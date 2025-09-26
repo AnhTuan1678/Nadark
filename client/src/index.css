@@ -1,0 +1,16 @@
+:root {
+    --color-bg-dark: #333;
+    --color-bg-nav: #444;
+    --color-bg-hover: #666;
+    --color-bg-content: #f4f4f4;
+    --color-bg-sidebar: #e2e2e2;
+    --color-text-light: #fff;
+    --color-text-dark: #000;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
