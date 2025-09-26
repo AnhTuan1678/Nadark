@@ -1,0 +1,109 @@
+import { useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { getStoryDetails, getChapters } from '../services/api'
+import styles from './StoryDetail.module.css'
+
+const StoryDetail = () => {
+  const { id } = useParams()
+  console.log('Story ID from URL:', id)
+  const [storyDetails, setStoryDetails] = useState(null)
+  const [chapters, setChapters] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getStoryDetails(id)
+      setStoryDetails(data)
+    }
+
+    fetchData()
+  }, [id])
+
+  useEffect(() => {
+    const fetchChapters = async () => {
+      const chapterData = await getChapters(id)
+      setChapters(chapterData)
+    }
+
+    fetchChapters()
+  }, [id])
+
+  const InfoItem = ({ label, value }) => {
+    return (
+      <div>
+        <label className='me-2 fw-bold'>{label}:</label>
+        <span>{value}</span>
+      </div>
+    )
+  }
+
+  const ChapterItem = ({ chapter }) => {
+    return (
+      <div className={`p-1 rounded ${styles.chapterItem}`}>
+        Chương {chapter.index}: {chapter.title}
+      </div>
+    )
+  }
+
+  return (
+    <div className='container mx-auto p-4'>
+      {storyDetails && (
+        <div className='d-flex flex-column mb-4 p-4 border rounded'>
+          <div className='d-flex flex-column flex-md-row mb-4 align-items-center'>
+            <img
+              className={styles['story-image']}
+              src={storyDetails.urlAvatar}
+              alt={storyDetails.title}
+            />
+            <div className='m-4 d-flex flex-column flex-grow-1'>
+              <p className='fs-3 fw-bold'>{storyDetails.title}</p>
+              <div className='d-flex flex-row mb-2 flex-wrap'>
+                {storyDetails.genres.map((genre, index) => (
+                  <div
+                    key={index}
+                    className={`badge me-1 mb-1 p-2 ${styles['genre-badge']} `}
+                    title={genre}>
+                    {genre}
+                  </div>
+                ))}
+              </div>
+              <div>
+                <InfoItem label='Tác giả' value={storyDetails.author} />
+              </div>
+              <InfoItem label='Trạng thái' value={storyDetails.status} />
+              <InfoItem label='Ngày đăng' value={storyDetails.publishedDate} />
+              <div className='d-flex flex-row justify-content-between'>
+                <InfoItem label='Lượt thích' value={storyDetails.like} />
+                <InfoItem label='Lượt xem' value={storyDetails.views} />
+                <InfoItem label='Theo dõi' value={storyDetails.followers} />
+              </div>
+              <div className='d-flex flex-row mt-3 gap-2 flex-wrap'>
+                <div className='btn btn btn-light'>Đọc từ đầu</div>
+                <div className='btn btn btn-light'>Thích</div>
+                <div className='btn btn btn-light'>Đánh dấu</div>
+                <div className='btn btn btn-light'>Theo dõi</div>
+                <div className='btn btn btn-light'>Báo cáo</div>
+                <div className='btn btn btn-light'>Xóa</div>
+              </div>
+            </div>
+          </div>
+          <div className='border-top border-3 pt-3 border-secondary'>
+            <p className='fw-bold'>Tóm tắt:</p>
+            <p>{storyDetails.summary}</p>
+          </div>
+        </div>
+      )}
+      <div className='d-flex flex-column mb-4 p-4 border rounded'>
+        <h3>Chapters</h3>
+        <div className='row row-cols-1 row-cols-sm-2 row-cols-lg-3'>
+          {chapters.map((chapter) => (
+            <div className='col' key={chapter.chapterId}>
+              <ChapterItem chapter={chapter} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default StoryDetail

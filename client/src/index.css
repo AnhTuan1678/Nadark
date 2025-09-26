@@ -6,6 +6,8 @@
     --color-bg-sidebar: #e2e2e2;
     --color-text-light: #fff;
     --color-text-dark: #000;
+    --color-bg-badge: #007bff;
+    --color-bg-badge-hover: #0056b3;
 }
 
 * {
@@ -13,4 +15,32 @@
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
+    /* overflow: hidden; */
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--color-bg-content);
+    color: var(--color-text-dark);
+    height: 100vh;
+}
+
+.header {
+    background: #444;
+    color: #fff;
+    padding: 1rem;
+}
+
+.container {
+    background: #f5f5f5;
+    max-width: 1000px;
+}
+
+.footer {
+    background: #222;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
 }

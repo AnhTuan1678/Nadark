@@ -1,0 +1,40 @@
+.story-image {
+    max-width: 250px;
+    max-height: 500px;
+    margin-right: 20px;
+    border-radius: 10px;
+}
+
+.genre-badge {
+    /* flex: 0 0 auto; */
+    max-width: 120px;
+    background-color: var(--color-bg-badge);
+    color: var(--color-text-light);
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-right: 5px;
+    font-size: 0.9em;
+    transition: background-color 0.3s, color 0.3s;
+}
+.genre-badge:hover {
+    background-color: var(--color-bg-badge-hover);
+    color: var(--color-bg-content);
+    cursor: pointer;
+}
+
+.label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.chapterItem {
+    font-size: small;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chapterItem:hover {
+    background-color: var(--color-bg-hover);
+    cursor: pointer;
+}
