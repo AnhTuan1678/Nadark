@@ -1,11 +1,11 @@
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { getStoryDetails, getChapters } from '../services/api'
 import styles from './StoryDetail.module.css'
 
 const StoryDetail = () => {
   const { id } = useParams()
-  console.log('Story ID from URL:', id)
+  const navigate = useNavigate()
   const [storyDetails, setStoryDetails] = useState(null)
   const [chapters, setChapters] = useState([])
 
@@ -38,7 +38,11 @@ const StoryDetail = () => {
 
   const ChapterItem = ({ chapter }) => {
     return (
-      <div className={`p-1 rounded ${styles.chapterItem}`}>
+      <div
+        className={`p-1 rounded ${styles.chapterItem}`}
+        onClick={() =>
+          navigate(`/story/${storyDetails.id}/chapter/${chapter.index}`)
+        }>
         Chương {chapter.index}: {chapter.title}
       </div>
     )
@@ -77,7 +81,13 @@ const StoryDetail = () => {
                 <InfoItem label='Theo dõi' value={storyDetails.followers} />
               </div>
               <div className='d-flex flex-row mt-3 gap-2 flex-wrap'>
-                <div className='btn btn btn-light'>Đọc từ đầu</div>
+                <div
+                  className='btn btn btn-light'
+                  onClick={() =>
+                    navigate(`/story/${storyDetails.id}/chapter/1`)
+                  }>
+                  Đọc từ đầu
+                </div>
                 <div className='btn btn btn-light'>Thích</div>
                 <div className='btn btn btn-light'>Đánh dấu</div>
                 <div className='btn btn btn-light'>Theo dõi</div>
