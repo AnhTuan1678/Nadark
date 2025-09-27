@@ -1,3 +1,7 @@
+.dropdownContainer {
+    position: relative;
+}
+
 .dropdownMenu {
     width: 200px;
     padding: 0 !important;

@@ -36,7 +36,6 @@ const ProfileMenu = ({ className }) => {
               ? 'animate__fadeOutUp show'
               : ''
           } ${styles.dropdownMenu}`}>
-          <div>
             <button
               className={`dropdown-item ${styles.dropdownItem}`}
               onClick={() => {
@@ -71,7 +70,6 @@ const ProfileMenu = ({ className }) => {
               Đăng xuất
             </button>
           </div>
-        </div>
       </>
     )
   }
