@@ -25,7 +25,8 @@ const Header = () => {
             <h1
               className={`logo ${style.logo} fs-1 me-4 text-white animate__animated animate__fadeInLeft flex-grow-1`}
               style={{ fontFamily: 'Ananda' }}>
-              Nadark
+              {/* Nadark */}
+              {import.meta.env.VITE_APP_NAME}
             </h1>
 
             <ProfileMenu className='flex-grow-1' />
@@ -40,7 +41,8 @@ const Header = () => {
           <h1
             className={`logo ${style.logo} fs-1 me-4 text-white animate__animated animate__fadeInLeft flex-grow-1`}
             style={{ fontFamily: 'Ananda' }}>
-            Nadark
+            {/* Nadark */}
+            {import.meta.env.VITE_APP_NAME}
           </h1>
 
           <SearchBar

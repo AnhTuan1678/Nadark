@@ -36,5 +36,6 @@
 
 .chapterItem:hover {
     background-color: var(--color-bg-hover);
+    color: var(--color-text-light);
     cursor: pointer;
 }

@@ -18,12 +18,12 @@ const Reader = () => {
 
   useEffect(() => {
     const fetchContent = async () => {
-      const data = await getChapterContent(chapterId)
+      const data = await getChapterContent(chapterId, id)
       setContent(data)
     }
 
     fetchContent()
-  }, [chapterId])
+  }, [chapterId, id])
 
   useEffect(() => {
     const fetchStoryDetails = async () => {

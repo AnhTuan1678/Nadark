@@ -98,7 +98,7 @@ const StoryDetail = () => {
           </div>
           <div className='border-top border-3 pt-3 border-secondary'>
             <p className='fw-bold'>Tóm tắt:</p>
-            <p>{storyDetails.summary}</p>
+            <p className='fw-lighter fst-italic'>{storyDetails.description}</p>
           </div>
         </div>
       )}
