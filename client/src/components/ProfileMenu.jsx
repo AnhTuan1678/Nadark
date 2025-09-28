@@ -1,11 +1,17 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './ProfileMenu.module.css'
+import { useAuth } from '../context/AuthContext'
+import LoginPopup from './LoginPopup'
 
 const ProfileMenu = ({ className }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [closing, setClosing] = useState(false)
+  const [showLogin, setShowLogin] = useState(false)
+
   const navigate = useNavigate()
+  const { user, logout } = useAuth()
+
   const toggleMenu = () => {
     setIsOpen(!isOpen)
   }
@@ -36,59 +42,66 @@ const ProfileMenu = ({ className }) => {
               ? 'animate__fadeOutUp show'
               : ''
           } ${styles.dropdownMenu}`}>
-            <button
-              className={`dropdown-item ${styles.dropdownItem}`}
-              onClick={() => {
-                // Handle profile click
-                navigate('/profile')
-              }}>
-              Hồ sơ
-            </button>
-            <button
-              className={`dropdown-item ${styles.dropdownItem}`}
-              onClick={() => {
-                // Handle profile click
-                navigate('/profile')
-              }}>
-              Tủ sách
-            </button>
-            <button
-              className={`dropdown-item ${styles.dropdownItem}`}
-              onClick={() => {
-                // Handle settings click
-                navigate('/settings')
-              }}>
-              Cài đặt
-            </button>
-            <div className={`dropdown-divider ${styles.dropdownDivider}`}></div>
-            <button
-              className={`dropdown-item ${styles.dropdownItem}`}
-              onClick={() => {
-                // Handle logout click
-                navigate('/logout')
-              }}>
-              Đăng xuất
-            </button>
-          </div>
+          <button
+            className={`dropdown-item ${styles.dropdownItem}`}
+            onClick={() => {
+              // Handle profile click
+              navigate('/profile')
+            }}>
+            Hồ sơ
+          </button>
+          <button
+            className={`dropdown-item ${styles.dropdownItem}`}
+            onClick={() => {
+              // Handle profile click
+              navigate('/profile')
+            }}>
+            Tủ sách
+          </button>
+          <button
+            className={`dropdown-item ${styles.dropdownItem}`}
+            onClick={() => {
+              // Handle settings click
+              navigate('/settings')
+            }}>
+            Cài đặt
+          </button>
+          <div className={`dropdown-divider ${styles.dropdownDivider}`}></div>
+          <button
+            className={`dropdown-item ${styles.dropdownItem}`}
+            onClick={logout}>
+            Đăng xuất
+          </button>
+        </div>
       </>
     )
   }
   return (
-    <div
-      className={`cursor-pointer ${className} d-flex align-items-center ${styles.dropdownContainer}`}
-      onClick={toggleMenu}>
-      <img
-        className='avatar'
-        src={urlAvatarBase}
-        alt='Avatar'
-        style={{
-          width: '50px',
-          height: '50px',
-          borderRadius: '50%',
-          marginLeft: 'auto',
+    <div className={`${className} d-flex`}>
+      <div className='flex-grow-1'></div>
+      {user ? (
+        <div
+          className={`cursor-pointer ${styles.dropdownContainer}`}
+          onClick={toggleMenu}>
+          <img className={styles.avatar} src={urlAvatarBase} alt='Avatar' />
+          <DropMenu />
+        </div>
+      ) : (
+        <div
+          className={`${styles.avatar} align-items-center justify-content-center position-relative`}>
+          <button
+            className={`btn btn-link ${styles.login} position-absolute top-50 translate-middle p-1`}
+            onClick={() => setShowLogin(true)}>
+            Đăng nhập
+          </button>
+        </div>
+      )}
+      <LoginPopup
+        isOpen={showLogin}
+        onClose={() => {
+          setShowLogin(false)
         }}
       />
-      <DropMenu />
     </div>
   )
 }

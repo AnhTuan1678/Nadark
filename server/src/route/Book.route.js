@@ -1,7 +1,6 @@
 const router = require('express').Router()
 const db = require('../models/index')
 
-
 // ============================
 // LẤY TẤT CẢ SÁCH
 // ============================

@@ -4,6 +4,7 @@ import StoryDetail from './pages/StoryDetail'
 import Reader from './pages/Reader'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import Login from './components/LoginPopup'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/story/:id' element={<StoryDetail />} />
           <Route path='/story/:id/chapter/:chapterId' element={<Reader />} />
+          <Route path='/login' element={<Login />} />
         </Routes>
         <Footer />
       </BrowserRouter>

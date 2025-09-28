@@ -1,6 +1,26 @@
 const API_URL = import.meta.env.VITE_API_URL
 console.log(API_URL)
 
+const login = async (usernameOrEmail, password) => {
+  const res = await fetch(`${API_URL}/api/account/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ usernameOrEmail, password }),
+  })
+  const data = await res.json()
+  return data
+}
+
+const register = async (usernameOrEmail, email, password) => {
+  const res = await fetch(`${API_URL}/api/account/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: usernameOrEmail, email, password }),
+  })
+  const data = await res.json()
+  return data
+}
+
 const getStoryDetails = async (storyId) => {
   const res = await fetch(`${API_URL}/api/book/${storyId}`)
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
@@ -29,12 +49,17 @@ const getChapters = async (storyId) => {
 }
 
 const getChapterContent = async (index, bookId) => {
-  const res = await fetch(
-    `${API_URL}/api/book/${bookId}/chapter/${index}`,
-  )
+  const res = await fetch(`${API_URL}/api/book/${bookId}/chapter/${index}`)
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
   const data = await res.json()
   return data
 }
 
-export { API_URL, getStoryDetails, getChapters, getChapterContent }
+export {
+  API_URL,
+  getStoryDetails,
+  getChapters,
+  getChapterContent,
+  login,
+  register,
+}
