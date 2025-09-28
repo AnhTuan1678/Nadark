@@ -11,6 +11,7 @@ const LoginPopup = ({ isOpen, onClose }) => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
+  const [error, setError] = useState('') // 👈 state lưu lỗi
   const { login } = useAuth()
 
   useEffect(() => {
@@ -18,6 +19,7 @@ const LoginPopup = ({ isOpen, onClose }) => {
       setUsernameOrEmail('')
       setPassword('')
       setEmail('')
+      setError('')
     }
   }, [isOpen])
 
@@ -26,6 +28,7 @@ const LoginPopup = ({ isOpen, onClose }) => {
   // Gửi login
   const handleLogin = async (e) => {
     e.preventDefault()
+    setError('') // reset lỗi cũ
     try {
       const data = await loginNormal(usernameOrEmail, password)
       console.log(data)
@@ -37,29 +40,30 @@ const LoginPopup = ({ isOpen, onClose }) => {
         )
         onClose()
       } else {
-        alert(data.error)
+        setError(data.error)
       }
     } catch (err) {
       console.error(err)
-      alert('Đăng nhập thất bại')
+      setError('Đăng nhập thất bại')
     }
   }
 
   // Gửi register
   const handleRegister = async (e) => {
     e.preventDefault()
+    setError('')
     try {
       const data = await registerNormal(usernameOrEmail, email, password)
 
       if (!data.error) {
-        alert('Đăng ký thành công, bạn có thể đăng nhập')
+        setError('') // clear lỗi
         setActiveTab('login') // chuyển về login
       } else {
-        alert(data.error)
+        setError(data.error)
       }
     } catch (err) {
       console.error(err)
-      alert('Đăng ký thất bại')
+      setError('Đăng ký thất bại')
     }
   }
 
@@ -91,14 +95,24 @@ const LoginPopup = ({ isOpen, onClose }) => {
               type='text'
               placeholder='Username hoặc Email'
               value={usernameOrEmail}
-              onChange={(e) => setUsernameOrEmail(e.target.value)}
+              onChange={(e) => {
+                setUsernameOrEmail(e.target.value)
+                setError('') // xoá lỗi khi gõ lại
+              }}
             />
             <input
               type='password'
               placeholder='Mật khẩu'
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                setError('')
+              }}
             />
+
+            {/* Hiện lỗi */}
+            {error && <div className={styles.error}>{error}</div>}
+
             <button type='submit'>Đăng nhập</button>
           </form>
         ) : (
@@ -107,20 +121,33 @@ const LoginPopup = ({ isOpen, onClose }) => {
               type='text'
               placeholder='Username'
               value={usernameOrEmail}
-              onChange={(e) => setUsernameOrEmail(e.target.value)}
+              onChange={(e) => {
+                setUsernameOrEmail(e.target.value)
+                setError('')
+              }}
             />
             <input
               type='email'
               placeholder='Email'
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                setError('')
+              }}
             />
             <input
               type='password'
               placeholder='Mật khẩu'
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                setError('')
+              }}
             />
+
+            {/* Hiện lỗi */}
+            {error && <div className={styles.error}>{error}</div>}
+
             <button type='submit'>Đăng ký</button>
           </form>
         )}

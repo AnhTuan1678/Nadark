@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { getChapterContent, getStoryDetails } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import styles from './Reader.module.css'
 import {
   faHome,
   faArrowLeft,
@@ -13,12 +14,14 @@ import {
 const Reader = () => {
   const { chapterId, id } = useParams(1)
   const navigate = useNavigate()
+
   const [content, setContent] = useState('')
   const [storyDetails, setStoryDetails] = useState({})
 
   useEffect(() => {
     const fetchContent = async () => {
       const data = await getChapterContent(chapterId, id)
+      console.log(data)
       setContent(data)
     }
 
@@ -39,12 +42,14 @@ const Reader = () => {
       <>
         <button
           className={`btn btn-primary ${className}`}
-          onClick={() =>
-            chapterId > 1 &&
-            navigate(
-              `/story/${storyDetails.id}/chapter/${parseInt(chapterId) - 1}`,
-            )
-          }>
+          onClick={() => {
+            if (chapterId > 1) {
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+              navigate(
+                `/story/${storyDetails.id}/chapter/${parseInt(chapterId) - 1}`,
+              )
+            }
+          }}>
           <FontAwesomeIcon icon={faArrowLeft} />
         </button>
 
@@ -62,12 +67,14 @@ const Reader = () => {
 
         <button
           className={`btn btn-primary ${className}`}
-          onClick={() =>
-            storyDetails.chapterCount > chapterId &&
-            navigate(
-              `/story/${storyDetails.id}/chapter/${parseInt(chapterId) + 1}`,
-            )
-          }>
+          onClick={() => {
+            if (storyDetails.chapterCount > chapterId) {
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+              navigate(
+                `/story/${storyDetails.id}/chapter/${parseInt(chapterId) + 1}`,
+              )
+            }
+          }}>
           <FontAwesomeIcon icon={faArrowRight} />
         </button>
       </>
@@ -97,13 +104,24 @@ const Reader = () => {
               }>
               {handleChapterNavigation()}
             </div>
-            <p className='fst-italic border-bottom pb-2 border-dark'>
-              Ngày phát hành: {content.releaseDate}
-            </p>
+            <div className='d-flex justify-content-between border-bottom pb-2 border-dark fst-italic'>
+              <span>Ngày phát hành: {content.created_at}</span>
+              <span>{content.word_count} từ</span>
+            </div>
+
             <div>
-              {content.content.split('\n').map((line, index) => (
-                <p key={index}>{line}</p>
-              ))}
+              {content.content.split('\n').map((line, index) => {
+                const imgMatch = line.match(/^\[!img\]\((.+)\)$/)
+                if (imgMatch) {
+                  return (
+                    <img className={styles.img} key={index} src={imgMatch[1]} alt={`image-${index}`} />
+                  )
+                } else if (line.trim() !== '') {
+                  return <p key={index}>{line}</p>
+                } else {
+                  return null
+                }
+              })}
             </div>
           </>
         )}

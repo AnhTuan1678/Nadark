@@ -50,3 +50,78 @@
 .search-btn:hover .icon {
     animation: spin 0.4s linear normal;
 }
+
+.wrapper {
+    position: relative;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 0;
+    margin-top: 5px;
+    list-style: none;
+    box-shadow: 0 4px 12px var(--color-shadow-hover);
+    overflow: hidden;
+    z-index: 100;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    border-bottom: 1px solid var(--color-bg-dark);
+}
+
+.highlighted {
+    background-color: var(--color-bg-nav);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.book-cover {
+    width: 50px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+    border: 1px solid var(--color-border);
+}
+
+.book-info {
+    display: flex;
+    flex-direction: column;
+    color: var(--color-white);
+    overflow: hidden;
+}
+
+.book-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.book-author,
+.book-meta {
+    font-size: 12px;
+    color: var(--color-text-light);
+    display: flex;
+    gap: 8px;
+}
+
+.book-meta span {
+    white-space: nowrap;
+}

@@ -67,7 +67,6 @@ router.post('/login', async (req, res) => {
     if (!usernameOrEmail || !password) {
       return res.status(400).json({ error: 'Vui lòng nhập đầy đủ thông tin' })
     }
-    console.log(1)
 
     // Tìm user theo username hoặc email
     const user = await db.User.findOne({
@@ -82,14 +81,12 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(401).json({ error: 'Sai username/email hoặc mật khẩu' })
     }
-    console.log(2)
 
     // Kiểm tra password
     const isMatch = await bcrypt.compare(password, user.password_hash)
     if (!isMatch) {
       return res.status(401).json({ error: 'Sai username/email hoặc mật khẩu' })
     }
-    console.log(3)
 
     // Tạo JWT
     const token = jwt.sign(
@@ -97,7 +94,6 @@ router.post('/login', async (req, res) => {
       JWT_SECRET,
       { expiresIn: '7d' },
     )
-    console.log(4)
 
     res.status(200).json({
       id: user.id,

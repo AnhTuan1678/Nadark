@@ -21,6 +21,24 @@ const register = async (usernameOrEmail, email, password) => {
   return data
 }
 
+const getProfile = async (token) => {
+  try {
+    const res = await fetch(`${API_URL}/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // gửi token JWT
+      },
+    })
+
+    const data = await res.json()
+    return data
+  } catch (err) {
+    console.error('Lỗi khi gọi getProfile:', err)
+    return { error: 'Không thể kết nối server' }
+  }
+}
+
 const getStoryDetails = async (storyId) => {
   const res = await fetch(`${API_URL}/api/book/${storyId}`)
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
@@ -55,11 +73,48 @@ const getChapterContent = async (index, bookId) => {
   return data
 }
 
+const getAllStory = async () => {
+  const res = await fetch(`${API_URL}/api/book`)
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+  const data = await res.json()
+
+  // Map lại từng book để đồng nhất field
+  return data.map((book) => ({
+    ...book,
+    chapterCount: book.chapter_count,
+    publishedDate: book.created_at,
+    urlAvatar: book.url_avatar,
+  }))
+}
+
+const searchBooks = async (query) => {
+  if (!query || query.trim() === '') {
+    throw new Error('Query không được để trống')
+  }
+
+  const res = await fetch(
+    `${API_URL}/api/book/search?query=${encodeURIComponent(query)}`,
+  )
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+  const data = await res.json()
+
+  // Map lại từng book để đồng nhất field với client
+  return data.map((book) => ({
+    ...book,
+    chapterCount: book.chapter_count,
+    publishedDate: book.created_at,
+    urlAvatar: book.url_avatar,
+  }))
+}
+
 export {
   API_URL,
   getStoryDetails,
+  getAllStory,
   getChapters,
   getChapterContent,
   login,
   register,
+  getProfile,
+  searchBooks,
 }

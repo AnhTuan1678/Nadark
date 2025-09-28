@@ -7,7 +7,7 @@ const StoryDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [storyDetails, setStoryDetails] = useState(null)
-  const [chapters, setChapters] = useState([])
+  const [chapters, setChapters] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,20 +98,29 @@ const StoryDetail = () => {
           </div>
           <div className='border-top border-3 pt-3 border-secondary'>
             <p className='fw-bold'>Tóm tắt:</p>
-            <p className='fw-lighter fst-italic'>{storyDetails.description}</p>
+            {storyDetails.description
+              ?.split('\n')
+              .filter((line) => line.trim() !== '')
+              .map((line, i) => (
+                <p key={i} className='fw-lighter fst-italic'>
+                  {line}
+                </p>
+              ))}
           </div>
         </div>
       )}
-      <div className='d-flex flex-column mb-4 p-4 border rounded'>
-        <h3>Chapters</h3>
-        <div className='row row-cols-1 row-cols-sm-2 row-cols-lg-3'>
-          {chapters.map((chapter) => (
-            <div className='col' key={chapter.chapterId}>
-              <ChapterItem chapter={chapter} />
-            </div>
-          ))}
+      {chapters && (
+        <div className='d-flex flex-column mb-4 p-4 border rounded'>
+          <h3>Chapters</h3>
+          <div className='row row-cols-1 row-cols-sm-2 row-cols-lg-3'>
+            {chapters.map((chapter) => (
+              <div className='col' key={chapter.chapterId}>
+                <ChapterItem chapter={chapter} />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
