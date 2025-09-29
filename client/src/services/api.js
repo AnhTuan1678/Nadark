@@ -1,5 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL
 
+import { formatterStoryDetail } from '../utils/formatterStoryDetail'
+
 // =============================
 // Auth APIs
 // =============================
@@ -57,13 +59,9 @@ export const getStoryDetails = async (storyId) => {
   const res = await fetch(`${API_URL}/api/book/${storyId}`)
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
   const data = await res.json()
+  const formatted = formatterStoryDetail(data)
 
-  return {
-    ...data,
-    chapterCount: data.chapter_count,
-    publishedDate: data.created_at,
-    urlAvatar: data.url_avatar,
-  }
+  return formatted
 }
 
 export const getChapters = async (storyId) => {
@@ -153,7 +151,6 @@ export const getProgressByBook = async (token, bookId) => {
   return await res.json()
 }
 
-
 export const updateSettings = async (token, settings) => {
   const res = await fetch(`${API_URL}/api/account/settings`, {
     method: 'PUT',
@@ -189,6 +186,39 @@ export const addToBookshelf = async (token, bookId) => {
   })
   return await res.json()
 }
+
+// =============================
+// Lấy tủ sách của user
+// =============================
+export const getBookshelf = async (token) => {
+  try {
+    const res = await fetch(`${API_URL}/api/account/bookshelf`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+    const data = await res.json(); // { books: [...] }
+
+    // Format từng book trong tủ
+    const formattedBooks = data.books.map((item) => {
+      // item.Book là object book kèm theo entry
+      return {
+        ...formatterStoryDetail(item.Book),
+        savedAt: item.saved_at, // thời gian lưu vào tủ
+      };
+    });
+
+    return formattedBooks;
+  } catch (err) {
+    console.error('Lỗi khi gọi getBookshelf:', err);
+    return [];
+  }
+};
 
 export const removeFromBookshelf = async (token, bookId) => {
   const res = await fetch(`${API_URL}/api/account/bookshelf/${bookId}`, {

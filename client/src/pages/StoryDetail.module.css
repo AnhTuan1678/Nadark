@@ -51,3 +51,39 @@
     font-weight: bold;
     border: 1px solid #fdcb6e;
 }
+
+.cus-btn {
+    background: var(--color-bg-badge-hover) !important;
+}
+
+.cus-btn:hover {
+    color: var(--color-bg-content) !important;
+    background: var(--color-bg-nav) !important;
+}
+
+.btn-yellow {
+    background-color: #f1c40f; /* màu vàng */
+    color: #fff;
+    border: none;
+}
+
+.btn-yellow:hover {
+    background-color: #d4ac0d;
+}
+
+.btn-blue {
+    background-color: #3498db; /* màu xanh */
+    color: #fff;
+    border: none;
+}
+
+.btn-blue:hover {
+    background-color: #2c80b4;
+}
+
+/* giữ style custom chung */
+.cus-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem; /* 6px */
+    font-weight: 500;
+}

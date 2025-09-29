@@ -1,17 +1,17 @@
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 
-// ============================
-// Middleware xác thực JWT
-// ============================
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1] // Bearer <token>
+// const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret'
 
-  if (!token) return res.status(401).json({ error: 'Token không tồn tại' })
+// const authenticateToken = (req, res, next) => {
+//   const authHeader = req.headers['authorization']
+//   const token = authHeader && authHeader.split(' ')[1]
+//   if (!token) return res.sendStatus(401)
 
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ error: 'Token không hợp lệ' })
-    req.user = user
-    next()
-  })
-}
+//   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+//     if (err) return res.sendStatus(403)
+//     req.user = user
+//     next()
+//   })
+// }
+
+// module.exports = authenticateToken

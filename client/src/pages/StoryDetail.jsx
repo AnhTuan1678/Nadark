@@ -4,8 +4,18 @@ import {
   getStoryDetails,
   getChapters,
   getProgressByBook,
+  addToBookshelf,
 } from '../services/api'
 import styles from './StoryDetail.module.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faHeart,
+  faBookmark,
+  faEye,
+  faFlag,
+} from '@fortawesome/free-solid-svg-icons'
+import Snackbar from '../components/SnackBar'
+import { formatterStoryDetail } from '../utils/formatterStoryDetail'
 
 const StoryDetail = () => {
   const { id } = useParams()
@@ -13,6 +23,8 @@ const StoryDetail = () => {
   const [storyDetails, setStoryDetails] = useState(null)
   const [chapters, setChapters] = useState(null)
   const [progress, setProgress] = useState(null)
+  const [snack, setSnack] = useState(null)
+  console.log(storyDetails)
 
   // lấy thông tin sách
   useEffect(() => {
@@ -41,7 +53,6 @@ const StoryDetail = () => {
       if (token) {
         try {
           const data = await getProgressByBook(token, id)
-          console.log(data)
           setProgress(data)
         } catch (err) {
           console.warn('Chưa có tiến trình đọc hoặc lỗi:', err)
@@ -50,6 +61,14 @@ const StoryDetail = () => {
     }
     fetchProgress()
   }, [id])
+
+  const handleFollowButton = async () => {
+    const token = localStorage.getItem('token')
+    const res = await addToBookshelf(token, id)
+    console.log(res)
+    setSnack(res)
+    setStoryDetails(formatterStoryDetail(res.book))
+  }
 
   const InfoItem = ({ label, value }) => {
     return (
@@ -84,6 +103,13 @@ const StoryDetail = () => {
 
   return (
     <div className='container mx-auto p-4'>
+      {snack && (
+        <Snackbar
+          status={snack.status}
+          message={snack.message}
+          onClose={() => setSnack(null)}
+        />
+      )}
       {storyDetails && (
         <div className='d-flex flex-column p-1 p-md-4 border rounded'>
           <div className='d-flex flex-column flex-md-row mb-4 align-items-center'>
@@ -109,35 +135,45 @@ const StoryDetail = () => {
               </div>
               <InfoItem label='Trạng thái' value={storyDetails.status} />
               <InfoItem label='Ngày đăng' value={storyDetails.publishedDate} />
-              <div className='d-flex flex-row justify-content-between'>
-                <InfoItem label='Lượt thích' value={storyDetails.like} />
-                <InfoItem label='Lượt xem' value={storyDetails.views} />
-                <InfoItem label='Theo dõi' value={storyDetails.followers} />
-              </div>
-              <div className='d-flex flex-row mt-3 gap-2 flex-wrap'>
-                <div
-                  className='btn btn btn-light'
-                  onClick={() =>
-                    navigate(`/story/${storyDetails.id}/chapter/1`)
-                  }>
-                  Đọc từ đầu
-                </div>
-                {progress && progress.last_chapter_index && (
-                  <div
-                    className='btn btn btn-light'
-                    onClick={() =>
-                      navigate(
-                        `/story/${storyDetails.id}/chapter/${progress.last_chapter_index}`,
-                      )
-                    }>
-                    Tiếp tục
+              <div className='d-flex flex-column gap-3'>
+                <div className='d-flex flex-row justify-content-between flex-wrap'>
+                  <div className={`btn ${styles['cus-btn']}`}>
+                    <FontAwesomeIcon icon={faHeart} /> {storyDetails.like}
                   </div>
-                )}
-                <div className='btn btn btn-light'>Thích</div>
-                <div className='btn btn btn-light'>Đánh dấu</div>
-                <div className='btn btn btn-light'>Theo dõi</div>
-                <div className='btn btn btn-light'>Báo cáo</div>
-                <div className='btn btn btn-light'>Xóa</div>
+                  <div
+                    className={`btn ${styles['cus-btn']}`}
+                    onClick={handleFollowButton}>
+                    <FontAwesomeIcon icon={faBookmark} />{' '}
+                    {storyDetails.followers}
+                  </div>
+                  <div className={`btn ${styles['cus-btn']}`}>
+                    <FontAwesomeIcon icon={faEye} /> {storyDetails.views}
+                  </div>
+                  <div className={`btn ${styles['cus-btn']}`}>
+                    <FontAwesomeIcon icon={faFlag} />
+                  </div>
+                </div>
+
+                <div className='d-flex flex-row gap-2 flex-wrap'>
+                  <div
+                    className='btn btn-warning'
+                    onClick={() =>
+                      navigate(`/story/${storyDetails.id}/chapter/1`)
+                    }>
+                    Đọc từ đầu
+                  </div>
+                  {progress && progress.last_chapter_index && (
+                    <div
+                      className='btn btn-success'
+                      onClick={() =>
+                        navigate(
+                          `/story/${storyDetails.id}/chapter/${progress.last_chapter_index}`,
+                        )
+                      }>
+                      Tiếp tục
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

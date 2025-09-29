@@ -20,7 +20,7 @@ const Header = () => {
   }, [])
 
   const handleSearch = (/*query*/) => {
-    // console.log('Tìm:', query)
+    
   }
 
   return (

@@ -8,11 +8,11 @@ import { store } from './redux/store'
 import { AuthProvider } from './context/AuthProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <AuthProvider>
         <App />
       </AuthProvider>
     </Provider>
-  </StrictMode>,
+  // </StrictMode>,
 )

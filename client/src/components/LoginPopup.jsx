@@ -31,7 +31,6 @@ const LoginPopup = ({ isOpen, onClose }) => {
     setError('') // reset lỗi cũ
     try {
       const data = await loginNormal(usernameOrEmail, password)
-      console.log(data)
 
       if (!data.error) {
         login(

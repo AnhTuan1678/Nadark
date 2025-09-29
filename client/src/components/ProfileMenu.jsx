@@ -54,7 +54,7 @@ const ProfileMenu = ({ className }) => {
             className={`dropdown-item ${styles.dropdownItem}`}
             onClick={() => {
               // Handle profile click
-              navigate('/profile')
+              navigate('/bookshelf')
             }}>
             Tủ sách
           </button>

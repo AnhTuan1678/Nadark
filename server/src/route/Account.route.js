@@ -2,6 +2,7 @@ const router = require('express').Router()
 const db = require('../models/index')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+// const authenticateToken = require('../middleware/authenticateToken')
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret'
 
@@ -215,7 +216,9 @@ router.get('/progress/:book_id', authenticateToken, async (req, res) => {
     })
 
     if (!progress)
-      return res.status(200).json({ message: 'Chưa có tiến trình đọc', progress: null })
+      return res
+        .status(200)
+        .json({ message: 'Chưa có tiến trình đọc', progress: null })
     res.json(progress.toJSON())
   } catch (err) {
     console.error(err)
@@ -268,39 +271,84 @@ router.put('/profile', authenticateToken, async (req, res) => {
 })
 
 // ============================
-// Thêm/Xoá sách vào tủ sách
+// Thêm / Xoá sách
 // ============================
 router.post('/bookshelf', authenticateToken, async (req, res) => {
   try {
     const { book_id } = req.body
     if (!book_id) return res.status(400).json({ error: 'Thiếu book_id' })
 
-    const [entry, created] = await db.UserBookshelf.findOrCreate({
+    // Kiểm tra xem sách đã có trong tủ chưa
+    const existingEntry = await db.UserBookshelf.findOne({
       where: { user_id: req.user.id, book_id },
-      defaults: { saved_at: new Date() },
     })
 
-    if (!created) {
-      return res.status(409).json({ error: 'Sách đã có trong tủ' })
+    if (existingEntry) {
+      // Nếu đã có => xoá
+      console.log('del')
+      await db.UserBookshelf.destroy({
+        where: { user_id: req.user.id, book_id },
+      })
+      await db.Book.decrement('followers', { by: 1, where: { id: book_id } })
+
+      const book = await db.Book.findByPk(book_id)
+      return res.json({
+        message: 'Đã xoá khỏi tủ sách',
+        status: 'warning',
+        action: 'removed',
+        book,
+      })
     }
 
-    res.json({ message: 'Đã thêm vào tủ sách', entry })
+    // Nếu chưa có => thêm
+    await db.UserBookshelf.create({
+      user_id: req.user.id,
+      book_id,
+      saved_at: new Date(),
+    })
+    await db.Book.increment('followers', { by: 1, where: { id: book_id } })
+
+    const book = await db.Book.findByPk(book_id)
+    return res.json({
+      message: 'Đã thêm vào tủ sách',
+      status: 'success',
+      action: 'added',
+      book,
+    })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Lỗi server' })
   }
 })
 
-router.delete('/bookshelf/:book_id', authenticateToken, async (req, res) => {
+// ============================
+// Lấy tủ sách của user
+// ============================
+router.get('/bookshelf', authenticateToken, async (req, res) => {
   try {
-    const { book_id } = req.params
-    const deleted = await db.UserBookshelf.destroy({
-      where: { user_id: req.user.id, book_id },
+    const books = await db.UserBookshelf.findAll({
+      where: { user_id: req.user.id },
+      include: [
+        {
+          model: db.Book,
+          attributes: [
+            'id',
+            'title',
+            'author',
+            'status',
+            'chapter_count',
+            'word_count',
+            'like',
+            'views',
+            'followers',
+            'url_avatar',
+          ],
+        },
+      ],
+      order: [['saved_at', 'DESC']],
     })
 
-    if (!deleted)
-      return res.status(404).json({ error: 'Không tìm thấy sách trong tủ' })
-    res.json({ message: 'Đã xoá khỏi tủ sách' })
+    res.json({ books })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Lỗi server' })
