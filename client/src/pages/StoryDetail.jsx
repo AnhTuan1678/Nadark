@@ -51,7 +51,7 @@ const StoryDetail = () => {
   return (
     <div className='container mx-auto p-4'>
       {storyDetails && (
-        <div className='d-flex flex-column mb-4 p-4 border rounded'>
+        <div className='d-flex flex-column p-1 p-md-4 border rounded'>
           <div className='d-flex flex-column flex-md-row mb-4 align-items-center'>
             <img
               className={styles['story-image']}

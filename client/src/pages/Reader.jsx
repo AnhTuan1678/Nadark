@@ -9,6 +9,10 @@ import {
   faArrowRight,
   faArrowUp,
   faBars,
+  faCog,
+  faTimes,
+  faSave,
+  faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 
 const Reader = () => {
@@ -17,17 +21,26 @@ const Reader = () => {
 
   const [content, setContent] = useState('')
   const [storyDetails, setStoryDetails] = useState({})
+  const [showSettings, setShowSettings] = useState(false)
+  const [setting, setSetting] = useState({
+    fontSize: '20px',
+    fontFamily: 'Arial',
+    lineHeight: 1.5,
+    zoom: 1,
+  })
 
+  // Lấy nội dung chương
   useEffect(() => {
     const fetchContent = async () => {
       const data = await getChapterContent(chapterId, id)
-      console.log(data)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       setContent(data)
     }
 
     fetchContent()
   }, [chapterId, id])
 
+  // Lấy thông tin sách
   useEffect(() => {
     const fetchStoryDetails = async () => {
       const data = await getStoryDetails(id)
@@ -37,14 +50,38 @@ const Reader = () => {
     fetchStoryDetails()
   }, [id])
 
-  const handleChapterNavigation = (className) => {
+  // Đọc setting từ local
+  useEffect(() => {
+    const localSetting = localStorage.getItem('readerSettings')
+    localSetting && setSetting(JSON.parse(localSetting))
+  }, [])
+
+  // Lưu setting
+  const handleSaveButton = () => {
+    localStorage.setItem('readerSettings', JSON.stringify(setting))
+    setShowSettings(false)
+  }
+
+  // Reset setting
+  const handleResetButton = () => {
+    const defaultSetting = {
+      fontSize: '20px',
+      fontFamily: 'Arial',
+      lineHeight: 1.5,
+      zoom: 1,
+    }
+    setSetting(defaultSetting)
+    localStorage.setItem('readerSettings', JSON.stringify(defaultSetting))
+  }
+
+  const ChapterNavigation = (className) => {
     return (
       <>
+        {/* Nút Previous */}
         <button
           className={`btn btn-primary ${className}`}
           onClick={() => {
             if (chapterId > 1) {
-              window.scrollTo({ top: 0, behavior: 'smooth' })
               navigate(
                 `/story/${storyDetails.id}/chapter/${parseInt(chapterId) - 1}`,
               )
@@ -53,23 +90,32 @@ const Reader = () => {
           <FontAwesomeIcon icon={faArrowLeft} />
         </button>
 
+        {/* Nút Home */}
         <button
           className={`btn btn-primary ${className}`}
           onClick={() => navigate('/')}>
           <FontAwesomeIcon icon={faHome} />
         </button>
 
+        {/* Nút Chapter List */}
         <button
           className={`btn btn-primary ${className}`}
           onClick={() => navigate(`/story/${storyDetails.id}`)}>
           <FontAwesomeIcon icon={faBars} />
         </button>
 
+        {/* Nút Settings */}
+        <button
+          className={`btn btn-secondary ${className}`}
+          onClick={() => setShowSettings(!showSettings)}>
+          <FontAwesomeIcon icon={faCog} />
+        </button>
+
+        {/* Nút Next */}
         <button
           className={`btn btn-primary ${className}`}
           onClick={() => {
             if (storyDetails.chapterCount > chapterId) {
-              window.scrollTo({ top: 0, behavior: 'smooth' })
               navigate(
                 `/story/${storyDetails.id}/chapter/${parseInt(chapterId) + 1}`,
               )
@@ -77,6 +123,134 @@ const Reader = () => {
           }}>
           <FontAwesomeIcon icon={faArrowRight} />
         </button>
+
+        {showSettings && (
+          // Overlay nền xám khi popup mở
+          <div className='cus-overlay' onClick={() => setShowSettings(false)}>
+            {/* Popup Settings */}
+            <div
+              className='position-fixed top-50 start-50 translate-middle bg-white p-4 rounded shadow'
+              style={{ zIndex: 1000, minWidth: '350px' }}
+              onClick={(e) => e.stopPropagation()}>
+              {/* Nút close */}
+              <button
+                className='btn btn-light position-absolute top-0 end-0 m-2 p-1'
+                onClick={() => setShowSettings(false)}
+                style={{ borderRadius: '50%', width: '30px', height: '30px' }}>
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+              <h5>Settings</h5>
+
+              {/* font size */}
+              <div className='mb-2 d-flex'>
+                <label className='text-center'>Font Size:</label>
+                <div className='flex-grow-1'></div>
+                <h6 className='text-center p-0 m-0'>{setting.fontSize}</h6>
+                <input
+                  type='range'
+                  min='12'
+                  max='36'
+                  defaultValue={parseInt(setting.fontSize, 10)}
+                  onChange={(e) =>
+                    setSetting((prev) => ({
+                      ...prev,
+                      fontSize: `${e.target.value}px`,
+                    }))
+                  }
+                />
+              </div>
+
+              {/* font family */}
+              <div className='mb-2 d-flex align-items-center'>
+                <label className='text-center'>Font:</label>
+                <div className='flex-grow-1'></div>
+                <select
+                  className='form-select w-auto'
+                  value={setting.fontFamily}
+                  onChange={(e) =>
+                    setSetting((prev) => ({
+                      ...prev,
+                      fontFamily: e.target.value,
+                    }))
+                  }>
+                  <option value='Arial' style={{ fontFamily: 'Arial' }}>
+                    Arial
+                  </option>
+                  <option
+                    value='Times New Roman'
+                    style={{ fontFamily: 'Times New Roman' }}>
+                    Times New Roman
+                  </option>
+                  <option value='Verdana' style={{ fontFamily: 'Verdana' }}>
+                    Verdana
+                  </option>
+                  <option value='Tahoma' style={{ fontFamily: 'Tahoma' }}>
+                    Tahoma
+                  </option>
+                </select>
+              </div>
+
+              {/* line height */}
+              <div className='mb-2 d-flex align-items-center'>
+                <label className='text-center'>Line Height:</label>
+                <div className='flex-grow-1'></div>
+                <h6 className='text-center p-0 m-0'>{setting.lineHeight}</h6>
+                <input
+                  type='range'
+                  min='1'
+                  max='2'
+                  step='0.1'
+                  value={setting.lineHeight}
+                  onChange={(e) =>
+                    setSetting((prev) => ({
+                      ...prev,
+                      lineHeight: parseFloat(e.target.value),
+                    }))
+                  }
+                />
+              </div>
+
+              {/* zoom */}
+              <div className='mb-2 d-flex align-items-center'>
+                <label className='text-center'>Zoom:</label>
+                <div className='flex-grow-1'></div>
+                <h6 className='text-center p-0 m-0'>{`${parseInt(
+                  setting.zoom * 100,
+                )}%`}</h6>
+                <input
+                  type='range'
+                  min='50'
+                  max='200'
+                  defaultValue={parseInt(setting.zoom * 100)}
+                  // value={setting.zoom || 100}
+                  onChange={(e) =>
+                    setSetting((prev) => ({
+                      ...prev,
+                      zoom: e.target.value / 100,
+                    }))
+                  }
+                />
+                %
+              </div>
+
+              <div className='mt-4 d-flex'>
+                {/* Nút reset */}
+                <button
+                  className='btn btn-warning d-flex '
+                  onClick={handleResetButton}>
+                  <FontAwesomeIcon icon={faRefresh} />
+                </button>
+                <div className='flex-grow-1'></div>
+                {/* Nút Save */}
+                <button
+                  className='btn btn-success d-flex '
+                  onClick={handleSaveButton}>
+                  <FontAwesomeIcon icon={faSave} />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </>
     )
   }
@@ -102,7 +276,7 @@ const Reader = () => {
               className={
                 'justify-content-between mt-4 chapter-nav d-flex border rounded bg-light p-2'
               }>
-              {handleChapterNavigation()}
+              {ChapterNavigation()}
             </div>
             <div className='d-flex justify-content-between border-bottom pb-2 border-dark fst-italic'>
               <span>Ngày phát hành: {content.created_at}</span>
@@ -114,10 +288,19 @@ const Reader = () => {
                 const imgMatch = line.match(/^\[!img\]\((.+)\)$/)
                 if (imgMatch) {
                   return (
-                    <img className={styles.img} key={index} src={imgMatch[1]} alt={`image-${index}`} />
+                    <img
+                      className={styles.img}
+                      key={index}
+                      src={imgMatch[1]}
+                      alt={`image-${index}`}
+                    />
                   )
                 } else if (line.trim() !== '') {
-                  return <p key={index}>{line}</p>
+                  return (
+                    <p style={setting} key={index}>
+                      {line}
+                    </p>
+                  )
                 } else {
                   return null
                 }
@@ -129,11 +312,11 @@ const Reader = () => {
           className={
             'justify-content-between mt-4 chapter-nav d-flex border rounded bg-light p-2'
           }>
-          {handleChapterNavigation()}
+          {ChapterNavigation()}
         </div>
       </div>
       <div className='position-fixed bottom-0 end-0 p-4 d-flex flex-column gap-2'>
-        {handleChapterNavigation('d-md-block d-none')}
+        {ChapterNavigation('d-md-block d-none')}
         <button
           className='btn btn-primary'
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
