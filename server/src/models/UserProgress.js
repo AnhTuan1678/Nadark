@@ -17,9 +17,8 @@ const UserProgress = sequelize.define(
       allowNull: false,
       references: { model: 'books', key: 'id' },
     },
-    last_chapter_id: {
+    last_chapter_index: {
       type: DataTypes.INTEGER,
-      references: { model: 'chapters', key: 'id' },
     },
     progress_percent: { type: DataTypes.DECIMAL(5, 2), defaultValue: 0 },
     updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
@@ -34,10 +33,6 @@ const UserProgress = sequelize.define(
 // Quan hệ
 UserProgress.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' })
 UserProgress.belongsTo(Book, { foreignKey: 'book_id', onDelete: 'CASCADE' })
-UserProgress.belongsTo(Chapter, {
-  foreignKey: 'last_chapter_id',
-  onDelete: 'SET NULL',
-})
 User.hasMany(UserProgress, { foreignKey: 'user_id' })
 Book.hasMany(UserProgress, { foreignKey: 'book_id' })
 

@@ -6,6 +6,22 @@ const jwt = require('jsonwebtoken')
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret'
 
 // ============================
+// Middleware xác thực JWT
+// ============================
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1] // Bearer <token>
+
+  if (!token) return res.status(401).json({ error: 'Token không tồn tại' })
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ error: 'Token không hợp lệ' })
+    req.user = user
+    next()
+  })
+}
+
+// ============================
 // Đăng ký
 // ============================
 router.post('/register', async (req, res) => {
@@ -111,23 +127,6 @@ router.post('/login', async (req, res) => {
 })
 
 // ============================
-// Middleware xác thực JWT
-// ============================
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization']
-  console.log(authHeader)
-  const token = authHeader && authHeader.split(' ')[1] // Bearer <token>
-
-  if (!token) return res.status(401).json({ error: 'Token không tồn tại' })
-
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ error: 'Token không hợp lệ' })
-    req.user = user
-    next()
-  })
-}
-
-// ============================
 // Lấy thông tin user
 // ============================
 router.get('/me', authenticateToken, async (req, res) => {
@@ -150,6 +149,161 @@ router.get('/me', authenticateToken, async (req, res) => {
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// ============================
+// Lưu tiến trình đọc
+// ============================
+router.post('/progress', authenticateToken, async (req, res) => {
+  try {
+    const { book_id, last_chapter_index, progress_percent } = req.body
+    if (!book_id) return res.status(400).json({ error: 'Thiếu book_id' })
+
+    const [progress, created] = await db.UserProgress.upsert(
+      {
+        user_id: req.user.id,
+        book_id,
+        last_chapter_index,
+        progress_percent,
+        updated_at: new Date(),
+      },
+      { returning: true },
+    )
+
+    res.json({
+      message: created ? 'Tạo mới tiến trình' : 'Cập nhật tiến trình',
+      progress,
+    })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Lỗi server' })
+  }
+})
+
+// ============================
+// Lấy tiến trình đọc của user
+// ============================
+
+// Lấy toàn bộ tiến trình của user
+router.get('/progress', authenticateToken, async (req, res) => {
+  try {
+    const progressList = await db.UserProgress.findAll({
+      where: { user_id: req.user.id },
+      order: [['updated_at', 'DESC']],
+    })
+
+    if (!progressList || progressList.length === 0) {
+      return res
+        .status(404)
+        .json({ error: 'Người dùng chưa có tiến trình đọc nào' })
+    }
+
+    res.json(progressList.map((p) => p.toJSON()))
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Lỗi server' })
+  }
+})
+
+// Lấy tiến trình đọc theo book_id
+router.get('/progress/:book_id', authenticateToken, async (req, res) => {
+  try {
+    const { book_id } = req.params
+    const progress = await db.UserProgress.findOne({
+      where: { user_id: req.user.id, book_id },
+    })
+
+    if (!progress)
+      return res.status(200).json({ message: 'Chưa có tiến trình đọc', progress: null })
+    res.json(progress.toJSON())
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Lỗi server' })
+  }
+})
+
+// ============================
+// Lưu setting người dùng
+// ============================
+router.put('/settings', authenticateToken, async (req, res) => {
+  try {
+    const { settings } = req.body
+    if (typeof settings !== 'object') {
+      return res.status(400).json({ error: 'Dữ liệu settings không hợp lệ' })
+    }
+
+    await db.User.update(
+      { personal_settings: settings, updated_at: new Date() },
+      { where: { id: req.user.id } },
+    )
+
+    res.json({ message: 'Cập nhật setting thành công', settings })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Lỗi server' })
+  }
+})
+
+// ============================
+// Đổi thông tin tài khoản
+// ============================
+router.put('/profile', authenticateToken, async (req, res) => {
+  try {
+    const { username, email, password } = req.body
+    const updateData = { updated_at: new Date() }
+
+    if (username) updateData.username = username
+    if (email) updateData.email = email
+    if (password) {
+      updateData.password_hash = await bcrypt.hash(password, 10)
+    }
+
+    await db.User.update(updateData, { where: { id: req.user.id } })
+    res.json({ message: 'Cập nhật thông tin thành công' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Lỗi server' })
+  }
+})
+
+// ============================
+// Thêm/Xoá sách vào tủ sách
+// ============================
+router.post('/bookshelf', authenticateToken, async (req, res) => {
+  try {
+    const { book_id } = req.body
+    if (!book_id) return res.status(400).json({ error: 'Thiếu book_id' })
+
+    const [entry, created] = await db.UserBookshelf.findOrCreate({
+      where: { user_id: req.user.id, book_id },
+      defaults: { saved_at: new Date() },
+    })
+
+    if (!created) {
+      return res.status(409).json({ error: 'Sách đã có trong tủ' })
+    }
+
+    res.json({ message: 'Đã thêm vào tủ sách', entry })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Lỗi server' })
+  }
+})
+
+router.delete('/bookshelf/:book_id', authenticateToken, async (req, res) => {
+  try {
+    const { book_id } = req.params
+    const deleted = await db.UserBookshelf.destroy({
+      where: { user_id: req.user.id, book_id },
+    })
+
+    if (!deleted)
+      return res.status(404).json({ error: 'Không tìm thấy sách trong tủ' })
+    res.json({ message: 'Đã xoá khỏi tủ sách' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Lỗi server' })
   }
 })
 

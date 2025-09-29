@@ -1,6 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { getChapterContent, getStoryDetails } from '../services/api'
+import {
+  getChapterContent,
+  getStoryDetails,
+  saveProgress,
+  updateSettings,
+  getProfile,
+} from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './Reader.module.css'
 import {
@@ -16,18 +22,20 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 const Reader = () => {
+  const defaultSetting = {
+    fontSize: '20px',
+    fontFamily: 'Arial',
+    lineHeight: 1.5,
+    zoom: 1,
+  }
+
   const { chapterId, id } = useParams(1)
   const navigate = useNavigate()
 
   const [content, setContent] = useState('')
   const [storyDetails, setStoryDetails] = useState({})
   const [showSettings, setShowSettings] = useState(false)
-  const [setting, setSetting] = useState({
-    fontSize: '20px',
-    fontFamily: 'Arial',
-    lineHeight: 1.5,
-    zoom: 1,
-  })
+  const [setting, setSetting] = useState(defaultSetting)
 
   // Lấy nội dung chương
   useEffect(() => {
@@ -35,6 +43,16 @@ const Reader = () => {
       const data = await getChapterContent(chapterId, id)
       window.scrollTo({ top: 0, behavior: 'smooth' })
       setContent(data)
+    }
+
+    // Lưu tiến trình đọc khi load chương
+    const token = localStorage.getItem('token')
+    if (token) {
+      try {
+        saveProgress(token, id, chapterId, 0)
+      } catch (err) {
+        console.error('Lỗi khi lưu tiến trình:', err)
+      }
     }
 
     fetchContent()
@@ -50,20 +68,48 @@ const Reader = () => {
     fetchStoryDetails()
   }, [id])
 
-  // Đọc setting từ local
+  // Lấy setting
   useEffect(() => {
-    const localSetting = localStorage.getItem('readerSettings')
-    localSetting && setSetting(JSON.parse(localSetting))
+    const fetchUserSettings = async () => {
+      const token = localStorage.getItem('token')
+      if (token) {
+        const profile = await getProfile(token)
+        if (profile.personal_settings) {
+          const defaultSetting = {
+            fontSize: '20px',
+            fontFamily: 'Arial',
+            lineHeight: 1.5,
+            zoom: 1,
+          }
+          const merged = { ...defaultSetting, ...profile.personal_settings }
+
+          setSetting(merged)
+        }
+      }
+    }
+
+    fetchUserSettings()
   }, [])
 
   // Lưu setting
-  const handleSaveButton = () => {
+  const handleSaveButton = async () => {
     localStorage.setItem('readerSettings', JSON.stringify(setting))
     setShowSettings(false)
+
+    // Lưu lên server
+    const token = localStorage.getItem('token')
+    if (token) {
+      try {
+        await updateSettings(token, setting)
+        console.log('Đã lưu setting lên server')
+      } catch (err) {
+        console.error('Lỗi khi lưu setting:', err)
+      }
+    }
   }
 
   // Reset setting
-  const handleResetButton = () => {
+  const handleResetButton = async () => {
     const defaultSetting = {
       fontSize: '20px',
       fontFamily: 'Arial',
@@ -71,7 +117,17 @@ const Reader = () => {
       zoom: 1,
     }
     setSetting(defaultSetting)
-    localStorage.setItem('readerSettings', JSON.stringify(defaultSetting))
+
+    // Lưu lên server
+    const token = localStorage.getItem('token')
+    if (token) {
+      try {
+        await updateSettings(token, setting)
+        console.log('Đã lưu setting lên server')
+      } catch (err) {
+        console.error('Lỗi khi lưu setting:', err)
+      }
+    }
   }
 
   const ChapterNavigation = (className) => {
@@ -79,6 +135,7 @@ const Reader = () => {
       <>
         {/* Nút Previous */}
         <button
+          disabled={chapterId <= 1}
           className={`btn btn-primary ${className}`}
           onClick={() => {
             if (chapterId > 1) {
@@ -106,13 +163,14 @@ const Reader = () => {
 
         {/* Nút Settings */}
         <button
-          className={`btn btn-secondary ${className}`}
+          className={`btn btn-primary ${className}`}
           onClick={() => setShowSettings(!showSettings)}>
           <FontAwesomeIcon icon={faCog} />
         </button>
 
         {/* Nút Next */}
         <button
+          disabled={storyDetails.chapterCount <= chapterId}
           className={`btn btn-primary ${className}`}
           onClick={() => {
             if (storyDetails.chapterCount > chapterId) {
@@ -150,7 +208,7 @@ const Reader = () => {
                   type='range'
                   min='12'
                   max='36'
-                  defaultValue={parseInt(setting.fontSize, 10)}
+                  value={parseInt(setting.fontSize, 10)}
                   onChange={(e) =>
                     setSetting((prev) => ({
                       ...prev,
@@ -221,8 +279,7 @@ const Reader = () => {
                   type='range'
                   min='50'
                   max='200'
-                  defaultValue={parseInt(setting.zoom * 100)}
-                  // value={setting.zoom || 100}
+                  value={parseInt(setting.zoom * 100)}
                   onChange={(e) =>
                     setSetting((prev) => ({
                       ...prev,

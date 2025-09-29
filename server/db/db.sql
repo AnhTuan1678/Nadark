@@ -72,7 +72,7 @@ CREATE TABLE user_progress (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users (id) ON DELETE CASCADE,
     book_id INT REFERENCES books (id) ON DELETE CASCADE,
-    last_chapter_id INT REFERENCES chapters (id) ON DELETE SET NULL,
+    last_chapter_index INT REFERENCES chapters (id) ON DELETE SET NULL,
     progress_percent NUMERIC(5, 2) DEFAULT 0,
     updated_at TIMESTAMP DEFAULT NOW(),
     UNIQUE (user_id, book_id)

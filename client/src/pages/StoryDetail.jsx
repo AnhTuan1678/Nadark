@@ -1,6 +1,10 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { getStoryDetails, getChapters } from '../services/api'
+import {
+  getStoryDetails,
+  getChapters,
+  getProgressByBook,
+} from '../services/api'
 import styles from './StoryDetail.module.css'
 
 const StoryDetail = () => {
@@ -8,7 +12,9 @@ const StoryDetail = () => {
   const navigate = useNavigate()
   const [storyDetails, setStoryDetails] = useState(null)
   const [chapters, setChapters] = useState(null)
+  const [progress, setProgress] = useState(null)
 
+  // lấy thông tin sách
   useEffect(() => {
     const fetchData = async () => {
       const data = await getStoryDetails(id)
@@ -18,6 +24,7 @@ const StoryDetail = () => {
     fetchData()
   }, [id])
 
+  // lấy danh sách chương
   useEffect(() => {
     const fetchChapters = async () => {
       const chapterData = await getChapters(id)
@@ -25,6 +32,23 @@ const StoryDetail = () => {
     }
 
     fetchChapters()
+  }, [id])
+
+  // lấy tiến trình đọc
+  useEffect(() => {
+    const fetchProgress = async () => {
+      const token = localStorage.getItem('token')
+      if (token) {
+        try {
+          const data = await getProgressByBook(token, id)
+          console.log(data)
+          setProgress(data)
+        } catch (err) {
+          console.warn('Chưa có tiến trình đọc hoặc lỗi:', err)
+        }
+      }
+    }
+    fetchProgress()
   }, [id])
 
   const InfoItem = ({ label, value }) => {
@@ -37,9 +61,19 @@ const StoryDetail = () => {
   }
 
   const ChapterItem = ({ chapter }) => {
+    let classNames = `p-1 rounded ${styles.chapterItem} `
+
+    if (progress) {
+      if (chapter.index < progress.last_chapter_index) {
+        classNames += styles.readChapter // đã đọc → mờ
+      } else if (chapter.index === progress.last_chapter_index) {
+        classNames += styles.currentChapter // đang đọc → highlight
+      }
+    }
+
     return (
       <div
-        className={`p-1 rounded ${styles.chapterItem}`}
+        className={classNames}
         onClick={() =>
           navigate(`/story/${storyDetails.id}/chapter/${chapter.index}`)
         }>
@@ -88,6 +122,17 @@ const StoryDetail = () => {
                   }>
                   Đọc từ đầu
                 </div>
+                {progress && progress.last_chapter_index && (
+                  <div
+                    className='btn btn btn-light'
+                    onClick={() =>
+                      navigate(
+                        `/story/${storyDetails.id}/chapter/${progress.last_chapter_index}`,
+                      )
+                    }>
+                    Tiếp tục
+                  </div>
+                )}
                 <div className='btn btn btn-light'>Thích</div>
                 <div className='btn btn btn-light'>Đánh dấu</div>
                 <div className='btn btn btn-light'>Theo dõi</div>

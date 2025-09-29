@@ -39,3 +39,15 @@
     color: var(--color-text-light);
     cursor: pointer;
 }
+
+/* Chương đã đọc */
+.readChapter {
+    opacity: 0.5;
+}
+
+/* Chương đang đọc */
+.currentChapter {
+    background-color: #ffeaa7;
+    font-weight: bold;
+    border: 1px solid #fdcb6e;
+}
