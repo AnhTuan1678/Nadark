@@ -4,7 +4,7 @@ const initialState = {
   username: null,
   id: null,
   token: null,
-  urlAvar: null,
+  avatarUrl: null,
   isLoggedIn: false,
 }
 
@@ -13,25 +13,28 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      const { username, token, id, urlAvar } = action.payload
+      const { username, token, id, avatarUrl } = action.payload
       state.username = username
       state.token = token
       state.id = id
-      state.urlAvar = urlAvar
+      state.avatarUrl = avatarUrl
       state.isLoggedIn = true
     },
     logout: (state) => {
       state.username = null
       state.token = null
       state.id = null
-      state.urlAvar = null
+      state.avatarUrl = null
       state.isLoggedIn = false
     },
     updateToken: (state, action) => {
       state.token = action.payload
     },
+    updateAvatar: (state, action) => {
+      state.avatarUrl = action.payload
+    },
   },
 })
 
-export const { login, logout, updateToken } = userSlice.actions
+export const { login, logout, updateToken, updateAvatar } = userSlice.actions
 export default userSlice.reducer

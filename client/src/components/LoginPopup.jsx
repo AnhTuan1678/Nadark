@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import styles from './LoginPopup.module.css'
-import { useAuth } from '../context/AuthContext'
 import {
   login as loginNormal,
   register as registerNormal,
 } from '../services/api'
+import { useDispatch } from 'react-redux'
+import { login } from '../redux/userSlice'
 
 const LoginPopup = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('login') // 👈 tab mặc định
@@ -12,7 +13,8 @@ const LoginPopup = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const [error, setError] = useState('') // 👈 state lưu lỗi
-  const { login } = useAuth()
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (isOpen) {
@@ -32,11 +34,9 @@ const LoginPopup = ({ isOpen, onClose }) => {
     try {
       const data = await loginNormal(usernameOrEmail, password)
 
-      if (!data.error) {
-        login(
-          { id: data.id, username: data.username, email: data.email },
-          data.token,
-        )
+      if (data.token) {
+        dispatch(login(data))
+        localStorage.setItem('token', data.token)
         onClose()
       } else {
         setError(data.error)

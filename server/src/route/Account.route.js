@@ -2,6 +2,9 @@ const router = require('express').Router()
 const db = require('../models/index')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const upload = require('../utlis/multer')
+const uploadToImgBB = require('../utlis/imgbb')
+const fs = require('fs')
 // const authenticateToken = require('../middleware/authenticateToken')
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret'
@@ -116,9 +119,9 @@ router.post('/login', async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
-      personal_settings: user.personal_settings,
-      url_avar: user.url_aver,
-      personal_settings: user.personal_settings,
+      personalSettings: user.personal_settings,
+      avatarUrl: user.avatar_url,
+      personalSettings: user.personal_settings,
       token,
     })
   } catch (err) {
@@ -272,6 +275,46 @@ router.put('/profile', authenticateToken, async (req, res) => {
 })
 
 // ============================
+// Đổi avatar
+// ============================
+router.post(
+  '/avatar',
+  authenticateToken,
+  upload.single('avatar'),
+  async (req, res) => {
+    try {
+      if (!req.file) return res.status(400).json({ message: 'Chưa chọn file' })
+
+      const user = await db.User.findByPk(req.user.id)
+      if (!user) return res.status(404).json({ message: 'User không tồn tại' })
+
+      // Upload lên ImgBB
+      const apiKey = process.env.IMGBB_API_KEY
+      const imagePath = req.file.path
+      const avatarUrl = await uploadToImgBB(imagePath, apiKey)
+
+      // Cập nhật user
+      user.avatar_url = avatarUrl
+      user.updated_at = new Date()
+      await user.save()
+
+      fs.unlinkSync(req.file.path)
+
+      res.json({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        avatarUrl: user.avatar_url,
+        createdDate: user.created_at,
+      })
+    } catch (err) {
+      console.error(err)
+      res.status(500).json({ message: 'Upload avatar thất bại' })
+    }
+  },
+)
+
+// ============================
 // Thêm / Xoá sách
 // ============================
 router.post('/bookshelf', authenticateToken, async (req, res) => {
@@ -286,7 +329,6 @@ router.post('/bookshelf', authenticateToken, async (req, res) => {
 
     if (existingEntry) {
       // Nếu đã có => xoá
-      console.log('del')
       await db.UserBookshelf.destroy({
         where: { user_id: req.user.id, book_id },
       })

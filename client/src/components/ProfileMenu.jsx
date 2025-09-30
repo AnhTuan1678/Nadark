@@ -1,16 +1,32 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './ProfileMenu.module.css'
-import { useAuth } from '../context/AuthContext'
 import LoginPopup from './LoginPopup'
-
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../redux/userSlice'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faUser,
+  faBookmark,
+  faCog,
+  faSignOut,
+  faSign,
+  faSignIn,
+} from '@fortawesome/free-solid-svg-icons'
 const ProfileMenu = ({ className }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [closing, setClosing] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
 
+  const { avatarUrl, isLoggedIn, username } = useSelector((state) => state.user)
+  const dispatch = useDispatch()
+
   const navigate = useNavigate()
-  const { user, logout } = useAuth()
+
+  const handleLogout = () => {
+    dispatch(logout())
+    localStorage.removeItem('token')
+  }
 
   const toggleMenu = () => {
     setIsOpen(!isOpen)
@@ -48,7 +64,8 @@ const ProfileMenu = ({ className }) => {
               // Handle profile click
               navigate('/profile')
             }}>
-            Hồ sơ
+            <FontAwesomeIcon icon={faUser} />
+            Tài khoản
           </button>
           <button
             className={`dropdown-item ${styles.dropdownItem}`}
@@ -56,7 +73,8 @@ const ProfileMenu = ({ className }) => {
               // Handle profile click
               navigate('/bookshelf')
             }}>
-            Tủ sách
+            <FontAwesomeIcon icon={faBookmark} />
+            Đánh dấu
           </button>
           <button
             className={`dropdown-item ${styles.dropdownItem}`}
@@ -64,12 +82,14 @@ const ProfileMenu = ({ className }) => {
               // Handle settings click
               navigate('/settings')
             }}>
+            <FontAwesomeIcon icon={faCog} />
             Cài đặt
           </button>
           <div className={`dropdown-divider ${styles.dropdownDivider}`}></div>
           <button
             className={`dropdown-item ${styles.dropdownItem}`}
-            onClick={logout}>
+            onClick={handleLogout}>
+            <FontAwesomeIcon icon={faSignOut} />
             Đăng xuất
           </button>
         </div>
@@ -79,11 +99,15 @@ const ProfileMenu = ({ className }) => {
   return (
     <div className={`${className} d-flex`}>
       <div className='flex-grow-1'></div>
-      {user ? (
+      {isLoggedIn ? (
         <div
           className={`cursor-pointer ${styles.dropdownContainer}`}
           onClick={toggleMenu}>
-          <img className={styles.avatar} src={urlAvatarBase} alt='Avatar' />
+          <img
+            className={styles.avatar}
+            src={avatarUrl || urlAvatarBase}
+            alt={username}
+          />
           <DropMenu />
         </div>
       ) : (
@@ -91,7 +115,8 @@ const ProfileMenu = ({ className }) => {
           className={`${styles.avatar} align-items-center justify-content-center position-relative`}>
           <button
             className={`btn btn-link ${styles.login} position-absolute top-50 translate-middle p-1`}
-            onClick={() => setShowLogin(true)}>
+              onClick={() => setShowLogin(true)}>
+              <FontAwesomeIcon icon={faSignIn}/>
             Đăng nhập
           </button>
         </div>

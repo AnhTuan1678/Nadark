@@ -1,12 +1,18 @@
-import { useEffect, useState } from 'react'
-import { getProfile } from '../services/api'
+import { useEffect, useState, useRef } from 'react'
+import { getProfile, updateAvatar } from '../services/api'
 import { formatterProfile } from '../utils/formatter'
+import styles from './Profile.module.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFolder } from '@fortawesome/free-solid-svg-icons'
+import { useDispatch } from 'react-redux'
+import { updateAvatar as updateAvatarAction } from '../redux/userSlice'
 
 const Profile = () => {
   const [profile, setProfile] = useState()
+  const fileInputRef = useRef(null)
 
-  console.log(profile)
-  // lấy profile
+  const dispatch = useDispatch()
+
   useEffect(() => {
     async function fetchData() {
       const token = localStorage.getItem('token')
@@ -24,50 +30,73 @@ const Profile = () => {
     )
   }
 
+  const handleAvatarClick = () => {
+    fileInputRef.current.click() // mở file explorer
+  }
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    const formData = new FormData()
+    formData.append('avatar', file)
+
+    try {
+      const token = localStorage.getItem('token')
+      const updatedProfile = await updateAvatar(token, formData)
+      dispatch(updateAvatarAction(updatedProfile.avatarUrl))
+      setProfile(updatedProfile)
+    } catch (err) {
+      console.error('Cập nhật avatar thất bại', err)
+    }
+  }
+
   return (
     profile && (
       <div className='container my-4 flex-grow-1'>
-        {/* Header */}
-        <div className='position-relative mb-4'>
+        <div className='position-relative mb-5'>
           <div
-            className='w-100'
-            style={{
-              height: '200px',
-              backgroundColor: '#aaa',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '2rem',
-              color: '#fff',
-              fontWeight: 'bold',
-            }}>
+            className='w-100 bg-secondary d-flex align-items-center justify-content-center text-white fw-bold'
+            style={{ height: '200px', fontSize: '2rem' }}>
             Background
           </div>
           <div
-            className='position-absolute  d-flex flex-column align-items-center'
-            style={{ bottom: '-90px', left: '20px' }}>
-            <img
-              src={profile.avatarUrl}
-              alt='avatar'
-              className='rounded-circle border border-dark'
-              style={{ width: '100px', height: '100px' }}
-            />
-            <h4>{profile.username}</h4>
+            className='position-absolute start-0 ms-3 d-flex flex-column align-items-center'
+            style={{ bottom: '-90px' }}>
+            <div
+              className={`position-relative rounded-circle border border-dark overflow-hidden ${styles.avatar}`}>
+              <img
+                src={profile?.avatarUrl}
+                alt='avatar'
+                style={{ width: '100px', height: '100px' }}
+              />
+              <div
+                className={`btn position-absolute bottom-0 start-0 w-100 ${styles.cusBtn}`}
+                onClick={handleAvatarClick}>
+                <FontAwesomeIcon icon={faFolder} />
+              </div>
+              {/* input file */}
+              <input
+                type='file'
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                accept='image/*'
+                onChange={handleFileChange}
+              />
+            </div>
+            <h4 className='mt-2'>{profile.username}</h4>
           </div>
         </div>
 
-        {/* Username and contact */}
-        <div
-          className='d-flex justify-content-between align-items-center mb-4'
-          style={{ marginTop: '30px' }}>
-          <div></div>
+        {/* Contact button */}
+        <div className='d-flex justify-content-end mb-4 mt-5'>
           <button className='btn btn-success'>
             <i className='bi bi-send-fill'></i> Liên hệ
           </button>
         </div>
 
         <div className='row'>
-          {/* Left: Progress & tags */}
+          {/* Left: Progress & info */}
           <div className='col-md-4 mb-4'>
             <div className='card p-3'>
               <h5>{profile.level}</h5>
@@ -83,23 +112,21 @@ const Profile = () => {
                 </div>
               </div>
               <p>{profile.status}</p>
-              <div className='p-0 m-0'>
-                <ul className='list-group list-group-flush'>
-                  <li className='list-group-item'>
-                    <strong>Tên đăng nhập:</strong> {profile.username}
-                  </li>
-                  <li className='list-group-item'>
-                    <strong>Email:</strong> {profile.email}
-                  </li>
-                  <li className='list-group-item'>
-                    <strong>Sinh thần:</strong> {profile.id}
-                  </li>
-                  <li className='list-group-item'>
-                    <strong>Ngày tạo:</strong>{' '}
-                    {new Date(profile.createdDate).toLocaleString()}
-                  </li>
-                </ul>
-              </div>
+              <ul className='list-group list-group-flush'>
+                <li className='list-group-item'>
+                  <strong>Tên đăng nhập:</strong> {profile.username}
+                </li>
+                <li className='list-group-item'>
+                  <strong>Email:</strong> {profile.email}
+                </li>
+                <li className='list-group-item'>
+                  <strong>Sinh thần:</strong> {profile.id}
+                </li>
+                <li className='list-group-item'>
+                  <strong>Ngày tạo:</strong>{' '}
+                  {new Date(profile.createdDate).toLocaleString()}
+                </li>
+              </ul>
             </div>
           </div>
 

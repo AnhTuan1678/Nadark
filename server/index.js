@@ -14,6 +14,9 @@ app.use(cors())
 app.use('/api', route)
 app.use(express.urlencoded({ extended: true }))
 
+const tempPath = path.join(__dirname, 'src/temp')
+app.use('/temp', express.static(tempPath))
+
 // =====================
 // PHỤC VỤ FRONTEND VITE BUILD
 // =====================

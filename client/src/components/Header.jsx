@@ -19,9 +19,7 @@ const Header = () => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const handleSearch = (/*query*/) => {
-    
-  }
+  const handleSearch = (/*query*/) => {}
 
   return (
     <div className={`${style.header} `}>
@@ -30,7 +28,8 @@ const Header = () => {
           <div className={`d-flex align-items-center container p-2 `}>
             <h1
               className={`logo ${style.logo} fs-1 me-4 text-white animate__animated animate__fadeInLeft flex-grow-1`}
-              style={{ fontFamily: 'Ananda' }}>
+              style={{ fontFamily: 'Ananda' }}
+              onClick={() => navigate(`/`)}>
               {/* Nadark */}
               {import.meta.env.VITE_APP_NAME}
             </h1>

@@ -39,6 +39,21 @@ export const getProfile = async (token) => {
   }
 }
 
+export const updateAvatar = async (token, formData) => {
+  const res = await fetch(`${API_URL}/api/account/avatar`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`, // nếu có auth
+    },
+    body: formData,
+  })
+  if (!res.ok) {
+    throw new Error('Upload avatar thất bại')
+  }
+
+  return await res.json()
+}
+
 // =============================
 // Book APIs
 // =============================
@@ -198,11 +213,11 @@ export const getBookshelf = async (token) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-    });
+    })
 
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
 
-    const data = await res.json(); // { books: [...] }
+    const data = await res.json() // { books: [...] }
 
     // Format từng book trong tủ
     const formattedBooks = data.books.map((item) => {
@@ -210,15 +225,15 @@ export const getBookshelf = async (token) => {
       return {
         ...formatterStoryDetail(item.Book),
         savedAt: item.saved_at, // thời gian lưu vào tủ
-      };
-    });
+      }
+    })
 
-    return formattedBooks;
+    return formattedBooks
   } catch (err) {
-    console.error('Lỗi khi gọi getBookshelf:', err);
-    return [];
+    console.error('Lỗi khi gọi getBookshelf:', err)
+    return []
   }
-};
+}
 
 export const removeFromBookshelf = async (token, bookId) => {
   const res = await fetch(`${API_URL}/api/account/bookshelf/${bookId}`, {

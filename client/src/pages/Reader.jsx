@@ -6,6 +6,7 @@ import {
   saveProgress,
   updateSettings,
   getProfile,
+  getChapters,
 } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './Reader.module.css'
@@ -20,6 +21,7 @@ import {
   faSave,
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
+import TableOfContents from '../components/TableOfContents'
 
 const Reader = () => {
   const defaultSetting = {
@@ -29,18 +31,20 @@ const Reader = () => {
     zoom: 1,
   }
 
-  const { chapterId, id } = useParams(1)
+  const { chapterIndex, id } = useParams(1)
   const navigate = useNavigate()
 
   const [content, setContent] = useState('')
   const [storyDetails, setStoryDetails] = useState({})
   const [showSettings, setShowSettings] = useState(false)
   const [setting, setSetting] = useState(defaultSetting)
+  const [chapters, setChapters] = useState(null)
+  const [showTOC, setShowTOC] = useState(false)
 
   // Lấy nội dung chương
   useEffect(() => {
     const fetchContent = async () => {
-      const data = await getChapterContent(chapterId, id)
+      const data = await getChapterContent(chapterIndex, id)
       window.scrollTo({ top: 0, behavior: 'smooth' })
       setContent(data)
     }
@@ -49,14 +53,14 @@ const Reader = () => {
     const token = localStorage.getItem('token')
     if (token) {
       try {
-        saveProgress(token, id, chapterId, 0)
+        saveProgress(token, id, chapterIndex, 0)
       } catch (err) {
         console.error('Lỗi khi lưu tiến trình:', err)
       }
     }
 
     fetchContent()
-  }, [chapterId, id])
+  }, [chapterIndex, id])
 
   // Lấy thông tin sách
   useEffect(() => {
@@ -66,6 +70,16 @@ const Reader = () => {
     }
 
     fetchStoryDetails()
+  }, [id])
+
+  // lấy danh sách chương
+  useEffect(() => {
+    const fetchChapters = async () => {
+      const chapterData = await getChapters(id)
+      setChapters(chapterData)
+    }
+
+    fetchChapters()
   }, [id])
 
   // Lấy setting
@@ -135,12 +149,14 @@ const Reader = () => {
       <>
         {/* Nút Previous */}
         <button
-          disabled={chapterId <= 1}
+          disabled={chapterIndex <= 1}
           className={`btn btn-primary ${className}`}
           onClick={() => {
-            if (chapterId > 1) {
+            if (chapterIndex > 1) {
               navigate(
-                `/story/${storyDetails.id}/chapter/${parseInt(chapterId) - 1}`,
+                `/story/${storyDetails.id}/chapter/${
+                  parseInt(chapterIndex) - 1
+                }`,
               )
             }
           }}>
@@ -150,14 +166,15 @@ const Reader = () => {
         {/* Nút Home */}
         <button
           className={`btn btn-primary ${className}`}
-          onClick={() => navigate('/')}>
+          onClick={() => navigate(`/story/${storyDetails.id}`)}>
           <FontAwesomeIcon icon={faHome} />
         </button>
 
         {/* Nút Chapter List */}
         <button
           className={`btn btn-primary ${className}`}
-          onClick={() => navigate(`/story/${storyDetails.id}`)}>
+          // onClick={() => navigate(`/story/${storyDetails.id}`)}>
+          onClick={() => setShowTOC(true)}>
           <FontAwesomeIcon icon={faBars} />
         </button>
 
@@ -170,12 +187,14 @@ const Reader = () => {
 
         {/* Nút Next */}
         <button
-          disabled={storyDetails.chapterCount <= chapterId}
+          disabled={storyDetails.chapterCount <= chapterIndex}
           className={`btn btn-primary ${className}`}
           onClick={() => {
-            if (storyDetails.chapterCount > chapterId) {
+            if (storyDetails.chapterCount > chapterIndex) {
               navigate(
-                `/story/${storyDetails.id}/chapter/${parseInt(chapterId) + 1}`,
+                `/story/${storyDetails.id}/chapter/${
+                  parseInt(chapterIndex) + 1
+                }`,
               )
             }
           }}>
@@ -315,6 +334,14 @@ const Reader = () => {
   return (
     <>
       <div className='container mx-auto p-4 flex-grow-1'>
+        {showTOC && (
+          <TableOfContents
+            items={chapters.map((chapter) => chapter.title)}
+            onClose={() => setShowTOC(false)}
+            currentIndex={chapterIndex}
+          />
+        )}
+
         {storyDetails && (
           <div className='text-center'>
             <button
