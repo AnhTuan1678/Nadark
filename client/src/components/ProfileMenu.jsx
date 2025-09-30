@@ -10,7 +10,6 @@ import {
   faBookmark,
   faCog,
   faSignOut,
-  faSign,
   faSignIn,
 } from '@fortawesome/free-solid-svg-icons'
 const ProfileMenu = ({ className }) => {
