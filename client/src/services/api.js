@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL
 
-import { formatterStoryDetail } from '../utils/formatterStoryDetail'
+import { formatterStoryDetail } from '../utils/formatter'
 
 // =============================
 // Auth APIs

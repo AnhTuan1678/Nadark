@@ -314,7 +314,7 @@ const Reader = () => {
 
   return (
     <>
-      <div className='container mx-auto p-4'>
+      <div className='container mx-auto p-4 flex-grow-1'>
         {storyDetails && (
           <div className='text-center'>
             <button

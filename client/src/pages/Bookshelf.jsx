@@ -20,7 +20,7 @@ const Bookshelf = () => {
   }, [token])
 
   return (
-    <div className='container mt-4'>
+    <div className='container mt-4 flex-grow-1'>
       <h2 className='mb-3'>Truyện đã lưu</h2>
       <div className='row'>
         {stories.map((story) => (

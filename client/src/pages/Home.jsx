@@ -19,7 +19,7 @@ const Home = () => {
   }, [])
 
   return (
-    <div className='container mt-4'>
+    <div className='container mt-4 flex-grow-1'>
       <h2 className='mb-3'>Danh sách truyện</h2>
       <div className='row'>
         {stories.map((story) => (

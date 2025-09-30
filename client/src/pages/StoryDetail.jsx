@@ -15,7 +15,7 @@ import {
   faFlag,
 } from '@fortawesome/free-solid-svg-icons'
 import Snackbar from '../components/SnackBar'
-import { formatterStoryDetail } from '../utils/formatterStoryDetail'
+import { formatterStoryDetail } from '../utils/formatter'
 
 const StoryDetail = () => {
   const { id } = useParams()
@@ -24,7 +24,6 @@ const StoryDetail = () => {
   const [chapters, setChapters] = useState(null)
   const [progress, setProgress] = useState(null)
   const [snack, setSnack] = useState(null)
-  console.log(storyDetails)
 
   // lấy thông tin sách
   useEffect(() => {
@@ -65,7 +64,6 @@ const StoryDetail = () => {
   const handleFollowButton = async () => {
     const token = localStorage.getItem('token')
     const res = await addToBookshelf(token, id)
-    console.log(res)
     setSnack(res)
     setStoryDetails(formatterStoryDetail(res.book))
   }
@@ -102,7 +100,7 @@ const StoryDetail = () => {
   }
 
   return (
-    <div className='container mx-auto p-4'>
+    <div className='container mx-auto p-4 flex-grow-1'>
       {snack && (
         <Snackbar
           status={snack.status}
