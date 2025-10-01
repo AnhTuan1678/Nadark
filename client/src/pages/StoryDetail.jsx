@@ -25,6 +25,62 @@ const StoryDetail = () => {
   const [progress, setProgress] = useState(null)
   const [snack, setSnack] = useState(null)
 
+  const [showAllChapters, setShowAllChapters] = useState(false)
+
+  const visibleChaptersDefault = 30
+
+  // ======= Bình luận =======
+  const currentUser = {
+    id: 99,
+    username: 'Bạn đọc A',
+    avatarUrl: 'https://i.pravatar.cc/40?img=10',
+  }
+
+  const [fakeComments, setFakeComments] = useState([
+    {
+      id: 1,
+      userId: 2,
+      username: 'Hồng Hoa',
+      avatarUrl: 'https://i.pravatar.cc/40?img=1',
+      content: 'Truyện rất hay, mình mong chờ chương mới!',
+    },
+    {
+      id: 2,
+      userId: 3,
+      username: 'Long Vũ',
+      avatarUrl: 'https://i.pravatar.cc/40?img=2',
+      content: 'Tác giả viết mạch lạc, dễ hiểu. Up chương đều tay nhé!',
+    },
+    {
+      id: 3,
+      userId: 4,
+      username: 'Mai Lan',
+      avatarUrl: 'https://i.pravatar.cc/40?img=3',
+      content: 'Nhân vật chính hơi bị OP nhưng đọc vẫn cuốn 😍',
+    },
+  ])
+
+  const [myComment, setMyComment] = useState(
+    fakeComments.find((c) => c.userId === currentUser.id) || null,
+  )
+  const [newComment, setNewComment] = useState('')
+
+  const handleAddComment = () => {
+    if (!newComment.trim()) return
+
+    const comment = {
+      id: Date.now(),
+      userId: currentUser.id,
+      username: currentUser.username,
+      avatarUrl: currentUser.avatarUrl,
+      content: newComment,
+    }
+
+    setFakeComments((prev) => [comment, ...prev])
+    setMyComment(comment)
+    setNewComment('')
+  }
+
   // lấy thông tin sách
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +96,7 @@ const StoryDetail = () => {
     const fetchChapters = async () => {
       const chapterData = await getChapters(id)
       setChapters(chapterData)
+      setShowAllChapters(chapterData.length <= visibleChaptersDefault)
     }
 
     fetchChapters()
@@ -98,6 +155,22 @@ const StoryDetail = () => {
       </div>
     )
   }
+
+  const CommentItem = ({ comment }) => (
+    <div className='d-flex mb-3'>
+      <img
+        src={comment.avatarUrl}
+        alt={comment.username}
+        className='rounded-circle me-3'
+        width={40}
+        height={40}
+      />
+      <div>
+        <p className='mb-1 fw-bold'>{comment.username}</p>
+        <p className='mb-0'>{comment.content}</p>
+      </div>
+    </div>
+  )
 
   return (
     <div className='container mx-auto p-4 flex-grow-1'>
@@ -192,14 +265,61 @@ const StoryDetail = () => {
         <div className='d-flex flex-column mb-4 p-4 border rounded'>
           <h3>Chapters</h3>
           <div className='row row-cols-1 row-cols-sm-2 row-cols-lg-3'>
-            {chapters.map((chapter) => (
-              <div className='col' key={chapter.chapterId}>
+            {chapters.map((chapter, index) => (
+              <div
+                className={`col ${
+                  visibleChaptersDefault > index || showAllChapters
+                    ? ''
+                    : 'd-none'
+                }`}
+                key={chapter.chapterId}>
                 <ChapterItem chapter={chapter} />
               </div>
             ))}
+            {visibleChaptersDefault < chapters.length && !showAllChapters && (
+              <div className='text-center mt-3 w-100'>
+                <button
+                  className='btn btn-light'
+                  onClick={() => setShowAllChapters(true)}>
+                  Xem thêm
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
+      {/* Bình luận */}
+      <div className='d-flex flex-column mb-4 p-4 border rounded'>
+        <h3>Bình luận</h3>
+
+        {/* Nếu đã có bình luận của mình */}
+        {myComment ? (
+          <div className='mb-4'>
+            <p className='fw-bold'>Bình luận của bạn:</p>
+            <CommentItem comment={myComment} />
+          </div>
+        ) : (
+          <div className='mb-4'>
+            <textarea
+              className='form-control mb-2'
+              rows={3}
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder='Viết bình luận của bạn...'
+            />
+            <button className='btn btn-primary' onClick={handleAddComment}>
+              Gửi
+            </button>
+          </div>
+        )}
+
+        <p className='fw-bold'>Bình luận khác:</p>
+        {fakeComments
+          .filter((c) => c.userId !== currentUser.id)
+          .map((comment) => (
+            <CommentItem key={comment.id} comment={comment} />
+          ))}
+      </div>
     </div>
   )
 }

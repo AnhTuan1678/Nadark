@@ -6,7 +6,6 @@ import {
   saveProgress,
   updateSettings,
   getProfile,
-  getChapters,
 } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './Reader.module.css'
@@ -38,7 +37,6 @@ const Reader = () => {
   const [storyDetails, setStoryDetails] = useState({})
   const [showSettings, setShowSettings] = useState(false)
   const [setting, setSetting] = useState(defaultSetting)
-  const [chapters, setChapters] = useState(null)
   const [showTOC, setShowTOC] = useState(false)
 
   // Lấy nội dung chương
@@ -70,16 +68,6 @@ const Reader = () => {
     }
 
     fetchStoryDetails()
-  }, [id])
-
-  // lấy danh sách chương
-  useEffect(() => {
-    const fetchChapters = async () => {
-      const chapterData = await getChapters(id)
-      setChapters(chapterData)
-    }
-
-    fetchChapters()
   }, [id])
 
   // Lấy setting
@@ -336,7 +324,7 @@ const Reader = () => {
       <div className='container mx-auto p-4 flex-grow-1'>
         {showTOC && (
           <TableOfContents
-            items={chapters.map((chapter) => chapter.title)}
+            bookId={id}
             onClose={() => setShowTOC(false)}
             currentIndex={chapterIndex}
           />

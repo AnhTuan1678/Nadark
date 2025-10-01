@@ -1,6 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL
 
 import { formatterStoryDetail } from '../utils/formatter'
+import { cacheFetch } from './cacheFetch'
 
 // =============================
 // Auth APIs
@@ -25,7 +26,7 @@ export const register = async (username, email, password) => {
 
 export const getProfile = async (token) => {
   try {
-    const res = await fetch(`${API_URL}/api/account/me`, {
+    const res = await cacheFetch(`${API_URL}/api/account/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -58,7 +59,7 @@ export const updateAvatar = async (token, formData) => {
 // Book APIs
 // =============================
 export const getAllStory = async () => {
-  const res = await fetch(`${API_URL}/api/book`)
+  const res = await cacheFetch(`${API_URL}/api/book`)
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
   const data = await res.json()
 
@@ -71,7 +72,7 @@ export const getAllStory = async () => {
 }
 
 export const getStoryDetails = async (storyId) => {
-  const res = await fetch(`${API_URL}/api/book/${storyId}`)
+  const res = await cacheFetch(`${API_URL}/api/book/${storyId}`)
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
   const data = await res.json()
   const formatted = formatterStoryDetail(data)
@@ -80,7 +81,7 @@ export const getStoryDetails = async (storyId) => {
 }
 
 export const getChapters = async (storyId) => {
-  const res = await fetch(`${API_URL}/api/book/${storyId}/chapters`)
+  const res = await cacheFetch(`${API_URL}/api/book/${storyId}/chapters`)
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
   const data = await res.json()
 
@@ -93,7 +94,7 @@ export const getChapters = async (storyId) => {
 }
 
 export const getChapterContent = async (index, bookId) => {
-  const res = await fetch(`${API_URL}/api/book/${bookId}/chapter/${index}`)
+  const res = await cacheFetch(`${API_URL}/api/book/${bookId}/chapter/${index}`)
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
   return await res.json()
 }
