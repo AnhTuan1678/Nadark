@@ -243,3 +243,121 @@ export const removeFromBookshelf = async (token, bookId) => {
   })
   return await res.json()
 }
+
+export const createReview = async (token, bookId, content, rating) => {
+  const res = await fetch(`${API_URL}/api/book/review`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ book_id: bookId, content, rating }),
+  })
+  if (!res.ok) throw new Error('Tạo review thất bại')
+  return await res.json()
+}
+
+export const getReviewsByBook = async (bookId) => {
+  const res = await fetch(`${API_URL}/api/book/${bookId}/reviews`)
+  if (!res.ok) {
+    console.log('Lấy review thất bại')
+    return []
+  }
+  return await res.json()
+}
+
+export const updateReview = async (token, reviewId, content, rating) => {
+  const res = await fetch(`${API_URL}/api/book/review/${reviewId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ content, rating }),
+  })
+  if (!res.ok) throw new Error('Cập nhật review thất bại')
+  return await res.json()
+}
+
+export const deleteReview = async (token, reviewId) => {
+  const res = await fetch(`${API_URL}/api/book/review/${reviewId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!res.ok) throw new Error('Xóa review thất bại')
+  return await res.json()
+}
+
+// Lấy tất cả comment theo chapterId
+export const getCommentsByChapter = async (chapterId) => {
+  const res = await fetch(`${API_URL}/api/chapter/${chapterId}/comment`)
+  if (!res.ok) {
+    console.log('Lấy comment thất bại')
+    return []
+  }
+  return await res.json()
+}
+
+// Lấy tất cả comment theo userId
+export const getCommentsByUser = async (userId) => {
+  const res = await fetch(`${API_URL}/api/account/${userId}/comment`)
+  if (!res.ok) {
+    console.log('Lấy comment của user thất bại')
+    return []
+  }
+  return await res.json()
+}
+
+// Lấy comment bản thân
+// Lấy tất cả comment theo userId
+export const getAllMyComments = async (token) => {
+  const res = await fetch(`${API_URL}/api/account/comment`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!res.ok) {
+    console.log('Lấy comment của user thất bại')
+    return []
+  }
+  return await res.json()
+}
+
+// Tạo comment mới
+export const createComment = async (
+  token,
+  chapterId,
+  content,
+  parentId = null,
+) => {
+  const res = await fetch(`${API_URL}/api/chapter/comment`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      chapter_id: chapterId,
+      content,
+      parent_id: parentId,
+    }),
+  })
+  if (!res.ok) throw new Error('Tạo comment thất bại')
+  return await res.json()
+}
+
+// Xoá comment
+export const deleteComment = async (token, commentId) => {
+  const res = await fetch(`${API_URL}/api/comment/${commentId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!res.ok) throw new Error('Xoá comment thất bại')
+  return await res.json()
+}

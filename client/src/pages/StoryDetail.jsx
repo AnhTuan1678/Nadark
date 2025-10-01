@@ -5,6 +5,10 @@ import {
   getChapters,
   getProgressByBook,
   addToBookshelf,
+  getReviewsByBook,
+  createReview,
+  updateReview,
+  deleteReview,
 } from '../services/api'
 import styles from './StoryDetail.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -15,7 +19,11 @@ import {
   faFlag,
 } from '@fortawesome/free-solid-svg-icons'
 import Snackbar from '../components/SnackBar'
+import { CommentItem } from '../components/CommentItem'
+import { StarRating } from '../components/StartRating'
+import { ReviewForm } from '../components/ReviewForm'
 import { formatterStoryDetail } from '../utils/formatter'
+import { useSelector } from 'react-redux'
 
 const StoryDetail = () => {
   const { id } = useParams()
@@ -24,68 +32,27 @@ const StoryDetail = () => {
   const [chapters, setChapters] = useState(null)
   const [progress, setProgress] = useState(null)
   const [snack, setSnack] = useState(null)
-
   const [showAllChapters, setShowAllChapters] = useState(false)
+  const [avgRating, setAvgRating] = useState(0)
 
   const visibleChaptersDefault = 30
 
-  // ======= Bình luận =======
-  const currentUser = {
-    id: 99,
-    username: 'Bạn đọc A',
-    avatarUrl: 'https://i.pravatar.cc/40?img=10',
-  }
+  const currentUser = useSelector((state) => state.user)
 
-  const [fakeComments, setFakeComments] = useState([
-    {
-      id: 1,
-      userId: 2,
-      username: 'Hồng Hoa',
-      avatarUrl: 'https://i.pravatar.cc/40?img=1',
-      content: 'Truyện rất hay, mình mong chờ chương mới!',
-    },
-    {
-      id: 2,
-      userId: 3,
-      username: 'Long Vũ',
-      avatarUrl: 'https://i.pravatar.cc/40?img=2',
-      content: 'Tác giả viết mạch lạc, dễ hiểu. Up chương đều tay nhé!',
-    },
-    {
-      id: 3,
-      userId: 4,
-      username: 'Mai Lan',
-      avatarUrl: 'https://i.pravatar.cc/40?img=3',
-      content: 'Nhân vật chính hơi bị OP nhưng đọc vẫn cuốn 😍',
-    },
-  ])
+  const [reviews, setReview] = useState([])
 
-  const [myComment, setMyComment] = useState(
-    fakeComments.find((c) => c.userId === currentUser.id) || null,
-  )
-  const [newComment, setNewComment] = useState('')
-
-  const handleAddComment = () => {
-    if (!newComment.trim()) return
-
-    const comment = {
-      id: Date.now(),
-      userId: currentUser.id,
-      username: currentUser.username,
-      avatarUrl: currentUser.avatarUrl,
-      content: newComment,
-    }
-
-    setFakeComments((prev) => [comment, ...prev])
-    setMyComment(comment)
-    setNewComment('')
-  }
+  const [myReview, setMyReview] = useState(null)
 
   // lấy thông tin sách
   useEffect(() => {
     const fetchData = async () => {
       const data = await getStoryDetails(id)
       setStoryDetails(data)
+      setAvgRating(
+        data.reviewCount > 0
+          ? (data.totalRating / data.reviewCount).toFixed(1)
+          : 0,
+      )
     }
 
     fetchData()
@@ -118,11 +85,53 @@ const StoryDetail = () => {
     fetchProgress()
   }, [id])
 
+  // Lấy review
+  useEffect(() => {
+    const fetchReview = async () => {
+      const review = await getReviewsByBook(id)
+      const r = review.find((c) => c.user_id === currentUser.id) || null
+      setMyReview(r)
+      setReview(review.filter((r) => r.user_id !== currentUser.id))
+    }
+    fetchReview()
+  }, [currentUser.id, id])
+
   const handleFollowButton = async () => {
     const token = localStorage.getItem('token')
     const res = await addToBookshelf(token, id)
     setSnack(res)
     setStoryDetails(formatterStoryDetail(res.book))
+  }
+
+  const handleAddReview = async ({ content = '', rating }) => {
+    if (!content.trim()) return
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setSnack({ message: 'Chưa đăng nhập', status: 'warning' })
+      return
+    }
+    const res = await createReview(token, id, content, rating)
+    res.User = { ...currentUser, avatar_url: currentUser.avatarUrl }
+    return res
+  }
+
+  const handleSaveReview = async ({ content, rating, reviewId }) => {
+    if (!content.trim()) return
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setSnack({ message: 'Chưa đăng nhập', status: 'warning' })
+      return
+    }
+    const res = await updateReview(token, reviewId, content, rating)
+    res.User = { ...currentUser, avatar_url: currentUser.avatarUrl }
+    return res
+  }
+
+  const handleDeletePreview = async (id) => {
+    if (!id) return
+    const token = localStorage.getItem('token')
+    const res = await deleteReview(token, id)
+    setSnack(res)
   }
 
   const InfoItem = ({ label, value }) => {
@@ -156,22 +165,6 @@ const StoryDetail = () => {
     )
   }
 
-  const CommentItem = ({ comment }) => (
-    <div className='d-flex mb-3'>
-      <img
-        src={comment.avatarUrl}
-        alt={comment.username}
-        className='rounded-circle me-3'
-        width={40}
-        height={40}
-      />
-      <div>
-        <p className='mb-1 fw-bold'>{comment.username}</p>
-        <p className='mb-0'>{comment.content}</p>
-      </div>
-    </div>
-  )
-
   return (
     <div className='container mx-auto p-4 flex-grow-1'>
       {snack && (
@@ -201,6 +194,12 @@ const StoryDetail = () => {
                   </div>
                 ))}
               </div>
+              {avgRating && (
+                <InfoItem
+                  label='Đánh giá'
+                  value={<StarRating rating={parseFloat(avgRating)} />}
+                />
+              )}
               <div>
                 <InfoItem label='Tác giả' value={storyDetails.author} />
               </div>
@@ -288,36 +287,25 @@ const StoryDetail = () => {
           </div>
         </div>
       )}
-      {/* Bình luận */}
+      {/* Đánh giá */}
       <div className='d-flex flex-column mb-4 p-4 border rounded'>
-        <h3>Bình luận</h3>
-
-        {/* Nếu đã có bình luận của mình */}
-        {myComment ? (
-          <div className='mb-4'>
-            <p className='fw-bold'>Bình luận của bạn:</p>
-            <CommentItem comment={myComment} />
-          </div>
-        ) : (
-          <div className='mb-4'>
-            <textarea
-              className='form-control mb-2'
-              rows={3}
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder='Viết bình luận của bạn...'
-            />
-            <button className='btn btn-primary' onClick={handleAddComment}>
-              Gửi
-            </button>
-          </div>
+        <h3>Review</h3>
+        {myReview && (
+          <ReviewForm
+            myReview={myReview}
+            handleAddReview={handleAddReview}
+            handleSaveReview={handleSaveReview}
+            deleteReview={deleteReview}
+            handleDeletePreview={handleDeletePreview}
+            setSnack={setSnack}
+          />
         )}
 
-        <p className='fw-bold'>Bình luận khác:</p>
-        {fakeComments
+        <p className='fw-bold'>Đánh giá của người khác:</p>
+        {reviews
           .filter((c) => c.userId !== currentUser.id)
-          .map((comment) => (
-            <CommentItem key={comment.id} comment={comment} />
+          .map((review) => (
+            <CommentItem key={review.id} comment={review} />
           ))}
       </div>
     </div>
