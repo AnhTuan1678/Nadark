@@ -6,9 +6,6 @@ import {
   getProgressByBook,
   addToBookshelf,
   getReviewsByBook,
-  createReview,
-  updateReview,
-  deleteReview,
 } from '../services/api'
 import styles from './StoryDetail.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -40,8 +37,6 @@ const StoryDetail = () => {
   const currentUser = useSelector((state) => state.user)
 
   const [reviews, setReview] = useState([])
-
-  const [myReview, setMyReview] = useState(null)
 
   // lấy thông tin sách
   useEffect(() => {
@@ -89,8 +84,6 @@ const StoryDetail = () => {
   useEffect(() => {
     const fetchReview = async () => {
       const review = await getReviewsByBook(id)
-      const r = review.find((c) => c.user_id === currentUser.id) || null
-      setMyReview(r)
       setReview(review.filter((r) => r.user_id !== currentUser.id))
     }
     fetchReview()
@@ -101,37 +94,6 @@ const StoryDetail = () => {
     const res = await addToBookshelf(token, id)
     setSnack(res)
     setStoryDetails(formatterStoryDetail(res.book))
-  }
-
-  const handleAddReview = async ({ content = '', rating }) => {
-    if (!content.trim()) return
-    const token = localStorage.getItem('token')
-    if (!token) {
-      setSnack({ message: 'Chưa đăng nhập', status: 'warning' })
-      return
-    }
-    const res = await createReview(token, id, content, rating)
-    res.User = { ...currentUser, avatar_url: currentUser.avatarUrl }
-    return res
-  }
-
-  const handleSaveReview = async ({ content, rating, reviewId }) => {
-    if (!content.trim()) return
-    const token = localStorage.getItem('token')
-    if (!token) {
-      setSnack({ message: 'Chưa đăng nhập', status: 'warning' })
-      return
-    }
-    const res = await updateReview(token, reviewId, content, rating)
-    res.User = { ...currentUser, avatar_url: currentUser.avatarUrl }
-    return res
-  }
-
-  const handleDeletePreview = async (id) => {
-    if (!id) return
-    const token = localStorage.getItem('token')
-    const res = await deleteReview(token, id)
-    setSnack(res)
   }
 
   const InfoItem = ({ label, value }) => {
@@ -290,16 +252,7 @@ const StoryDetail = () => {
       {/* Đánh giá */}
       <div className='d-flex flex-column mb-4 p-4 border rounded'>
         <h3>Review</h3>
-        {myReview && (
-          <ReviewForm
-            myReview={myReview}
-            handleAddReview={handleAddReview}
-            handleSaveReview={handleSaveReview}
-            deleteReview={deleteReview}
-            handleDeletePreview={handleDeletePreview}
-            setSnack={setSnack}
-          />
-        )}
+        <ReviewForm bookId={id} />
 
         <p className='fw-bold'>Đánh giá của người khác:</p>
         {reviews

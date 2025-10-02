@@ -5,7 +5,7 @@ import styles from './StoryCard.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart, faBookmark, faEye } from '@fortawesome/free-solid-svg-icons'
 
-const StoryCard = ({ story }) => {
+const StoryCard = ({ story, className }) => {
   const navigate = useNavigate()
 
   const popupContent = (
@@ -38,7 +38,7 @@ const StoryCard = ({ story }) => {
   )
 
   return (
-    <div className='col-4 col-sm-3 col-md-2 p-1'>
+    <div className={`col-4 col-sm-3 col-md-2 p-1 ${className}`}>
       <Tippy
         content={popupContent}
         placement='right'
@@ -51,16 +51,36 @@ const StoryCard = ({ story }) => {
         <div
           className={`card h-100 shadow-sm ${styles['story-card']}`}
           onClick={() => navigate(`/story/${story.id}`)}>
-          {story.urlAvatar && (
-            <img
-              src={story.urlAvatar}
-              alt={story.title}
-              className='card-img-top'
-              style={{ objectFit: 'cover', height: '200px' }}
-            />
-          )}
-          <div className={styles['card-body']}>
-            <p className={styles['card-title']}>{story.title}</p>
+          <div className='card text-white'>
+            {story.urlAvatar && (
+              <img
+                src={story.urlAvatar}
+                alt={story.title}
+                className='card-img'
+                style={{ objectFit: 'cover', height: '200px' }}
+              />
+            )}
+
+            {story?.chapters?.length === 1 && (
+              <div className='card-img-overlay d-flex flex-column justify-content-end p-2 bg-dark bg-opacity-25'>
+                <ul className='list-group list-group-flush'>
+                  {story.chapters.map((chapter) => (
+                    <li
+                      key={chapter.id}
+                      className={`list-group-item bg-transparent text-white border-0 p-0 ${styles['card-title']}`}>
+                      {chapter.index}. {chapter.title}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          <div className={`${styles['card-body']} p-0`}>
+            <p
+              className={`${styles['card-title']} text-center p-2 m-0 fw-bold`}>
+              {story.title}
+            </p>
           </div>
         </div>
       </Tippy>
