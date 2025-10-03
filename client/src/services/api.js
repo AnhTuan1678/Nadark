@@ -49,7 +49,7 @@ export const changePassword = async (token, oldPassword, newPassword) => {
 
 export const getProfile = async (token) => {
   try {
-    const res = await cacheFetch(`${API_URL}/api/account/me`, {
+    const res = await fetch(`${API_URL}/api/account/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -398,7 +398,8 @@ export const createComment = async (
 
 // Xoá comment
 export const deleteComment = async (token, commentId) => {
-  const res = await fetch(`${API_URL}/api/comment/${commentId}`, {
+  console.log(`${API_URL}/api/chapter/comment/${commentId}`)
+  const res = await fetch(`${API_URL}/api/chapter/comment/${commentId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,

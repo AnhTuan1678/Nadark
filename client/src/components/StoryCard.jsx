@@ -4,8 +4,10 @@ import 'tippy.js/dist/tippy.css'
 import styles from './StoryCard.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart, faBookmark, faEye } from '@fortawesome/free-solid-svg-icons'
+import { useState } from 'react'
 
 const StoryCard = ({ story, className }) => {
+  const [hover, setHover] = useState(false)
   const navigate = useNavigate()
 
   const popupContent = (
@@ -16,7 +18,7 @@ const StoryCard = ({ story, className }) => {
           alt={story.title}
           className={styles['card-img']}
         />
-        <div className='d-flex flex-column p-2 ps-3'>
+        <div className='d-flex flex-column p-2 ps-4'>
           <h5>{story.title}</h5>
           <p className='fst-italic fs-6'>{story.author}</p>
           <p>{story.chapterCount} chương</p>
@@ -49,25 +51,28 @@ const StoryCard = ({ story, className }) => {
         arrow={true}
         animation='fade'>
         <div
-          className={`card h-100 shadow-sm ${styles['story-card']}`}
-          onClick={() => navigate(`/story/${story.id}`)}>
+          className={`cursor-pointer overflow-hidden animate__animated animate__faster ${
+            hover ? 'animate__pulse' : ''
+          }`}
+          onClick={() => navigate(`/story/${story.id}`)}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}>
           <div className='card text-white'>
             {story.urlAvatar && (
               <img
                 src={story.urlAvatar}
                 alt={story.title}
-                className='card-img'
-                style={{ objectFit: 'cover', height: '200px' }}
+                className='p-0 m-0'
               />
             )}
 
             {story?.chapters?.length === 1 && (
-              <div className='card-img-overlay d-flex flex-column justify-content-end p-2 bg-dark bg-opacity-25'>
+              <div className='card-img-overlay d-flex flex-column justify-content-end p-1 bg-dark bg-opacity-25'>
                 <ul className='list-group list-group-flush'>
                   {story.chapters.map((chapter) => (
                     <li
                       key={chapter.id}
-                      className={`list-group-item bg-transparent text-white border-0 p-0 ${styles['card-title']}`}>
+                      className={`list-group-item bg-transparent text-no-wrapper text-truncate text-white border-0 p-0 ${styles['card-title']}`}>
                       {chapter.index}. {chapter.title}
                     </li>
                   ))}
@@ -76,9 +81,9 @@ const StoryCard = ({ story, className }) => {
             )}
           </div>
 
-          <div className={`${styles['card-body']} p-0`}>
+          <div className={`p-0`}>
             <p
-              className={`${styles['card-title']} text-center p-2 m-0 fw-bold`}>
+              className={`fs-6 text-center p-1 mb-3 fw-bold`}>
               {story.title}
             </p>
           </div>

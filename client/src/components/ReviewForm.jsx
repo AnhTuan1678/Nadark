@@ -102,17 +102,14 @@ export function ReviewForm({ bookId }) {
     <div className='mb-4'>
       {review && !editing ? (
         // Hiển thị bình luận hiện có
-        <div className='mb-4 border p-3 shadow rounded-3'>
-          <div className='mb-2'>
-            <strong>Bạn đã đánh giá:</strong>
-          </div>
+        <div className='mb-4 border p-1 p-md-3 rounded-3'>
           <StarSelector
             rating={review.rating}
             setRating={setRating}
             fixed={!editing}
           />
           <CommentItem comment={review} />
-          <div>
+          <div className='pt-2 ps-5'>
             <button
               className='btn btn-sm btn-outline-primary me-2'
               onClick={() => {

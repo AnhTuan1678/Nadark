@@ -415,18 +415,6 @@ router.get('/bookshelf', authenticateToken, async (req, res) => {
       include: [
         {
           model: db.Book,
-          attributes: [
-            'id',
-            'title',
-            'author',
-            'status',
-            'chapter_count',
-            'word_count',
-            'like',
-            'views',
-            'followers',
-            'url_avatar',
-          ],
         },
       ],
       order: [['saved_at', 'DESC']],

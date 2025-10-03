@@ -54,22 +54,8 @@ function App() {
           <Route path='/story/:id' element={<StoryDetail />} />
           <Route path='/story/:id/chapter/:chapterIndex' element={<Reader />} />
           <Route path='/login' element={<Login />} />
-          <Route
-            path='/profile'
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/bookshelf'
-            element={
-              <ProtectedRoute>
-                <Bookshelf />
-              </ProtectedRoute>
-            }
-          />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/bookshelf' element={<Bookshelf />} />
           <Route path='/action/addStory' element={<AddStory />} />
           <Route path='/action/addChapter' element={<AddChapter />} />
           <Route path='/tutorial' element={<Tutorial />} />
