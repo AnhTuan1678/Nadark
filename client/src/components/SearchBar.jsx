@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import styles from './SearchBar.module.css'
-import { searchBooks } from '../services/api'
+import { bookAPI } from '../services/api'
 import { useNavigate } from 'react-router-dom'
 
 const SearchBar = ({ className = '' }) => {
@@ -29,7 +29,7 @@ const SearchBar = ({ className = '' }) => {
     }
 
     const fetchData = async () => {
-      const data = await searchBooks(debouncedQuery)
+      const data = await bookAPI.searchBooks(debouncedQuery)
       setResults(data)
       setShowDropdown(true)
       setHighlightedIndex(-1) // reset highlight khi search mới

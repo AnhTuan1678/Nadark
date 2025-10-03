@@ -1,12 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
-import {
-  getStoryDetails,
-  getChapters,
-  getProgressByBook,
-  addToBookshelf,
-  getReviewsByBook,
-} from '../services/api'
+import { reviewAPI, bookAPI, progressAPI, bookshelfAPI } from '../services/api'
 import styles from './StoryDetail.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -44,7 +38,7 @@ const StoryDetail = () => {
   // lấy thông tin sách
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getStoryDetails(id)
+      const data = await bookAPI.getStoryDetails(id)
       setStoryDetails(data)
       setAvgRating(
         data.reviewCount > 0
@@ -59,7 +53,7 @@ const StoryDetail = () => {
   // lấy danh sách chương
   useEffect(() => {
     const fetchChapters = async () => {
-      const chapterData = await getChapters(id)
+      const chapterData = await bookAPI.getChapters(id)
       setChapters(chapterData)
       setShowAllChapters(chapterData.length <= visibleChaptersDefault)
     }
@@ -73,7 +67,7 @@ const StoryDetail = () => {
       const token = currentUser.token
       if (token) {
         try {
-          const data = await getProgressByBook(token, id)
+          const data = await progressAPI.getProgressByBook(token, id)
           setProgress(data)
         } catch (err) {
           console.warn('Chưa có tiến trình đọc hoặc lỗi:', err)
@@ -81,12 +75,12 @@ const StoryDetail = () => {
       }
     }
     fetchProgress()
-  }, [id])
+  }, [currentUser.token, id])
 
   // Lấy review
   useEffect(() => {
     const fetchReview = async () => {
-      const review = await getReviewsByBook(id)
+      const review = await reviewAPI.getReviewsByBook(id)
       setReview(review.filter((r) => r.user_id !== currentUser.id))
     }
     fetchReview()
@@ -94,7 +88,7 @@ const StoryDetail = () => {
 
   const handleFollowButton = async () => {
     const token = currentUser.token
-    const res = await addToBookshelf(token, id)
+    const res = await bookshelfAPI.addToBookshelf(token, id)
     showSnackbar(res)
     setStoryDetails(formatterStoryDetail(res.book))
   }

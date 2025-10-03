@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getChapters } from '../services/api'
+import { bookAPI } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
@@ -15,7 +15,7 @@ const TableOfContents = ({ onClose, currentIndex = 1, bookId }) => {
   // lấy danh sách chương
   useEffect(() => {
     const fetchChapters = async () => {
-      const chapters = await getChapters(bookId)
+      const chapters = await bookAPI.getChapters(bookId)
       setChapters(chapters)
       setPadLength(Math.ceil(Math.log10(chapters.length + 1)))
     }

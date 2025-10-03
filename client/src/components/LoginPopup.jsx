@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import styles from './LoginPopup.module.css'
-import {
-  login as loginNormal,
-  register as registerNormal,
-} from '../services/api'
+import { authAPI } from '../services/api'
 import { useDispatch } from 'react-redux'
 import { login } from '../redux/userSlice'
 
@@ -21,7 +18,7 @@ const LoginPopup = ({ activeTab, onClose }) => {
     e.preventDefault()
     setError('')
     try {
-      const data = await loginNormal(usernameOrEmail, password)
+      const data = await authAPI.login(usernameOrEmail, password)
 
       if (data.token) {
         dispatch(login(data))
@@ -40,7 +37,7 @@ const LoginPopup = ({ activeTab, onClose }) => {
     e.preventDefault()
     setError('')
     try {
-      const data = await registerNormal(usernameOrEmail, email, password)
+      const data = await authAPI.register(usernameOrEmail, email, password)
 
       if (!data.error) {
         setError('')

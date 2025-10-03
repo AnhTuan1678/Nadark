@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getBookshelf } from '../services/api'
+import { bookshelfAPI } from '../services/api'
 import StoryCard from '../components/StoryCard'
 import { useSelector } from 'react-redux'
 
@@ -11,7 +11,7 @@ const Bookshelf = () => {
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const data = await getBookshelf(token)
+        const data = await bookshelfAPI.getBookshelf(token)
         setStories(data)
       } catch (err) {
         console.error('Lỗi khi tải danh sách truyện:', err)

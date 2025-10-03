@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import styles from './LoginPopup.module.css'
-import { changePassword } from '../services/api'
+import { authAPI } from '../services/api'
 import { useSnackbar } from '../context/SnackbarContext'
 
 const ChangePasswordPopup = ({ isOpen, onClose, token }) => {
@@ -40,7 +40,7 @@ const ChangePasswordPopup = ({ isOpen, onClose, token }) => {
     }
 
     try {
-      const data = await changePassword(token, oldPassword, newPassword)
+      const data = await authAPI.changePassword(token, oldPassword, newPassword)
       if (data.error) {
         showSnackbar({ status: 'error', message: data.error })
       } else {

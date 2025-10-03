@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
-import { getProfile, updateAvatar, getUserProgress } from '../services/api'
+// import { getUserProgress } from '../services/api/progress'
+// import { getProfile, updateAvatar } from '../services/api/user'
+import { userAPI, progressAPI } from '../services/api'
 import { formatterProfile } from '../utils/formatter'
 import styles from './Profile.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -22,9 +24,9 @@ const Profile = () => {
   useEffect(() => {
     async function fetchData() {
       const token = localStorage.getItem('token')
-      const data = await getProfile(token)
+      const data = await userAPI.getProfile(token)
       setProfile(formatterProfile(data))
-      const res = await getUserProgress(token)
+      const res = await progressAPI.getUserProgress(token)
       setProgress(res)
     }
     fetchData()
@@ -51,7 +53,7 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem('token')
-      const updatedProfile = await updateAvatar(token, formData)
+      const updatedProfile = await userAPI.updateAvatar(token, formData)
       dispatch(updateAvatarAction(updatedProfile.avatarUrl))
       setProfile(updatedProfile)
     } catch (err) {
@@ -74,7 +76,7 @@ const Profile = () => {
             <div
               className={`position-relative rounded-circle border border-dark overflow-hidden ${styles.avatar}`}>
               <img
-                src={profile?.avatarUrl}
+                src={profile?.avatarUrl || './avatar.png'}
                 alt='avatar'
                 style={{ width: '100px', height: '100px' }}
               />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getAllStory } from '../services/api'
+import { bookAPI } from '../services/api'
 import StoryCard from '../components/StoryCard'
 
 const Home = () => {
@@ -8,7 +8,7 @@ const Home = () => {
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const data = await getAllStory()
+        const data = await bookAPI.getAllStory()
         setStories(data)
       } catch (err) {
         console.error('Lỗi khi tải danh sách truyện:', err)

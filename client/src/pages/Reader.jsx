@@ -1,15 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
-import {
-  getChapterContent,
-  getStoryDetails,
-  saveProgress,
-  updateSettings,
-  getProfile,
-  createComment,
-  deleteComment,
-  getCommentsByChapter,
-} from '../services/api'
+import { updateSettings } from '../services/api/user'
+import { commentAPI, bookAPI, progressAPI, userAPI } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './Reader.module.css'
 import {
@@ -60,8 +52,8 @@ const Reader = () => {
   // Lấy nội dung chương
   useEffect(() => {
     const fetchContent = async () => {
-      const data = await getChapterContent(chapterIndex, id)
-      const comments = await getCommentsByChapter(data.id)
+      const data = await bookAPI.getChapterContent(chapterIndex, id)
+      const comments = await commentAPI.getCommentsByChapter(data.id)
       window.scrollTo({ top: 0, behavior: 'smooth' })
       setContent(data)
       setComments(comments)
@@ -70,7 +62,7 @@ const Reader = () => {
     // Lưu tiến trình đọc khi load chương
     if (currentUser.token) {
       try {
-        saveProgress(currentUser.token, id, chapterIndex, 0)
+        progressAPI.saveProgress(currentUser.token, id, chapterIndex, 0)
       } catch (err) {
         console.error('Lỗi khi lưu tiến trình:', err)
       }
@@ -82,7 +74,7 @@ const Reader = () => {
   // Lấy thông tin sách
   useEffect(() => {
     const fetchStoryDetails = async () => {
-      const data = await getStoryDetails(id)
+      const data = await bookAPI.getStoryDetails(id)
       setStoryDetails(data)
     }
 
@@ -94,11 +86,11 @@ const Reader = () => {
     const fetchUserSettings = async () => {
       const token = currentUser.token
       if (token) {
-        const profile = await getProfile(token)
+        const profile = await userAPI.getProfile(token)
         if (profile.personal_settings) {
           const defaultSetting = {
-            fontSize: '20px',
-            fontFamily: 'Arial',
+            fontSize: '18px',
+            fontFamily: 'Times New Roman',
             lineHeight: 1.5,
             zoom: 1,
           }
@@ -165,8 +157,8 @@ const Reader = () => {
   // Reset setting
   const handleResetButton = async () => {
     const defaultSetting = {
-      fontSize: '20px',
-      fontFamily: 'Arial',
+      fontSize: '18px',
+      fontFamily: 'Times New Roman',
       lineHeight: 1.5,
       zoom: 1,
     }
@@ -188,7 +180,12 @@ const Reader = () => {
     if (!message || !message.trim()) return
 
     const token = currentUser.token
-    const res = await createComment(token, content.id, message, parentId)
+    const res = await commentAPI.createComment(
+      token,
+      content.id,
+      message,
+      parentId,
+    )
     res.User = { ...currentUser, avatar_url: currentUser.avatarUrl }
 
     setComments([res, ...comments]) // thêm vào đầu
@@ -197,7 +194,7 @@ const Reader = () => {
 
   const handleDeleteComment = async (token, commentId) => {
     try {
-      const res = await deleteComment(token, commentId)
+      const res = await commentAPI.deleteComment(token, commentId)
       showSnackbar(res)
       setComments((prevComments) =>
         prevComments.filter(
