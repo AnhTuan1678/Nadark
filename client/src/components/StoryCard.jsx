@@ -59,15 +59,16 @@ const StoryCard = ({ story, className }) => {
           onMouseLeave={() => setHover(false)}>
           <div className='card text-white'>
             {story.urlAvatar && (
-              <img
-                src={story.urlAvatar}
-                alt={story.title}
-                className='p-0 m-0'
-              />
+              <div
+                className='ratio ratio-2x3 bg-cover bg-center'
+                style={{
+                  backgroundImage: `url(${story.urlAvatar})`,
+                }}></div>
             )}
 
             {story?.chapters?.length === 1 && (
-              <div className='card-img-overlay d-flex flex-column justify-content-end p-1 bg-dark bg-opacity-25'>
+              <div
+                className={`card-img-overlay d-flex flex-column justify-content-end p-1 ${styles['story-chapter']}`}>
                 <ul className='list-group list-group-flush'>
                   {story.chapters.map((chapter) => (
                     <li
@@ -82,8 +83,7 @@ const StoryCard = ({ story, className }) => {
           </div>
 
           <div className={`p-0`}>
-            <p
-              className={`fs-6 text-center p-1 mb-3 fw-bold`}>
+            <p className={`fs-7 text-center p-1 ${styles['limit-2-lines']}`}>
               {story.title}
             </p>
           </div>

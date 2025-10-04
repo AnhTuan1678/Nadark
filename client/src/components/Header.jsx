@@ -1,17 +1,12 @@
 import './Header.module.css'
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import ProfileMenu from './ProfileMenu'
 import SearchBar from './SearchBar'
 import style from './Header.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faArrowRotateBack,
-  faArrowsRotate,
-  faBars,
-  faExchangeAlt,
-  faHome,
-} from '@fortawesome/free-solid-svg-icons'
+import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
+import NavBar from './NavBar'
 
 const Header = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
@@ -97,9 +92,8 @@ const MobileHeader = () => {
     <div className='d-flex'>
       {/* Nút toggle */}
       <button
-        className='btn ps-1 btn-primary m-0 p-0 bg-transparent'
-        onClick={() => setShowSearch((prev) => !prev)}
-        style={{ zIndex: 9999, height: '46px' }}>
+        className='btn ps-1 pe-1 m-0 p-0 btn-light round-0'
+        onClick={() => setShowSearch((prev) => !prev)}>
         <FontAwesomeIcon icon={faArrowsRotate} />
       </button>
       <div className='d-flex w-100 flex-column p-1'>
@@ -122,83 +116,6 @@ const MobileHeader = () => {
             <SearchBar className='w-100' />
           </div>
         )}
-      </div>
-    </div>
-  )
-}
-
-const NavBar = ({ className }) => {
-  const items = ['Hot', 'Theo dõi', 'Lịch sử', 'Thể loại', 'Tìm truyện']
-  const navigate = useNavigate()
-  const location = useLocation()
-
-  const [active, setActive] = useState(null)
-
-  useEffect(() => {
-    // Tùy vào pathname để set active
-    switch (location.pathname) {
-      case '/':
-        setActive(0)
-        break
-      case '/hot':
-        setActive(1)
-        break
-      case '/follow':
-        setActive(2)
-        break
-      case '/history':
-        setActive(3)
-        break
-      case '/category':
-        setActive(4)
-        break
-      default:
-        setActive(null)
-    }
-  }, [location.pathname])
-
-  return (
-    <div className={`${className} sticky-top ${style['nav-bar']}`}>
-      <div className='container'>
-        <ul className='d-flex m-0 p-0'>
-          <li
-            className={`ps-1 fs-md-7 pe-1 rounded-0 btn opacity-hover-50 bg-opacity-50 text-uppercase  ${
-              active === 0 ? style.active : ''
-            }`}
-            onClick={() => navigate('/')}>
-            <FontAwesomeIcon icon={faHome} />
-          </li>
-          {items.map((item, index) => (
-            <li
-              key={index}
-              className={`ps-1 pe-1 fs-md-7 rounded-0 btn opacity-hover-50 bg-opacity-50 text-uppercase  ${
-                active === index + 1 ? style.active : ''
-              }`}
-              onClick={() => {
-                setActive(index + 1)
-                // navigate tùy item
-                switch (index) {
-                  case 0:
-                    navigate('/hot')
-                    break
-                  case 1:
-                    navigate('/follow')
-                    break
-                  case 2:
-                    navigate('/history')
-                    break
-                  case 3:
-                    navigate('/category')
-                    break
-                  case 4:
-                    navigate('/search')
-                    break
-                }
-              }}>
-              {item}
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   )

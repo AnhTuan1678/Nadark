@@ -1,11 +1,15 @@
 import { useEffect, useState, useRef } from 'react'
-// import { getUserProgress } from '../services/api/progress'
-// import { getProfile, updateAvatar } from '../services/api/user'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { userAPI, progressAPI } from '../services/api'
 import { formatterProfile } from '../utils/formatter'
 import styles from './Profile.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFolder, faKey } from '@fortawesome/free-solid-svg-icons'
+import {
+  faCircleNotch,
+  faFolder,
+  faKey,
+} from '@fortawesome/free-solid-svg-icons'
 import { useDispatch } from 'react-redux'
 import { updateAvatar as updateAvatarAction } from '../redux/userSlice'
 import StoryCard from '../components/StoryCard'
@@ -16,21 +20,25 @@ const Profile = () => {
   const [profile, setProfile] = useState()
   const [progress, setProgress] = useState()
   const fileInputRef = useRef(null)
-  const [visibleCount, setVisibleCount] = useState(12)
   const [isOpenChangePass, setIsOpenChangePass] = useState(false)
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
+
+  const user = useSelector((state) => state.user)
+
+  const navigate = useNavigate()
 
   const dispatch = useDispatch()
 
   useEffect(() => {
     async function fetchData() {
-      const token = localStorage.getItem('token')
+      const token = user.token
       const data = await userAPI.getProfile(token)
       setProfile(formatterProfile(data))
-      const res = await progressAPI.getUserProgress(token)
-      setProgress(res)
+      const res = await progressAPI.getMyProgress(token, { limit: 12 })
+      setProgress(res.data)
     }
     fetchData()
-  }, [])
+  }, [user.token])
 
   if (!localStorage.getItem('token')) {
     return (
@@ -51,6 +59,8 @@ const Profile = () => {
     const formData = new FormData()
     formData.append('avatar', file)
 
+    setIsUploadingAvatar(true)
+
     try {
       const token = localStorage.getItem('token')
       const updatedProfile = await userAPI.updateAvatar(token, formData)
@@ -58,12 +68,25 @@ const Profile = () => {
       setProfile(updatedProfile)
     } catch (err) {
       console.error('Cập nhật avatar thất bại', err)
+    } finally {
+      setIsUploadingAvatar(false)
     }
   }
 
   return (
     profile && (
       <div className='container my-4 flex-grow-1'>
+        {isUploadingAvatar && (
+          <div className='cus-overlay' style={{ zIndex: 100 }}>
+            <FontAwesomeIcon
+              className='start-50'
+              icon={faCircleNotch}
+              spin
+              size='5x'
+              color='#fff'
+            />
+          </div>
+        )}
         <div className='position-relative mb-5'>
           <div
             className='w-100 bg-secondary d-flex align-items-center justify-content-center text-white fw-bold'
@@ -151,15 +174,15 @@ const Profile = () => {
 
           {/* Right: Story info */}
           <div className='col-md-8 m-0 p-0'>
-            <div className='mb-3 border shadow p-2 m-0 rounded'>
-              <h5 className='border-bottom pb-2'>
+            <div className='mb-3 border shadow p-2 m-0 rounded cus-container'>
+              <h5 className='border-bottom pb-2 m-3 fs-3 fw-normal text-blue'>
                 Truyện đã đăng ({profile.storiesPosted})
               </h5>
               {profile.storiesPosted === 0 && <p>Không có truyện nào</p>}
             </div>
             {progress && (
-              <div className='mb-3 border shadow p-2 m-0 rounded'>
-                <h5 className='border-bottom pb-2'>
+              <div className='mb-3 border shadow p-2 m-0 rounded cus-container'>
+                <h5 className='border-bottom pb-2 m-3 fs-3 fw-normal text-blue'>
                   Truyện đã đọc ({progress?.length})
                 </h5>
                 {progress?.length === 0 ? (
@@ -167,7 +190,7 @@ const Profile = () => {
                 ) : (
                   <>
                     <div className='row mx-0'>
-                      {progress.slice(0, visibleCount).map((book) => (
+                      {progress.map((book) => (
                         <StoryCard
                           key={book.id}
                           story={formatterStoryDetail(book.Book)}
@@ -175,22 +198,14 @@ const Profile = () => {
                         />
                       ))}
                     </div>
-                    {visibleCount < progress.length && (
-                      <div className='text-center'>
-                        <button
-                          className='btn btn-outline-primary m-3'
-                          onClick={() => setVisibleCount(visibleCount + 12)}>
-                          Xem thêm
-                        </button>
-                        <button
-                          className='btn btn-outline-primary m-3'
-                          onClick={() =>
-                            setVisibleCount(visibleCount + 9999999)
-                          }>
-                          Xem tất cả
-                        </button>
-                      </div>
-                    )}
+
+                    <div className='text-center'>
+                      <button
+                        className='btn btn-outline-primary'
+                        onClick={() => navigate('/history')}>
+                        Xem tất cả
+                      </button>
+                    </div>
                   </>
                 )}
               </div>

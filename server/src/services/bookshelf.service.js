@@ -1,10 +1,12 @@
 const db = require('../models')
 
-exports.getBookshelf = async (userId) => {
-  return await db.UserBookshelf.findAll({
+exports.getBookshelf = async (userId, { limit = 30, offset = 0 } = {}) => {
+  return await db.UserBookshelf.findAndCountAll({
     where: { user_id: userId },
     include: [{ model: db.Book }],
     order: [['saved_at', 'DESC']],
+    limit,
+    offset,
   })
 }
 

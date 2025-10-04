@@ -13,21 +13,25 @@ export const addToBookshelf = async (token, bookId) => {
   return res.json()
 }
 
-export const getBookshelf = async (token) => {
-  const res = await fetch(`${API_URL}/api/bookshelf`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+export const getBookshelf = async (token, { limit = 30, offset = 0 } = {}) => {
+  const res = await fetch(
+    `${API_URL}/api/bookshelf?limit=${limit}&offset=${offset}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     },
-  })
-  if (!res.ok) throw new Error('Lấy tủ sách thất bại')
+  )
 
+  if (!res.ok) throw new Error('Lấy tủ sách thất bại')
   const data = await res.json()
-  return data.map((item) => ({
+  const books = data.data.map((item) => ({
     ...formatterStoryDetail(item.Book),
     savedAt: item.saved_at,
   }))
+  return { data: books, total: data.total }
 }
 
 export const removeFromBookshelf = async (token, bookId) => {

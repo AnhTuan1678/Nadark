@@ -36,7 +36,7 @@ const TableOfContents = ({ onClose, currentIndex = 1, bookId }) => {
   return (
     <div
       className='position-fixed top-0 end-0 vh-100 p-1'
-      style={{ zIndex: 1001 }}>
+      style={{ zIndex: 2001 }}>
       <div
         className='border shadow-sm p-1 position-relative h-100 overflow-auto bg-light rounded'
         style={{

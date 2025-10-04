@@ -45,6 +45,9 @@
     /* #fefefe; */
     --color-comment-background: #f3f4f6;
     --color-chapter-background: #eae4d3;
+    --color-popup-background: #ccc;
+
+    --color-text-blue: #2980b9;
 }
 
 * {
@@ -126,11 +129,12 @@ body {
 .cus-overlay {
     cursor: auto;
     position: fixed !important;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.2);
+    top: -100vh;
+    left: -100vw;
+    width: 300vw;
+    height: 300vh;
+    background: rgba(0, 0, 0, 0.4);
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -142,9 +146,10 @@ body {
 }
 
 .tippy-box {
-    background-color: white;
+    background-color: var(--color-popup-background);
     color: black;
     border-radius: 8px;
+    border: 1px solid #000000;
 }
 
 .tippy-content {
@@ -155,9 +160,69 @@ body {
 .fs-7 {
     font-size: 0.875rem;
 }
+.ratio-2x3 {
+    aspect-ratio: 2 / 3;
+}
+
+.bg-cover {
+    background-size: cover;
+}
+.bg-center {
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.text-blue {
+    color: var(--color-text-blue);
+}
 
 @media (max-width: 768px) {
-  .fs-md-7 {
-    font-size: 0.875rem; /* tương đương fs-6 của BS */
-  }
+    .fs-md-7 {
+        font-size: 0.875rem; /* tương đương fs-6 của BS */
+    }
+}
+
+@media (min-width: 768px) {
+    .w-md-100 {
+        width: 100% !important;
+    }
+}
+
+@keyframes sonar {
+    0% {
+        opacity: 0.9;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2.8);
+    }
+}
+
+.dot {
+    width: 15px;
+    height: 15px;
+}
+
+.dot .ping {
+    border: 1px solid #f33;
+    width: 9px;
+    height: 9px;
+    background-color: rgba(238, 46, 36, 0.2);
+    border-radius: 50%;
+    animation-name: sonar;
+    animation-duration: 1.25s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    display: block;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+.dot .core {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #f33;
+    position: absolute;
+    transform: translate(50%, 50%);
 }

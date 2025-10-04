@@ -31,10 +31,27 @@ exports.saveProgress = async (req, res) => {
   }
 }
 
+exports.getAllMyProgress = async (req, res) => {
+  try {
+    const { limit = 30, offset = 0 } = req.query
+    const result = await progressService.getAllProgressByUser(req.user.id, {
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+    })
+    res.json(result)
+  } catch (err) {
+    console.error(err)
+    res.status(err.status || 500).json({ error: err.message })
+  }
+}
 
 exports.getAllProgress = async (req, res) => {
   try {
-    const result = await progressService.getAllProgressByUser(req.user.id)
+    const { limit = 30, offset = 0, id } = req.query
+    const result = await progressService.getAllProgressByUser(id, {
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+    })
     res.json(result)
   } catch (err) {
     console.error(err)

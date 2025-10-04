@@ -37,10 +37,18 @@ exports.saveProgress = async (
   }
 }
 
-exports.getAllProgressByUser = async (userId) => {
+exports.getAllProgressByUser = async (userId, { limit = 30, offset = 0 }) => {
+  // Lấy tổng số tiến trình để phục vụ phân trang
+  const total = await db.UserProgress.count({
+    where: { user_id: userId },
+  })
+
+  // Lấy danh sách tiến trình kèm thông tin Book + Chapter
   const progressList = await db.UserProgress.findAll({
     where: { user_id: userId },
     order: [['updated_at', 'DESC']],
+    limit,
+    offset,
     include: [
       {
         model: db.Book,
@@ -58,16 +66,15 @@ exports.getAllProgressByUser = async (userId) => {
                 Sequelize.col('UserProgress.last_chapter_index'),
               ),
             ),
-            required: false,
+            required: false, // nếu chương bị xóa thì vẫn trả sách
           },
         ],
       },
     ],
   })
 
-  if (!progressList || progressList.length === 0) {
-    return []
+  return {
+    total,
+    data: progressList.map((p) => p.toJSON()),
   }
-
-  return progressList.map((p) => p.toJSON())
 }

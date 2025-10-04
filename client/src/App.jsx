@@ -10,6 +10,8 @@ import Bookshelf from './pages/Bookshelf'
 import AddStory from './pages/AddStory'
 import AddChapter from './pages/AddChapter'
 import Tutorial from './pages/Tutorial'
+import History from './pages/History'
+import UserProfile from './pages/UserProfile'
 import { getProfile } from './services/api/user'
 import { useEffect } from 'react'
 import { store } from './redux/store'
@@ -58,6 +60,8 @@ function App() {
           <Route path='/action/addStory' element={<AddStory />} />
           <Route path='/action/addChapter' element={<AddChapter />} />
           <Route path='/tutorial' element={<Tutorial />} />
+          <Route path='/history' element={<History />} />
+          <Route path='/user' element={<UserProfile />} />
         </Routes>
         <Footer />
       </BrowserRouter>

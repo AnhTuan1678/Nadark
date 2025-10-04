@@ -2,6 +2,7 @@
     right: -4px;
     top: 40px;
     background-color: var(--color-bg-sidebar) !important;
+    z-index: 9999 !important;
 }
 
 .dropdownMenu::before {

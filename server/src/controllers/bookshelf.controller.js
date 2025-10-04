@@ -2,8 +2,17 @@ const bookshelfService = require('../services/bookshelf.service')
 
 exports.getBookshelf = async (req, res) => {
   try {
-    const books = await bookshelfService.getBookshelf(req.user.id)
-    res.json(books)
+    const userId = req.user.id
+    const limit = parseInt(req.query.limit) || 30 // mặc định 30
+    const offset = parseInt(req.query.offset) || 0 // mặc định 0
+
+    const result = await bookshelfService.getBookshelf(userId, {
+      limit,
+      offset,
+    })
+    console.log(result)
+
+    res.json({ data: result.rows, total: result.count })
   } catch (err) {
     res.status(err.status || 500).json({ error: err.message })
   }

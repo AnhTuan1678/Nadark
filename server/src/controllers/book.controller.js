@@ -2,9 +2,14 @@ const bookService = require('../services/book.service')
 
 exports.getAllBooks = async (req, res) => {
   try {
-    const books = await bookService.getAllBooks()
-    res.json(books)
+    const limit = parseInt(req.query.limit) || 30
+    const offset = parseInt(req.query.offset) || 0
+
+    const result = await bookService.getAllBooks({ limit, offset })
+
+    res.json(result)
   } catch (err) {
+    console.error('Lỗi khi lấy danh sách truyện:', err)
     res.status(500).json({ error: 'Internal server error' })
   }
 }

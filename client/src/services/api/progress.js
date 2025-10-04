@@ -1,15 +1,30 @@
 import { API_URL } from './config'
 
-export const getUserProgress = async (token) => {
-  const res = await fetch(`${API_URL}/api/progress`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+export const getMyProgress = async (token, { limit = 30, offset = 0 } = {}) => {
+  const res = await fetch(
+    `${API_URL}/api/progress?limit=${limit}&offset=${offset}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     },
-  })
+  )
+
   if (!res.ok) throw new Error('Lấy tiến trình thất bại')
-  return res.json()
+
+  return res.json() //{ total, data }
+}
+
+export const getUserProgress = async (userId, { limit = 30, offset = 0 } = {}) => {
+  const res = await fetch(
+    `${API_URL}/api/progress/user?limit=${limit}&offset=${offset}&id=${userId}`,
+  )
+
+  if (!res.ok) throw new Error('Lấy tiến trình thất bại')
+
+  return res.json() //{ total, data }
 }
 
 export const saveProgress = async (

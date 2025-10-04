@@ -2,16 +2,26 @@ import { API_URL } from './config'
 import { cacheFetch } from '../cacheFetch'
 import { formatterStoryDetail } from '../../utils/formatter'
 
-export const getAllStory = async () => {
-  const res = await cacheFetch(`${API_URL}/api/book`)
+export const getAllStory = async ({ limit = 30, offset = 0 }) => {
+  const res = await cacheFetch(
+    `${API_URL}/api/book?limit=${limit}&offset=${offset}`,
+  )
+
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+
   const data = await res.json()
-  return data.map((book) => ({
-    ...book,
-    chapterCount: book.chapter_count,
-    publishedDate: book.created_at,
-    urlAvatar: book.url_avatar,
-  }))
+
+  const list = Array.isArray(data.data) ? data.data : data
+
+  return {
+    total: data.total || list.length || 0,
+    data: list.map((book) => ({
+      ...book,
+      chapterCount: book.chapter_count,
+      publishedDate: book.created_at,
+      urlAvatar: book.url_avatar,
+    })),
+  }
 }
 
 export const getStoryDetails = async (storyId) => {
@@ -23,7 +33,7 @@ export const getStoryDetails = async (storyId) => {
 
 export const getChapters = async (storyId) => {
   const res = await cacheFetch(`${API_URL}/api/book/${storyId}/chapters`)
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
   const data = await res.json()
   return data.map((ch) => ({
     chapterId: ch.id,

@@ -7,6 +7,12 @@ export const getProfile = async (token) => {
   return res.json()
 }
 
+export const getUserById = async (userId) => {
+  console.log(`${API_URL}/api/user/${userId}`)
+  const res = await fetch(`${API_URL}/api/user/${userId}`)
+  return res.json()
+}
+
 export const updateProfile = async (token, formData) => {
   const res = await fetch(`${API_URL}/api/user/profile`, {
     method: 'PUT',

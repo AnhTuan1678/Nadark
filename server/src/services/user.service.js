@@ -20,9 +20,7 @@ exports.getUserById = async (id) => {
     attributes: ['id', 'username', 'avatar_url'],
   })
   if (!user) {
-    const err = new Error('User không tồn tại')
-    err.status = 404
-    throw err
+    return { error: 'User không tồn tại', status: 404 }
   }
   return user
 }

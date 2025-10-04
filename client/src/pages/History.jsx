@@ -1,46 +1,45 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { bookshelfAPI } from '../services/api'
+import { progressAPI } from '../services/api' // import hàm mới
 import StoryCard from '../components/StoryCard'
 import NotifyBlock from '../components/NotifyBlock'
+import { formatterStoryDetail } from '../utils/formatter'
 
-const Bookshelf = () => {
+const History = () => {
   const [stories, setStories] = useState([])
+  const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const limit = 30
-  const [page, setPage] = useState(1)
 
-  const token = useSelector((state) => state.user.token)
+  const user = useSelector((state) => state.user)
 
-  const fetchStories = async (currentPage) => {
-    if (!token) return
+  const fetchHistoryStories = async (currentPage) => {
+    if (!user.token) return
     try {
       const offset = (currentPage - 1) * limit
-      const res = await bookshelfAPI.getBookshelf(token, { limit, offset })
-      console.log(res)
-      if (res.data) {
+      const res = await progressAPI.getMyProgress(user.token, {
+        limit,
+        offset,
+      })
+
+      if (res && Array.isArray(res.data)) {
         setStories(res.data)
-        setTotal(res.total || 0)
+        setTotal(res.total || res.data.length)
+      } else {
+        setStories([])
+        setTotal(0)
       }
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
-      console.error('Lỗi khi tải danh sách truyện:', err)
+      console.error('Lỗi khi tải tiến trình truyện:', err)
     }
   }
 
   useEffect(() => {
-    fetchStories(page)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [page, token])
+    fetchHistoryStories(page)
+  }, [page, user.token])
 
   const totalPages = Math.ceil(total / limit) || 1
-
-  if (!token) {
-    return (
-      <div className='container cus-container flex-grow-1 d-flex align-items-center justify-content-center'>
-        <h6 className='text-center'>Bạn chưa đăng nhập</h6>
-      </div>
-    )
-  }
 
   return (
     <div className='container cus-container shadow flex-grow-1'>
@@ -49,13 +48,24 @@ const Bookshelf = () => {
         nghiệm không thoải mái này!
       </NotifyBlock>
 
-      <h2 className='m-3 fs-3 fw-normal text-blue'>Truyện đã lưu</h2>
+      <h2 className='m-3 fs-3 fw-normal text-blue'>
+        {import.meta.env.VITE_APP_NAME} - Truyện đã đọc {'>'}
+      </h2>
 
-      <div className='row ps-4 pe-4'>
-        {stories.map((story) => (
-          <StoryCard key={story.id} story={story} />
-        ))}
-      </div>
+      {stories?.length === 0 ? (
+        <p>Chưa đọc truyện nào</p>
+      ) : (
+        <>
+          <div className='row mx-0'>
+            {stories.map((book) => (
+              <StoryCard
+                key={book.id}
+                story={formatterStoryDetail(book.Book)}
+              />
+            ))}
+          </div>
+        </>
+      )}
 
       {/* Pagination */}
       <div className='d-flex justify-content-center my-4'>
@@ -92,4 +102,4 @@ const Bookshelf = () => {
   )
 }
 
-export default Bookshelf
+export default History

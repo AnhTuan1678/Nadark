@@ -1,8 +1,16 @@
 const db = require('../models')
 const { Op } = require('sequelize')
 
-exports.getAllBooks = async () => {
-  return db.Book.findAll()
+exports.getAllBooks = async ({ limit, offset }) => {
+  const { count, rows } = await db.Book.findAndCountAll({
+    limit: limit || 30,
+    offset: offset || 0,
+    order: [['updated_at', 'DESC']], // sắp xếp theo thời gian cập nhật
+  })
+  return {
+    total: count,
+    data: rows,
+  }
 }
 
 exports.searchBooks = async (query) => {

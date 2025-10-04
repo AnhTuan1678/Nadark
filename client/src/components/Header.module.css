@@ -4,7 +4,7 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 2000;
+    z-index: 1000;
     background-image: url('../assets/bg-header.jpg');
 }
 
@@ -12,26 +12,24 @@
     font-size: 48px;
     font-weight: bold;
     color: transparent;
-    background: linear-gradient(
-        90deg,
-        #ffff00,
-        /* vàng */ #00ff00,
-        /* xanh lá */ #00bcd4 /* xanh nước biển */
-    );
+    background: linear-gradient(90deg, #ffff00, #00ff00, #00bcd4);
     -webkit-background-clip: text;
     background-clip: text;
-    background-size: 300% 100%; /* để animation mượt */
+    background-size: 300% 100%;
     animation: gradientMove 5s linear infinite alternate;
 }
 
 .nav-bar {
     background-color: var(--color-body-background);
+    z-index: 999 !important;
 }
 
 .active {
     height: 100%;
     background-color: #ffffff !important;
     color: #ae4ad9 !important;
+    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1), 5px 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 1 !important;
 }
 
 @keyframes gradientMove {
