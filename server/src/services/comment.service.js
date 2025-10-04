@@ -1,7 +1,7 @@
 const db = require('../models')
 const { Op } = require('sequelize')
 
-async function getCommentsByChapter(chapterId) {
+exports.getCommentsByChapter = async (chapterId) => {
   return db.Comment.findAll({
     where: { chapter_id: chapterId },
     include: [{ model: db.User, attributes: ['id', 'username', 'avatar_url'] }],
@@ -9,7 +9,7 @@ async function getCommentsByChapter(chapterId) {
   })
 }
 
-async function createComment(userId, { chapter_id, parent_id, content }) {
+exports.createComment = async (userId, { chapter_id, parent_id, content }) => {
   const chapter = await db.Chapter.findByPk(chapter_id)
   if (!chapter) throw new Error('CHAPTER_NOT_FOUND')
 
@@ -26,7 +26,7 @@ async function createComment(userId, { chapter_id, parent_id, content }) {
   })
 }
 
-async function deleteComment(userId, id) {
+exports.deleteComment = async (userId, id) => {
   const comment = await db.Comment.findByPk(id)
   if (!comment) throw new Error('COMMENT_NOT_FOUND')
   if (comment.user_id !== userId) throw new Error('FORBIDDEN')
@@ -36,13 +36,6 @@ async function deleteComment(userId, id) {
   })
 }
 
-async function getChapterById(id) {
+exports.getChapterById = async (id) => {
   return db.Chapter.findByPk(id)
-}
-
-module.exports = {
-  getCommentsByChapter,
-  createComment,
-  deleteComment,
-  getChapterById,
 }

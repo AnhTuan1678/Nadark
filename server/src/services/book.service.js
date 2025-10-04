@@ -1,11 +1,11 @@
 const db = require('../models')
 const { Op } = require('sequelize')
 
-async function getAllBooks() {
+exports.getAllBooks = async () => {
   return db.Book.findAll()
 }
 
-async function searchBooks(query) {
+exports.searchBooks = async (query) => {
   return db.Book.findAll({
     where: {
       [Op.or]: [
@@ -18,18 +18,18 @@ async function searchBooks(query) {
   })
 }
 
-async function getBookById(id) {
+exports.getBookById = async (id) => {
   return db.Book.findByPk(id)
 }
 
-async function getChaptersByBookId(bookId) {
+exports.getChaptersByBookId = async (bookId) => {
   return db.Chapter.findAll({
     where: { book_id: bookId },
     order: [['id', 'ASC']],
   })
 }
 
-async function getChapterByIndex(bookId, index) {
+exports.getChapterByIndex = async (bookId, index) => {
   return db.Chapter.findOne({
     where: { book_id: bookId },
     order: [['id', 'ASC']],
@@ -38,7 +38,7 @@ async function getChapterByIndex(bookId, index) {
   })
 }
 
-async function createReview(userId, { book_id, content, rating }) {
+exports.createReview = async (userId, { book_id, content, rating }) => {
   const book = await db.Book.findByPk(book_id)
   if (!book) throw new Error('BOOK_NOT_FOUND')
 
@@ -50,7 +50,7 @@ async function createReview(userId, { book_id, content, rating }) {
   return db.Review.create({ user_id: userId, book_id, content, rating })
 }
 
-async function getReviews(bookId) {
+exports.getReviews = async (bookId) => {
   return db.Review.findAll({
     where: { book_id: bookId },
     include: [{ model: db.User, attributes: ['id', 'username', 'avatar_url'] }],
@@ -58,7 +58,7 @@ async function getReviews(bookId) {
   })
 }
 
-async function updateReview(userId, reviewId, { content, rating }) {
+exports.updateReview = async (userId, reviewId, { content, rating }) => {
   const review = await db.Review.findByPk(reviewId)
   if (!review) throw new Error('REVIEW_NOT_FOUND')
   if (review.user_id !== userId) throw new Error('FORBIDDEN')
@@ -70,23 +70,11 @@ async function updateReview(userId, reviewId, { content, rating }) {
   return review.save()
 }
 
-async function deleteReview(userId, reviewId) {
+exports.deleteReview = async (userId, reviewId) => {
   const review = await db.Review.findByPk(reviewId)
   if (!review) throw new Error('REVIEW_NOT_FOUND')
   if (review.user_id !== userId) throw new Error('FORBIDDEN')
 
   await review.destroy()
   return true
-}
-
-module.exports = {
-  getAllBooks,
-  searchBooks,
-  getBookById,
-  getChaptersByBookId,
-  getChapterByIndex,
-  createReview,
-  getReviews,
-  updateReview,
-  deleteReview,
 }

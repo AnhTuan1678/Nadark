@@ -1,10 +1,46 @@
 .header {
-    background-color: var(--color-header-background);
+    /* background-color: var(--color-header-background); */
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 2000;
+    background-image: url('../assets/bg-header.jpg');
+}
+
+.logo {
+    font-size: 48px;
+    font-weight: bold;
+    color: transparent;
+    background: linear-gradient(
+        90deg,
+        #ffff00,
+        /* vàng */ #00ff00,
+        /* xanh lá */ #00bcd4 /* xanh nước biển */
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-size: 300% 100%; /* để animation mượt */
+    animation: gradientMove 5s linear infinite alternate;
+}
+
+.nav-bar {
+    background-color: var(--color-body-background);
+}
+
+.active {
+    height: 100%;
+    background-color: #ffffff !important;
+    color: #ae4ad9 !important;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 0%;
+    }
 }
 
 @font-face {

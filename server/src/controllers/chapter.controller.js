@@ -1,6 +1,6 @@
 const commentService = require('../services/comment.service')
 
-async function getComments(req, res) {
+exports.getComments = async (req, res) => {
   try {
     const comments = await commentService.getCommentsByChapter(
       req.params.chapterId,
@@ -12,7 +12,7 @@ async function getComments(req, res) {
   }
 }
 
-async function createComment(req, res) {
+exports.createComment = async (req, res) => {
   try {
     const { chapter_id, parent_id, content } = req.body
     if (!content)
@@ -34,7 +34,7 @@ async function createComment(req, res) {
   }
 }
 
-async function deleteComment(req, res) {
+exports.deleteComment = async (req, res) => {
   try {
     await commentService.deleteComment(req.user.id, req.params.id)
     res.json({ message: 'Xoá thành công' })
@@ -50,7 +50,7 @@ async function deleteComment(req, res) {
   }
 }
 
-async function getChapter(req, res) {
+exports.getChapter = async (req, res) => {
   try {
     const chapter = await commentService.getChapterById(req.params.id)
     if (!chapter) return res.status(404).json({ error: 'Chapter not found' })
@@ -59,11 +59,4 @@ async function getChapter(req, res) {
     console.error(err)
     res.status(500).json({ error: 'Internal server error' })
   }
-}
-
-module.exports = {
-  getComments,
-  createComment,
-  deleteComment,
-  getChapter,
 }

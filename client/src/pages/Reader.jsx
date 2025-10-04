@@ -407,7 +407,7 @@ const Reader = () => {
         {storyDetails && (
           <div className='text-center'>
             <h2
-              className='mb-0 cursor-pointer opacity-hover-50 bg-transparent fs-5 fw-bold'
+              className={`mb-0 cursor-pointer opacity-hover-50 bg-transparent fs-4 fw-bold ${styles.title}`}
               onClick={() => navigate(`/story/${storyDetails.id}`)}>
               {storyDetails.title}
             </h2>
@@ -431,10 +431,10 @@ const Reader = () => {
               </div>
             )}
 
-            <h5 className='text-center mb-0 fw-bold fs-6'>
+            <h5 className={`text-center mb-0 fw-bold fs-6 ${styles.title}`}>
               Chương {content.index}: {content.title}
             </h5>
-            <h6 className='text-center fw-bold fs-7 mb-4'>
+            <h6 className={`text-center fw-bold fs-7 mb-4 ${styles.title}`}>
               Cập nhật: {timeAgo(content.created_at)} - Độ dài:{' '}
               {content.word_count} từ
             </h6>
@@ -453,7 +453,7 @@ const Reader = () => {
                   )
                 } else if (line.trim() !== '') {
                   return (
-                    <p style={setting} key={index}>
+                    <p className={styles.paragraph} style={setting} key={index}>
                       {line}
                     </p>
                   )

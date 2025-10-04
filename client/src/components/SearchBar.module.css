@@ -1,5 +1,6 @@
 .search-bar {
-    /* max-width: 300px; */
+    max-width: 600px;
+    flex: 1;
     transition: box-shadow 0.3s;
     background-color: var(--color-bg-input);
     height: 30px;

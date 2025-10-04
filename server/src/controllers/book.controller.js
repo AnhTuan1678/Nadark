@@ -1,6 +1,6 @@
 const bookService = require('../services/book.service')
 
-async function getAllBooks(req, res) {
+exports.getAllBooks = async (req, res) => {
   try {
     const books = await bookService.getAllBooks()
     res.json(books)
@@ -9,7 +9,7 @@ async function getAllBooks(req, res) {
   }
 }
 
-async function searchBooks(req, res) {
+exports.searchBooks = async (req, res) => {
   try {
     const { query } = req.query
     if (!query || query.trim() === '') {
@@ -22,7 +22,7 @@ async function searchBooks(req, res) {
   }
 }
 
-async function getBook(req, res) {
+exports.getBook = async (req, res) => {
   try {
     const book = await bookService.getBookById(req.params.id)
     if (!book) return res.status(404).json({ error: 'Book not found' })
@@ -32,7 +32,7 @@ async function getBook(req, res) {
   }
 }
 
-async function getChapters(req, res) {
+exports.getChapters = async (req, res) => {
   try {
     const chapters = await bookService.getChaptersByBookId(req.params.id)
     res.json(chapters)
@@ -41,7 +41,7 @@ async function getChapters(req, res) {
   }
 }
 
-async function getChapterByIndex(req, res) {
+exports.getChapterByIndex = async (req, res) => {
   try {
     const index = parseInt(req.params.index, 10)
     if (isNaN(index) || index < 1) {
@@ -55,7 +55,7 @@ async function getChapterByIndex(req, res) {
   }
 }
 
-async function createReview(req, res) {
+exports.createReview = async (req, res) => {
   try {
     const review = await bookService.createReview(req.user.id, req.body)
     res.status(201).json(review)
@@ -68,7 +68,7 @@ async function createReview(req, res) {
   }
 }
 
-async function getReviews(req, res) {
+exports.getReviews = async (req, res) => {
   try {
     const reviews = await bookService.getReviews(req.params.bookId)
     res.json(reviews)
@@ -77,7 +77,7 @@ async function getReviews(req, res) {
   }
 }
 
-async function updateReview(req, res) {
+exports.updateReview = async (req, res) => {
   try {
     const updated = await bookService.updateReview(
       req.user.id,
@@ -94,7 +94,7 @@ async function updateReview(req, res) {
   }
 }
 
-async function deleteReview(req, res) {
+exports.deleteReview = async (req, res) => {
   try {
     await bookService.deleteReview(req.user.id, req.params.id)
     res.json({ message: 'Review deleted successfully' })
@@ -105,16 +105,4 @@ async function deleteReview(req, res) {
       return res.status(403).json({ message: 'Forbidden' })
     res.status(500).json({ message: 'Server error' })
   }
-}
-
-module.exports = {
-  getAllBooks,
-  searchBooks,
-  getBook,
-  getChapters,
-  getChapterByIndex,
-  createReview,
-  getReviews,
-  updateReview,
-  deleteReview,
 }

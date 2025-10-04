@@ -38,9 +38,11 @@
     --color-bg-input: #e0e0e0; /* màu nền input */
     --color-text-input: #6b6b6b; /* màu chữ input */
     --color-input-icon: #444444; /* màu icon */
-    --color-body-background: #f7f7f8;
+    --color-body-background: #e2e2e2;
+    /* #f7f7f8; */
     --color-header-background: #f6f7f8;
-    --color-container-background: #fefefe;
+    --color-container-background: #f9f9f9;
+    /* #fefefe; */
     --color-comment-background: #f3f4f6;
     --color-chapter-background: #eae4d3;
 }
@@ -49,7 +51,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: Tahoma, sans-serif, Helvetica, Arial;
 }
 
 body {
@@ -126,13 +128,13 @@ body {
     position: fixed !important;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    z-index: 1000;
 }
 
 .opacity-hover-50:hover {
@@ -152,4 +154,10 @@ body {
 
 .fs-7 {
     font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  .fs-md-7 {
+    font-size: 0.875rem; /* tương đương fs-6 của BS */
+  }
 }
