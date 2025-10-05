@@ -10,7 +10,6 @@ exports.getBookshelf = async (req, res) => {
       limit,
       offset,
     })
-    console.log(result)
 
     res.json({ data: result.rows, total: result.count })
   } catch (err) {
@@ -33,5 +32,21 @@ exports.removeBook = async (req, res) => {
     res.json({ message: 'Đã xóa sách khỏi tủ' })
   } catch (err) {
     res.status(err.status || 500).json({ error: err.message })
+  }
+}
+
+exports.toggleBookshelf = async (req, res) => {
+  try {
+    const { book_id } = req.body
+    if (!book_id) return res.status(400).json({ error: 'Thiếu book_id' })
+
+    const result = await bookshelfService.toggleBookInBookshelf(
+      req.user.id,
+      book_id,
+    )
+    res.json(result)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Lỗi server' })
   }
 }

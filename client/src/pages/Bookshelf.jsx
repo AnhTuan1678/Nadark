@@ -12,22 +12,20 @@ const Bookshelf = () => {
 
   const token = useSelector((state) => state.user.token)
 
-  const fetchStories = async (currentPage) => {
-    if (!token) return
-    try {
-      const offset = (currentPage - 1) * limit
-      const res = await bookshelfAPI.getBookshelf(token, { limit, offset })
-      console.log(res)
-      if (res.data) {
-        setStories(res.data)
-        setTotal(res.total || 0)
-      }
-    } catch (err) {
-      console.error('Lỗi khi tải danh sách truyện:', err)
-    }
-  }
-
   useEffect(() => {
+    const fetchStories = async (currentPage) => {
+      if (!token) return
+      try {
+        const offset = (currentPage - 1) * limit
+        const res = await bookshelfAPI.getBookshelf(token, { limit, offset })
+        if (res.data) {
+          setStories(res.data)
+          setTotal(res.total || 0)
+        }
+      } catch (err) {
+        console.error('Lỗi khi tải danh sách truyện:', err)
+      }
+    }
     fetchStories(page)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [page, token])

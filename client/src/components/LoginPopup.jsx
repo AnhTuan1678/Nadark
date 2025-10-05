@@ -52,96 +52,93 @@ const LoginPopup = ({ activeTab, onClose }) => {
   }
 
   return (
-    <div className=''>
-      <div className={styles.overlay} onClick={onClose}>
-        <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-          {/* Tabs */}
-          <div className={styles.tabHeader}>
-            <button
-              className={`${styles.tab} ${
-                tab === 'login' ? styles.active : ''
-              }`}
-              onClick={() => setTab('login')}>
-              Đăng nhập
-            </button>
-            <button
-              className={`${styles.tab} ${
-                tab === 'register' ? styles.active : ''
-              }`}
-              onClick={() => setTab('register')}>
-              Đăng ký
-            </button>
-          </div>
-
-          {/* Nội dung */}
-          {tab === 'login' ? (
-            <form onSubmit={handleLogin} className={styles.form}>
-              <input
-                type='text'
-                placeholder='Username hoặc Email'
-                value={usernameOrEmail}
-                onChange={(e) => {
-                  setUsernameOrEmail(e.target.value)
-                  setError('') // xoá lỗi khi gõ lại
-                }}
-              />
-              <input
-                type='password'
-                placeholder='Mật khẩu'
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value)
-                  setError('')
-                }}
-              />
-
-              {/* Hiện lỗi */}
-              {error && <div className={styles.error}>{error}</div>}
-
-              <button type='submit'>Đăng nhập</button>
-            </form>
-          ) : (
-            <form onSubmit={handleRegister} className={styles.form}>
-              <input
-                type='text'
-                placeholder='Username'
-                value={usernameOrEmail}
-                onChange={(e) => {
-                  setUsernameOrEmail(e.target.value)
-                  setError('')
-                }}
-              />
-              <input
-                type='email'
-                placeholder='Email'
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value)
-                  setError('')
-                }}
-              />
-              <input
-                type='password'
-                placeholder='Mật khẩu'
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value)
-                  setError('')
-                }}
-              />
-
-              {/* Hiện lỗi */}
-              {error && <div className={styles.error}>{error}</div>}
-
-              <button type='submit'>Đăng ký</button>
-            </form>
-          )}
-
-          {/* Nút đóng */}
-          <button className={styles.closeButton} onClick={onClose}>
-            X
+    <div className='position-fixed start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center'>
+      {/* <div className={styles.overlay} onClick={onClose}></div> */}
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        {/* Tabs */}
+        <div className={styles.tabHeader}>
+          <button
+            className={`${styles.tab} ${tab === 'login' ? styles.active : ''}`}
+            onClick={() => setTab('login')}>
+            Đăng nhập
+          </button>
+          <button
+            className={`${styles.tab} ${
+              tab === 'register' ? styles.active : ''
+            }`}
+            onClick={() => setTab('register')}>
+            Đăng ký
           </button>
         </div>
+
+        {/* Nội dung */}
+        {tab === 'login' ? (
+          <form onSubmit={handleLogin} className={styles.form}>
+            <input
+              type='text'
+              placeholder='Username hoặc Email'
+              value={usernameOrEmail}
+              onChange={(e) => {
+                setUsernameOrEmail(e.target.value)
+                setError('') // xoá lỗi khi gõ lại
+              }}
+            />
+            <input
+              type='password'
+              placeholder='Mật khẩu'
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                setError('')
+              }}
+            />
+
+            {/* Hiện lỗi */}
+            {error && <div className={styles.error}>{error}</div>}
+
+            <button type='submit'>Đăng nhập</button>
+          </form>
+        ) : (
+          <form onSubmit={handleRegister} className={styles.form}>
+            <input
+              type='text'
+              placeholder='Username'
+              value={usernameOrEmail}
+              onChange={(e) => {
+                setUsernameOrEmail(e.target.value)
+                setError('')
+              }}
+            />
+            <input
+              type='email'
+              placeholder='Email'
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                setError('')
+              }}
+            />
+            <input
+              type='password'
+              placeholder='Mật khẩu'
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                setError('')
+              }}
+            />
+
+            {/* Hiện lỗi */}
+            {error && <div className={styles.error}>{error}</div>}
+
+            <button type='submit'>Đăng ký</button>
+          </form>
+        )}
+
+        {/* Nút đóng */}
+        <button className={styles.closeButton} onClick={onClose}>
+          X
+        </button>
       </div>
     </div>
   )

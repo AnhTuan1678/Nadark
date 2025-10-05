@@ -32,3 +32,41 @@ exports.removeBook = async (userId, bookId) => {
     throw err
   }
 }
+
+exports.toggleBookInBookshelf = async (userId, bookId) => {
+  if (!bookId) throw new Error('Thiếu book_id')
+
+  // Kiểm tra sách đã có trong tủ chưa
+  const existingEntry = await db.UserBookshelf.findOne({
+    where: { user_id: userId, book_id: bookId },
+  })
+
+  let action, message, status
+
+  if (existingEntry) {
+    // Xoá sách khỏi tủ
+    await db.UserBookshelf.destroy({
+      where: { user_id: userId, book_id: bookId },
+    })
+    await db.Book.decrement('followers', { by: 1, where: { id: bookId } })
+
+    action = 'removed'
+    message = 'Đã xoá khỏi tủ sách'
+    status = 'warning'
+  } else {
+    // Thêm sách vào tủ
+    await db.UserBookshelf.create({
+      user_id: userId,
+      book_id: bookId,
+      saved_at: new Date(),
+    })
+    await db.Book.increment('followers', { by: 1, where: { id: bookId } })
+
+    action = 'added'
+    message = 'Đã thêm vào tủ sách'
+    status = 'success'
+  }
+
+  const book = await db.Book.findByPk(bookId)
+  return { action, message, status, book }
+}

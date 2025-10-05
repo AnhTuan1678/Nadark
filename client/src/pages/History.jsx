@@ -13,29 +13,29 @@ const History = () => {
 
   const user = useSelector((state) => state.user)
 
-  const fetchHistoryStories = async (currentPage) => {
-    if (!user.token) return
-    try {
-      const offset = (currentPage - 1) * limit
-      const res = await progressAPI.getMyProgress(user.token, {
-        limit,
-        offset,
-      })
-
-      if (res && Array.isArray(res.data)) {
-        setStories(res.data)
-        setTotal(res.total || res.data.length)
-      } else {
-        setStories([])
-        setTotal(0)
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    } catch (err) {
-      console.error('Lỗi khi tải tiến trình truyện:', err)
-    }
-  }
-
   useEffect(() => {
+    const fetchHistoryStories = async (currentPage) => {
+      if (!user.token) return
+      try {
+        const offset = (currentPage - 1) * limit
+        const res = await progressAPI.getMyProgress(user.token, {
+          limit,
+          offset,
+        })
+
+        if (res && Array.isArray(res.data)) {
+          setStories(res.data)
+          setTotal(res.total || res.data.length)
+        } else {
+          setStories([])
+          setTotal(0)
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } catch (err) {
+        console.error('Lỗi khi tải tiến trình truyện:', err)
+      }
+    }
+
     fetchHistoryStories(page)
   }, [page, user.token])
 

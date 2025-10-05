@@ -80,7 +80,6 @@ const Header = () => {
       <div style={{ height: height }}></div>
       <NavBar />
     </>
-    // <MobileHeader />
   )
 }
 
@@ -89,17 +88,17 @@ const MobileHeader = () => {
   const [showSearch, setShowSearch] = useState(false)
 
   return (
-    <div className='d-flex'>
+    <div className='d-flex h-100'>
       {/* Nút toggle */}
       <button
-        className='btn ps-1 pe-1 m-0 p-0 btn-light round-0'
+        className='btn ps-1 pe-1 m-0 p-0 btn-light rounded-0 shadow'
         onClick={() => setShowSearch((prev) => !prev)}>
         <FontAwesomeIcon icon={faArrowsRotate} />
       </button>
-      <div className='d-flex w-100 flex-column p-1'>
+      <div className='d-flex w-100 flex-column p-0 ms-2 me-2 justify-content-center'>
         {/* Logo + Profile */}
         {!showSearch && (
-          <div className='d-flex align-items-center p-1 m-0 animate__animated animate__fadeInDown animate__faster'>
+          <div className='d-flex align-items-center p-0 m-0 animate__animated animate__fadeInDown animate__faster'>
             <h1
               className={`logo fs-4 m-0 ${style.logo} cursor-pointer`}
               style={{ fontFamily: 'Ananda' }}
@@ -112,7 +111,7 @@ const MobileHeader = () => {
 
         {/* Search Bar */}
         {showSearch && (
-          <div className='d-flex p-1 animate__animated animate__fadeInDown animate__faster'>
+          <div className='d-flex p-0 animate__animated animate__fadeInDown animate__faster'>
             <SearchBar className='w-100' />
           </div>
         )}

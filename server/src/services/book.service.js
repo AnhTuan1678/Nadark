@@ -1,5 +1,5 @@
 const db = require('../models')
-const { Op } = require('sequelize')
+const { Op, literal } = require('sequelize')
 
 exports.getAllBooks = async ({ limit, offset }) => {
   const { count, rows } = await db.Book.findAndCountAll({
@@ -14,20 +14,62 @@ exports.getAllBooks = async ({ limit, offset }) => {
 }
 
 exports.searchBooks = async (query) => {
-  return db.Book.findAll({
+  if (!query.trim()) return []
+
+  const limit = 8
+  const similarityThreshold = 0.2 // độ giống tối thiểu
+
+  // 1. Tìm bản ghi chứa query
+  let results = await db.Book.findAll({
     where: {
       [Op.or]: [
         { title: { [Op.iLike]: `%${query}%` } },
         { author: { [Op.iLike]: `%${query}%` } },
-        { description: { [Op.iLike]: `%${query}%` } },
       ],
     },
-    limit: 5,
+    limit,
+    order: [
+      [
+        literal(`CASE 
+        WHEN "title" ILIKE '${query}%' THEN 0
+        WHEN "author" ILIKE '${query}%' THEN 1
+        ELSE 2
+      END`),
+        'ASC',
+      ],
+    ],
   })
+
+  // 2. Nếu không có kết quả chứa query → dùng similarity
+  if (results.length < limit) {
+    results = await db.Book.findAll({
+      attributes: {
+        include: [
+          [
+            literal(
+              `GREATEST(similarity("title", '${query}'), similarity("author", '${query}'))`,
+            ),
+            'sim_score',
+          ],
+        ],
+      },
+      where: literal(
+        `GREATEST(similarity("title", '${query}'), similarity("author", '${query}')) >= ${similarityThreshold}`,
+      ),
+      order: [[literal('sim_score'), 'DESC']],
+      limit,
+    })
+  }
+
+  return results
 }
 
 exports.getBookById = async (id) => {
-  return db.Book.findByPk(id)
+  const book = await db.Book.findByPk(id)
+  if (!book) return null
+  await book.increment('views', { by: 1 })
+
+  return book
 }
 
 exports.getChaptersByBookId = async (bookId) => {

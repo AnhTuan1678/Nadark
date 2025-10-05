@@ -7,7 +7,7 @@ import NotifyBlock from '../components/NotifyBlock'
 const Home = () => {
   const [stories, setStories] = useState([])
   const [total, setTotal] = useState(0)
-  const limit = 30
+  const limit = 36
 
   const [searchParams, setSearchParams] = useSearchParams()
   const pageParam = parseInt(searchParams.get('page')) || 1

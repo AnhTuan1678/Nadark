@@ -2,7 +2,7 @@ import { API_URL } from './config'
 import { formatterStoryDetail } from '../../utils/formatter'
 
 export const addToBookshelf = async (token, bookId) => {
-  const res = await fetch(`${API_URL}/api/account/bookshelf`, {
+  const res = await fetch(`${API_URL}/api/bookshelf`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

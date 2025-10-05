@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { userAPI, progressAPI } from '../services/api'
 import { formatterProfile } from '../utils/formatter'
@@ -13,25 +13,25 @@ import {
 import { useDispatch } from 'react-redux'
 import { updateAvatar as updateAvatarAction } from '../redux/userSlice'
 import StoryCard from '../components/StoryCard'
-import ChangePasswordPopup from '../components/ChangePasswordPopup'
 import { formatterStoryDetail } from '../utils/formatter'
 
 const Profile = () => {
   const [profile, setProfile] = useState()
   const [progress, setProgress] = useState()
   const fileInputRef = useRef(null)
-  const [isOpenChangePass, setIsOpenChangePass] = useState(false)
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
 
   const user = useSelector((state) => state.user)
 
   const navigate = useNavigate()
+  const location = useLocation()
 
   const dispatch = useDispatch()
 
   useEffect(() => {
     async function fetchData() {
       const token = user.token
+      if (!token) return
       const data = await userAPI.getProfile(token)
       setProfile(formatterProfile(data))
       const res = await progressAPI.getMyProgress(token, { limit: 12 })
@@ -40,9 +40,9 @@ const Profile = () => {
     fetchData()
   }, [user.token])
 
-  if (!localStorage.getItem('token')) {
+  if (!user.isLoggedIn) {
     return (
-      <div className='d-flex justify-content-center align-items-center vh-100'>
+      <div className='d-flex justify-content-center align-items-center flex-grow-1 text-center'>
         <p className='text-muted'>Bạn chưa đăng nhập</p>
       </div>
     )
@@ -125,16 +125,13 @@ const Profile = () => {
           <button
             className='btn btn-warning'
             onClick={() => {
-              setIsOpenChangePass(true)
+              navigate('/auth?action=cp', {
+                state: { from: location.pathname },
+              })
             }}>
             <FontAwesomeIcon icon={faKey} className='me-2' />
             Đổi mật khẩu
           </button>
-          <ChangePasswordPopup
-            isOpen={isOpenChangePass}
-            onClose={() => setIsOpenChangePass(false)}
-            token={localStorage.getItem('token')}
-          />
         </div>
 
         <div className='row'>

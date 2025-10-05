@@ -12,6 +12,7 @@ import AddChapter from './pages/AddChapter'
 import Tutorial from './pages/Tutorial'
 import History from './pages/History'
 import UserProfile from './pages/UserProfile'
+import UserAuth from './pages/UserAuth'
 import { getProfile } from './services/api/user'
 import { useEffect } from 'react'
 import { store } from './redux/store'
@@ -62,6 +63,7 @@ function App() {
           <Route path='/tutorial' element={<Tutorial />} />
           <Route path='/history' element={<History />} />
           <Route path='/user' element={<UserProfile />} />
+          <Route path='/auth' element={<UserAuth />} />
         </Routes>
         <Footer />
       </BrowserRouter>

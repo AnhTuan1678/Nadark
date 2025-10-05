@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './ProfileMenu.module.css'
 import LoginPopup from './LoginPopup'
 import { useSelector, useDispatch } from 'react-redux'
@@ -32,6 +32,7 @@ const ProfileMenu = ({ className }) => {
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
+  const location = useLocation()
   const { showSnackbar } = useSnackbar()
 
   const handleLogout = () => {
@@ -118,7 +119,9 @@ const ProfileMenu = ({ className }) => {
               <button
                 className={`dropdown-item ${styles.dropdownItem}`}
                 onClick={() =>
-                  setAuthPopup({ show: true, activeTab: 'login' })
+                  navigate('/auth?action=l', {
+                    state: { from: location.pathname },
+                  })
                 }>
                 <FontAwesomeIcon icon={faSignIn} />
                 Đăng nhập
@@ -126,7 +129,9 @@ const ProfileMenu = ({ className }) => {
               <button
                 className={`dropdown-item ${styles.dropdownItem}`}
                 onClick={() =>
-                  setAuthPopup({ show: true, activeTab: 'register' })
+                  navigate('/auth?action=r', {
+                    state: { from: location.pathname },
+                  })
                 }>
                 <FontAwesomeIcon icon={faUserPlus} />
                 Đăng ký

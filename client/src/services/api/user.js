@@ -8,7 +8,6 @@ export const getProfile = async (token) => {
 }
 
 export const getUserById = async (userId) => {
-  console.log(`${API_URL}/api/user/${userId}`)
   const res = await fetch(`${API_URL}/api/user/${userId}`)
   return res.json()
 }

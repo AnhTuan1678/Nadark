@@ -10,6 +10,10 @@
     box-shadow: 0 4px 10px rgba(190, 60, 60, 0.15);
 }
 
+.search-bar ul {
+    background-color: var(--color-bg-input);
+}
+
 .search-input {
     outline: none;
     background-color: transparent;

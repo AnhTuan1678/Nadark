@@ -4,6 +4,7 @@
 
 .paragraph{
     font-family: Times New Roman,Georgia,serif;
+    overflow-wrap: break-word;
 }
 
 .img {

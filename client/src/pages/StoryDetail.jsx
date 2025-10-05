@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { reviewAPI, bookAPI, progressAPI, bookshelfAPI } from '../services/api'
-import styles from './StoryDetail.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faHeart,
@@ -19,10 +19,10 @@ import {
 import { CommentItem } from '../components/CommentItem'
 import { StarRating } from '../components/StartRating'
 import { ReviewForm } from '../components/ReviewForm'
-import { formatterStoryDetail } from '../utils/formatter'
-import { useSelector } from 'react-redux'
 import { useSnackbar } from '../context/SnackbarContext'
 import { timeAgo } from '../utils/timeAgo'
+import { formatterStoryDetail } from '../utils/formatter'
+import styles from './StoryDetail.module.css'
 
 const StoryDetail = () => {
   const { id } = useParams()
