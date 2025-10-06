@@ -26,8 +26,7 @@
 }
 
 .search-btn:hover {
-    /* background: var(--color-bg-badge); */
-    color: var(--color-white);
+    color: #786199;
 }
 
 @keyframes spin {

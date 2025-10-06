@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Tahoma, sans-serif, Helvetica, Arial;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--color-body-background);
+    background-size: cover;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* background-color: var(--color-bg-content); */
+    color: var(--color-text-dark);
+}
+
+.header {
+    background: #444;
+    color: #fff;
+    padding: 1rem;
+}
+
+.container {
+    max-width: 1100px;
+}
+
+.cus-container {
+    background-color: var(--color-container-background);
+}
+
+.cus-comment {
+    background-color: var(--color-comment-background);
+}
+
+.footer {
+    background: #222;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--color-bg-badge);
+    border-color: var(--color-bg-badge);
+    color: var(--color-text-light);
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+    background-color: var(--color-bg-badge-hover);
+    border-color: var(--color-bg-badge-hover);
+    color: var(--color-bg-content);
+    cursor: pointer;
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+    background-color: var(--color-bg-disabled);
+    border-color: var(--color-bg-disabled);
+    color: var(--color-text-disabled);
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Overlay mờ nền */
+.cus-overlay {
+    cursor: auto;
+    position: fixed !important;
+    top: -100vh;
+    left: -100vw;
+    width: 300vw;
+    height: 300vh;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.opacity-hover-50:hover {
+    opacity: 0.5;
+}
+
+.tippy-box {
+    background-color: var(--color-body-background);
+    color: black;
+    border-radius: 8px;
+    border: 1px solid #000000;
+    opacity: 88%;
+}
+
+.tippy-box > .tippy-arrow::before {
+    color: var(--color-body-background);
+    border: 1px solid #000000;
+}
+
+.tippy-content {
+    max-width: 50vw;
+    padding: 8px;
+}
+
+.fs-7 {
+    font-size: 0.875rem;
+}
+
+.fs-8 {
+    font-size: 0.75rem;
+}
+
+.ratio-2x3 {
+    aspect-ratio: 2 / 3;
+}
+
+.bg-cover {
+    background-size: cover;
+}
+.bg-center {
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.text-blue {
+    color: var(--color-text-blue);
+}
+
+@media (max-width: 768px) {
+    .fs-md-7 {
+        font-size: 0.875rem !important;
+    }
+    .fs-md-8 {
+        font-size: 0.7rem !important;
+    }
+    .fs-md-9 {
+        font-size: 0.55rem !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .w-md-100 {
+        width: 100% !important;
+    }
+}
+
+.primary-color {
+    color: var(--primary--color);
+}

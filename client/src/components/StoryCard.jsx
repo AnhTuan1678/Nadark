@@ -29,7 +29,9 @@ const StoryCard = ({ story, className }) => {
           />
         </div>
         <div className='d-flex flex-column p-2 ps-4'>
-          <h5 className='fs-4 text-success'>{story.title}</h5>
+          <h5 className={`fs-6 text-success ${styles['limit-2-lines']}`}>
+            {story.title}
+          </h5>
           <p className='fs-7'>
             <FontAwesomeIcon icon={faUser} />
             {story.author}
@@ -66,8 +68,8 @@ const StoryCard = ({ story, className }) => {
         placement='right'
         interactive={false}
         delay={[100, 0]}
-        offset={[240, -75]}
-        maxWidth={600}
+        offset={[-200, -10]}
+        maxWidth={400}
         arrow={true}
         animation='fade'>
         <div

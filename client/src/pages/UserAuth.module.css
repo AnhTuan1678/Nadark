@@ -1,12 +1,14 @@
 .container {
-    /* position: fixed; */
     flex: 1;
     inset: 0;
-    /* background: rgba(0, 0, 0, 0.4); */
     display: flex;
     justify-content: center;
     align-items: center;
-    /* z-index: 1000; */
+    
+    background-color: #520044;
+    background-image: url(https://auth.fandom.com/_next/static/media/branding_background.c0ec82a7.png);
+    background-repeat: repeat;
+    background-size: 382px;
 }
 
 .modal {
@@ -22,6 +24,7 @@
     margin-bottom: 20px;
     font-weight: 700;
     font-size: 16px;
+    color: #630049;
 }
 
 .label {
@@ -51,7 +54,7 @@
     font-size: 14px;
 }
 
-.forgot {
+.btn {
     font-size: 13px;
     color: #9c1b5d;
     text-decoration: none;
@@ -89,10 +92,6 @@
 .footerText a {
     color: #9c1b5d;
     text-decoration: none;
-}
-
-.register {
-    font-weight: bold;
 }
 
 .error {

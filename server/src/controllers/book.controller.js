@@ -18,10 +18,6 @@ exports.searchBooks = async (req, res) => {
   try {
     const { query, genres, minChapter, maxChapter, limit } = req.query
 
-    if (!query || query.trim() === '') {
-      return res.status(400).json({ message: 'Query không được để trống' })
-    }
-
     // Chuyển genres từ string sang array số nếu có
     let genresArray = []
     if (genres) {

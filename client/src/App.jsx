@@ -10,7 +10,7 @@ import Bookshelf from './pages/Bookshelf'
 import AddStory from './pages/AddStory'
 import AddChapter from './pages/AddChapter'
 import Tutorial from './pages/Tutorial'
-import RecentlyRead from './pages/History'
+import RecentlyRead from './pages/Recently'
 import UserProfile from './pages/UserProfile'
 import UserAuth from './pages/UserAuth'
 import { getProfile } from './services/api/user'
@@ -18,6 +18,8 @@ import { useEffect } from 'react'
 import { store } from './redux/store'
 import { login, logout } from './redux/userSlice'
 import SearchPage from './pages/SearchPage'
+import './assets/styles/index.css'
+import NotFound from './pages/NotFound'
 
 function App() {
   // Lấy dữ liệu user
@@ -94,6 +96,7 @@ function App() {
               </DefaultLayout>
             }
           />
+          <Route path='/*' element={<NotFound />} />
         </Routes>
         <Footer />
       </BrowserRouter>

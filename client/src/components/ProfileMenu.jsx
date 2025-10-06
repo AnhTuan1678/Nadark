@@ -15,7 +15,7 @@ import {
   faUserPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { clearCache } from '../services/cacheFetch'
-import nova from '../assets/nova.png' // avatar mặc định
+import nova from '../assets/image/GuestAvatar.png' // avatar mặc định
 
 const ProfileMenu = ({ className }) => {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn)

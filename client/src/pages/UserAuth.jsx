@@ -36,6 +36,7 @@ const UserAuth = () => {
 
   return (
     <div className={styles.container}>
+      <div className='AuthHeader_header'></div>
       {tab === 'l' && <Login onSuccess={handleSuccess} />}
       {tab === 'r' && <Register onSwitchTab={() => setTab('l')} />}
       {tab === 'cp' && (
@@ -90,22 +91,26 @@ const Login = ({ onSuccess = () => {} }) => {
       <h2 className={styles.title}>Đăng nhập</h2>
 
       <form onSubmit={handleLogin} className={styles.form}>
-        <label className={styles.label}>Tên tài khoản hoặc email *</label>
-        <input
-          type='text'
-          placeholder='Username'
-          value={usernameOrEmail}
-          onChange={(e) => setUsernameOrEmail(e.target.value)}
-        />
-        <label className={styles.label}>Mật khẩu *</label>
-        <input
-          type='password'
-          placeholder='Password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className='w-100 floating-label'>
+          <input
+            type='text'
+            placeholder=''
+            value={usernameOrEmail}
+            onChange={(e) => setUsernameOrEmail(e.target.value)}
+          />
+          <label className={styles.label}>Tên tài khoản hoặc email *</label>
+        </div>
+        <div className='floating-label'>
+          <input
+            type='password'
+            placeholder=''
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <label className={styles.label}>Mật khẩu *</label>
+        </div>
 
-        <a href='#' className={styles.forgot}>
+        <a href='#' className={`${styles.btn} fw-bold`}>
           Quên mật khẩu?
         </a>
 
@@ -123,7 +128,7 @@ const Login = ({ onSuccess = () => {} }) => {
       <p className={styles.footerText}>
         Chưa có tài khoản?{' '}
         <span
-          className={styles.register}
+          className={`${styles.btn} fw-bold`}
           onClick={() => setSearchParams({ action: 'r' })}
           style={{ cursor: 'pointer' }}>
           Đăng ký ngay
@@ -178,27 +183,33 @@ const Register = ({ onSwitchTab }) => {
       <h2 className={styles.title}>Đăng ký</h2>
 
       <form onSubmit={handleRegister} className={styles.form}>
-        <label className={styles.label}>Tên tài khoản *</label>
-        <input
-          type='text'
-          placeholder='Username'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <label className={styles.label}>Email *</label>
-        <input
-          type='email'
-          placeholder='Email'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <label className={styles.label}>Mật khẩu *</label>
-        <input
-          type='password'
-          placeholder='Password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className='floating-label'>
+          <input
+            type='text'
+            placeholder=''
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <label className={styles.label}>Tên tài khoản *</label>
+        </div>
+        <div className='floating-label'>
+          <input
+            type='email'
+            placeholder=''
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <label className={styles.label}>Email *</label>
+        </div>
+        <div className='floating-label'>
+          <input
+            type='password'
+            placeholder=''
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <label className={styles.label}>Mật khẩu *</label>
+        </div>
 
         <div
           className={styles.error}
@@ -214,7 +225,7 @@ const Register = ({ onSwitchTab }) => {
       <p className={styles.footerText}>
         Đã có tài khoản?{' '}
         <span
-          className={styles.register}
+          className={`${styles.btn} fw-bold`}
           onClick={() => setSearchParams({ action: 'l' })}
           style={{ cursor: 'pointer' }}>
           Đăng nhập
@@ -276,29 +287,35 @@ const ChangePassword = ({ onSuccess = () => {} }) => {
     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
       <h3>Đổi mật khẩu</h3>
       <form onSubmit={handleChangePassword} className={styles.form}>
-        <label className={styles.label}>Mật khẩu cũ</label>
-        <input
-          type='password'
-          placeholder='Nhập mật khẩu cũ'
-          value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
-        />
+        <div className='floating-label'>
+          <input
+            type='password'
+            placeholder=''
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+          />
+          <label className={styles.label}>Mật khẩu cũ</label>
+        </div>
 
-        <label className={styles.label}>Mật khẩu mới</label>
-        <input
-          type='password'
-          placeholder='Nhập mật khẩu mới'
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
+        <div className='floating-label'>
+          <input
+            type='password'
+            placeholder=''
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+          <label className={styles.label}>Mật khẩu mới</label>
+        </div>
 
-        <label className={styles.label}>Xác nhận mật khẩu mới</label>
-        <input
-          type='password'
-          placeholder='Nhập lại mật khẩu mới'
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
+        <div className='floating-label'>
+          <input
+            type='password'
+            placeholder=''
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          <label className={styles.label}>Xác nhận mật khẩu mới</label>
+        </div>
 
         <div
           className={styles.error}

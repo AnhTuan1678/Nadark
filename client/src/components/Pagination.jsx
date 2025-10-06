@@ -11,33 +11,29 @@ const Pagination = ({ page, totalPages, onChangePage }) => {
     const start = Math.max(3, page - 3)
     const end = Math.min(totalPages - 2, page + 3)
 
-    if (start > 3) {
-      pages.push('left-ellipsis') // dấu ...
-    }
+    if (start > 3) pages.push('left-ellipsis')
 
     for (let i = start; i <= end; i++) {
       pages.push(i)
     }
 
-    if (end < totalPages - 2) {
-      pages.push('right-ellipsis') // dấu ...
-    }
+    if (end < totalPages - 2) pages.push('right-ellipsis')
 
     // 2 trang cuối
     for (let i = Math.max(totalPages - 1, 3); i <= totalPages; i++) {
       pages.push(i)
     }
 
-    // loại trùng lặp
-    return [...new Set(pages)]
+    // loại trùng nhưng vẫn giữ thứ tự và dấu ...
+    return pages.filter((v, i, arr) => arr.indexOf(v) === i)
   }
 
   const pagesToShow = createPageArray()
 
   return (
-    <div className='d-flex justify-content-center my-4'>
+    <div className='d-flex justify-content-center my-1'>
       <nav>
-        <ul className='pagination'>
+        <ul className='pagination d-flex flex-wrap justify-content-center gap-1'>
           <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
             <button
               className='page-link'
@@ -48,11 +44,13 @@ const Pagination = ({ page, totalPages, onChangePage }) => {
 
           {pagesToShow.map((p, idx) =>
             p === 'left-ellipsis' || p === 'right-ellipsis' ? (
-              <li key={idx} className='page-item disabled'>
+              <li key={`ellipsis-${idx}`} className='page-item disabled'>
                 <span className='page-link'>...</span>
               </li>
             ) : (
-              <li key={p} className={`page-item ${p === page ? 'active' : ''}`}>
+              <li
+                key={`page-${p}`}
+                className={`page-item ${p === page ? 'active' : ''}`}>
                 <button className='page-link' onClick={() => onChangePage(p)}>
                   {p}
                 </button>

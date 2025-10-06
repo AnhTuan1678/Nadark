@@ -3,10 +3,10 @@
 }
 
 .limit-2-lines {
-    display: -webkit-box;
+    display: -webkit-box !important;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    -webkit-box-orient: vertical;
+    -webkit-box-orient: vertical !important;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
@@ -24,7 +24,7 @@
 .story-info-popup p {
     margin: 2px 0;
     display: -webkit-box;
-    -webkit-line-clamp: 10;
+    -webkit-line-clamp: 6;
     line-clamp: 10;
     -webkit-box-orient: vertical;
     overflow: hidden;

@@ -33,7 +33,7 @@ const NavBar = ({ className = '' }) => {
       <div className='container'>
         <ul className='d-flex m-0 p-0'>
           <li
-            className={`ps-1 fs-md-7 pe-1 rounded-0 btn opacity-hover-50 bg-opacity-50 text-uppercase ${
+            className={`ps-1 fs-7 fs-md-9 pe-1 rounded-0 btn opacity-hover-50 bg-opacity-50 text-uppercase ${
               (active === 0 && hovered === null && showActive) || hovered === 0
                 ? style.active
                 : ''
@@ -60,7 +60,7 @@ const NavBar = ({ className = '' }) => {
             return (
               <li
                 key={index}
-                className={`ps-1 pe-1 fs-md-7 rounded-0 btn btn-slide opacity-hover-50 bg-opacity-50 text-uppercase ${
+                className={`ps-1 pe-1 fs-7 fs-md-9 rounded-0 btn btn-slide opacity-hover-50 bg-opacity-50 text-uppercase ${
                   isActive && showActive ? style.active : ''
                 }`}
                 onClick={() => {
@@ -83,8 +83,17 @@ const GenresDropdown = ({ onHover = () => {} }) => {
   const navigate = useNavigate()
   const [hovered, setHovered] = useState(false)
   const [activeGenre, setActiveGenre] = useState(null)
+  const [isMobile, setIsMobile] = useState(false)
 
-  // Chia thành 4 cột, mỗi cột 15 genres
+  // Phát hiện thiết bị mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  // Chia genre thành 4 cột
   const columns = [[], [], [], []]
   genres.forEach((genre, index) => {
     const colIndex = Math.floor(index / 15)
@@ -94,25 +103,32 @@ const GenresDropdown = ({ onHover = () => {} }) => {
   useEffect(() => {
     if (hovered) onHover(false)
     else onHover(true)
-  })
+  }, [hovered])
+
+  const handleButtonClick = () => {
+    if (isMobile) {
+      navigate('/search') // 👉 mobile: chuyển ngay
+    } else {
+      setHovered(!hovered) // 👉 desktop: bật/tắt dropdown
+    }
+  }
 
   return (
     <div
       className='position-relative'
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => {
-        setHovered(false)
-        setActiveGenre(null)
-      }}>
+      onMouseEnter={() => !isMobile && setHovered(true)}
+      onMouseLeave={() => !isMobile && setHovered(false)}>
       <span
-        className={`btn fs-md-7 rounded-0 text-uppercase ${
+        className={`btn fs-7 fs-md-9 rounded-0 text-uppercase ${
           hovered && style.active
-        }`}>
+        }`}
+        onClick={handleButtonClick}>
         Thể loại
-        <FontAwesomeIcon icon={faCaretDown} />
+        <FontAwesomeIcon icon={faCaretDown} className='ms-1' />
       </span>
 
-      {hovered && (
+      {/* Dropdown chỉ hiển thị trên desktop */}
+      {!isMobile && hovered && (
         <div
           className={`position-absolute bg-white shadow p-2 top-100 left-0 d-flex ${style.dropdown}`}
           style={{ zIndex: 1000 }}>
@@ -121,11 +137,10 @@ const GenresDropdown = ({ onHover = () => {} }) => {
               {col.map((genre) => (
                 <li
                   key={genre.id}
-                  className={`p-1 hover-bg-light cursor-pointer slide-in-hover ${style.genre}`}
+                  className={`p-1 hover-bg-light slide-in-hover cursor-pointer ${style.genre}`}
                   onClick={() => {
                     navigate(`/search?genre=${genre.id}`)
                     setHovered(false)
-                    // set
                   }}
                   onMouseEnter={() => setActiveGenre(genre)}
                   onMouseLeave={() => setActiveGenre(null)}>
@@ -135,13 +150,10 @@ const GenresDropdown = ({ onHover = () => {} }) => {
             </ul>
           ))}
 
-          {/* Hiển thị description */}
           {activeGenre && (
             <div
-              className={`${style.description} p-2 m-0 bg-light shadow position-absolute top-100 start-0 w-100 border-top`}
-              style={{
-                zIndex: 1000,
-              }}>
+              className={`${style.description} p-2 bg-light shadow position-absolute top-100 start-0 w-100 border-top`}
+              style={{ zIndex: 1000 }}>
               {activeGenre.description}
             </div>
           )}

@@ -50,10 +50,6 @@ export const searchBooks = async ({
   maxChapter = 1e6,
   limit = 8,
 }) => {
-  if (!query || query.trim() === '') {
-    throw new Error('Query không được để trống')
-  }
-
   const params = new URLSearchParams()
   params.append('query', query)
   if (genres.length > 0) params.append('genres', genres.join(','))
@@ -61,7 +57,7 @@ export const searchBooks = async ({
   if (maxChapter && maxChapter < 1e6) params.append('maxChapter', maxChapter)
   if (limit) params.append('limit', limit)
 
-  const res = await fetch(`${API_URL}/api/book/search?${params.toString()}`)
+  const res = await cacheFetch(`${API_URL}/api/book/search?${params.toString()}`)
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
 
   const data = await res.json()

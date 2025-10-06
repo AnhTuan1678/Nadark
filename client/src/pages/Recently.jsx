@@ -56,16 +56,11 @@ const RecentlyRead = () => {
           <p className='text-muted'>Bạn chưa đọc truyện nào</p>
         </div>
       ) : (
-        <>
-          <div className='row mx-0'>
-            {stories.map((book) => (
-              <StoryCard
-                key={book.id}
-                story={formatterStoryDetail(book.Book)}
-              />
-            ))}
-          </div>
-        </>
+        <div className='row ps-1 pe-1'>
+          {stories.map((book) => (
+            <StoryCard key={book.id} story={formatterStoryDetail(book.Book)} />
+          ))}
+        </div>
       )}
 
       <Pagination

@@ -23,69 +23,6 @@ exports.getAllBooks = async ({ limit, offset }) => {
   }
 }
 
-// exports.searchBooks = async (query, limit = 8) => {
-//   if (!query.trim()) return []
-
-//   const similarityThreshold = query.length < 4 ? 0.1 : 0.35
-//   const startTime = performance.now()
-
-//   // 1️⃣ Tìm exact match
-//   let exactResults = await db.Book.findAll({
-//     where: {
-//       [Op.or]: [
-//         { title: { [Op.iLike]: `%${query}%` } },
-//         { author: { [Op.iLike]: `%${query}%` } },
-//       ],
-//     },
-//     limit,
-//     order: [
-//       [
-//         literal(`CASE
-//           WHEN "title" ILIKE '${query}%' THEN 0
-//           WHEN "author" ILIKE '${query}%' THEN 1
-//           ELSE 2
-//         END`),
-//         'ASC',
-//       ],
-//     ],
-//   })
-
-//   // 2️⃣ Chỉ search similarity nếu exactResults chưa đủ limit
-//   let similarityResults = []
-//   if (exactResults.length < limit) {
-//     const exactIds = exactResults.map((r) => r.id)
-//     similarityResults = await db.Book.findAll({
-//       attributes: {
-//         include: [
-//           [
-//             literal(
-//               `GREATEST(similarity("title", '${query}'), similarity("author", '${query}'))`,
-//             ),
-//             'sim_score',
-//           ],
-//         ],
-//       },
-//       where: literal(
-//         `GREATEST(similarity("title", '${query}'), similarity("author", '${query}')) >= ${similarityThreshold}` +
-//           (exactIds.length ? ` AND id NOT IN (${exactIds.join(',')})` : ''),
-//       ),
-//       order: [[literal('sim_score'), 'DESC']],
-//       limit: limit - exactResults.length,
-//     })
-//   }
-
-//   // 3️⃣ Gộp kết quả
-//   const results = [...exactResults, ...similarityResults]
-
-//   const endTime = performance.now()
-//   const searchTime = (endTime - startTime).toFixed(2)
-//   console.log(
-//     `🔍 Search "${query}" mất ${searchTime} ms, kết quả: ${results.length}`,
-//   )
-
-//   return results
-// }
-
 exports.searchBooks = async (
   query,
   limit = 8,
@@ -93,13 +30,11 @@ exports.searchBooks = async (
   minChapter = 0,
   maxChapter = 1e6,
 ) => {
-  if (!query.trim()) return []
-
   const similarityThreshold = query.length < 4 ? 0.1 : 0.25
   const startTime = performance.now()
 
-  // 1️⃣ Build where condition
-  let whereCondition = {
+  // Điều kiện cơ bản
+  const whereCondition = {
     [Op.or]: [
       { title: { [Op.iLike]: `%${query}%` } },
       { author: { [Op.iLike]: `%${query}%` } },
@@ -107,21 +42,34 @@ exports.searchBooks = async (
     chapter_count: { [Op.between]: [minChapter, maxChapter] },
   }
 
-  // 2️⃣ Genre condition (filter nếu genres được truyền)
-  let genreCondition = {
+  // Lấy ID sách phù hợp thể loại (nếu có lọc)
+  let bookIds = null
+  if (genres.length > 0) {
+    const booksWithGenre = await db.Book.findAll({
+      attributes: ['id'],
+      include: [
+        {
+          model: db.Genre,
+          where: { id: { [Op.in]: genres } },
+          attributes: [],
+          through: { attributes: [] },
+        },
+      ],
+    })
+    bookIds = booksWithGenre.map((b) => b.id)
+    if (!bookIds.length) return [] // không có sách phù hợp
+    whereCondition.id = { [Op.in]: bookIds }
+  }
+
+  // Truy vấn exact match (với include genre đầy đủ)
+  const exactResults = await db.Book.findAll({
     include: [
       {
         model: db.Genre,
         attributes: ['id', 'name', 'description'],
         through: { attributes: [] },
-        ...(genres.length > 0 ? { where: { id: { [Op.in]: genres } } } : {}),
       },
     ],
-  }
-
-  // 3️⃣ Exact match
-  let exactResults = await db.Book.findAll({
-    ...genreCondition,
     where: whereCondition,
     limit,
     order: [
@@ -136,7 +84,7 @@ exports.searchBooks = async (
     ],
   })
 
-  // 4️⃣ Similarity nếu exactResults chưa đủ
+  // Similarity search
   let similarityResults = []
   if (exactResults.length < limit) {
     const exactIds = exactResults.map((r) => r.id)
@@ -151,10 +99,17 @@ exports.searchBooks = async (
           ],
         ],
       },
-      ...genreCondition,
+      include: [
+        {
+          model: db.Genre,
+          attributes: ['id', 'name', 'description'],
+          through: { attributes: [] },
+        },
+      ],
       where: literal(
         `GREATEST(similarity("title", '${query}'), similarity("author", '${query}')) >= ${similarityThreshold}` +
           ` AND "chapter_count" BETWEEN ${minChapter} AND ${maxChapter}` +
+          (bookIds ? ` AND id IN (${bookIds.join(',')})` : '') +
           (exactIds.length ? ` AND id NOT IN (${exactIds.join(',')})` : ''),
       ),
       order: [[literal('sim_score'), 'DESC']],
@@ -162,7 +117,7 @@ exports.searchBooks = async (
     })
   }
 
-  // 5️⃣ Gộp kết quả
+  // Kết quả cuối
   const results = [...exactResults, ...similarityResults]
 
   const endTime = performance.now()
@@ -173,7 +128,6 @@ exports.searchBooks = async (
 
   return results
 }
-
 
 exports.getBookById = async (id) => {
   const book = await db.Book.findByPk(id, {
