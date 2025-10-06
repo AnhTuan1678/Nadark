@@ -2,47 +2,145 @@ const db = require('../models')
 const { Op, literal } = require('sequelize')
 
 exports.getAllBooks = async ({ limit, offset }) => {
-  const { count, rows } = await db.Book.findAndCountAll({
+  const count = await db.Book.count()
+
+  const rows = await db.Book.findAll({
     limit: limit || 30,
     offset: offset || 0,
-    order: [['updated_at', 'DESC']], // sắp xếp theo thời gian cập nhật
+    order: [['updated_at', 'DESC']],
+    include: [
+      {
+        model: db.Genre,
+        through: { attributes: [] },
+        attributes: ['id', 'name', 'description'],
+      },
+    ],
   })
+
   return {
     total: count,
     data: rows,
   }
 }
 
-exports.searchBooks = async (query) => {
+// exports.searchBooks = async (query, limit = 8) => {
+//   if (!query.trim()) return []
+
+//   const similarityThreshold = query.length < 4 ? 0.1 : 0.35
+//   const startTime = performance.now()
+
+//   // 1️⃣ Tìm exact match
+//   let exactResults = await db.Book.findAll({
+//     where: {
+//       [Op.or]: [
+//         { title: { [Op.iLike]: `%${query}%` } },
+//         { author: { [Op.iLike]: `%${query}%` } },
+//       ],
+//     },
+//     limit,
+//     order: [
+//       [
+//         literal(`CASE
+//           WHEN "title" ILIKE '${query}%' THEN 0
+//           WHEN "author" ILIKE '${query}%' THEN 1
+//           ELSE 2
+//         END`),
+//         'ASC',
+//       ],
+//     ],
+//   })
+
+//   // 2️⃣ Chỉ search similarity nếu exactResults chưa đủ limit
+//   let similarityResults = []
+//   if (exactResults.length < limit) {
+//     const exactIds = exactResults.map((r) => r.id)
+//     similarityResults = await db.Book.findAll({
+//       attributes: {
+//         include: [
+//           [
+//             literal(
+//               `GREATEST(similarity("title", '${query}'), similarity("author", '${query}'))`,
+//             ),
+//             'sim_score',
+//           ],
+//         ],
+//       },
+//       where: literal(
+//         `GREATEST(similarity("title", '${query}'), similarity("author", '${query}')) >= ${similarityThreshold}` +
+//           (exactIds.length ? ` AND id NOT IN (${exactIds.join(',')})` : ''),
+//       ),
+//       order: [[literal('sim_score'), 'DESC']],
+//       limit: limit - exactResults.length,
+//     })
+//   }
+
+//   // 3️⃣ Gộp kết quả
+//   const results = [...exactResults, ...similarityResults]
+
+//   const endTime = performance.now()
+//   const searchTime = (endTime - startTime).toFixed(2)
+//   console.log(
+//     `🔍 Search "${query}" mất ${searchTime} ms, kết quả: ${results.length}`,
+//   )
+
+//   return results
+// }
+
+exports.searchBooks = async (
+  query,
+  limit = 8,
+  genres = [],
+  minChapter = 0,
+  maxChapter = 1e6,
+) => {
   if (!query.trim()) return []
 
-  const limit = 8
-  const similarityThreshold = 0.2 // độ giống tối thiểu
+  const similarityThreshold = query.length < 4 ? 0.1 : 0.25
+  const startTime = performance.now()
 
-  // 1. Tìm bản ghi chứa query
-  let results = await db.Book.findAll({
-    where: {
-      [Op.or]: [
-        { title: { [Op.iLike]: `%${query}%` } },
-        { author: { [Op.iLike]: `%${query}%` } },
-      ],
-    },
+  // 1️⃣ Build where condition
+  let whereCondition = {
+    [Op.or]: [
+      { title: { [Op.iLike]: `%${query}%` } },
+      { author: { [Op.iLike]: `%${query}%` } },
+    ],
+    chapter_count: { [Op.between]: [minChapter, maxChapter] },
+  }
+
+  // 2️⃣ Genre condition (filter nếu genres được truyền)
+  let genreCondition = {
+    include: [
+      {
+        model: db.Genre,
+        attributes: ['id', 'name', 'description'],
+        through: { attributes: [] },
+        ...(genres.length > 0 ? { where: { id: { [Op.in]: genres } } } : {}),
+      },
+    ],
+  }
+
+  // 3️⃣ Exact match
+  let exactResults = await db.Book.findAll({
+    ...genreCondition,
+    where: whereCondition,
     limit,
     order: [
       [
         literal(`CASE 
-        WHEN "title" ILIKE '${query}%' THEN 0
-        WHEN "author" ILIKE '${query}%' THEN 1
-        ELSE 2
-      END`),
+          WHEN "title" ILIKE '${query}%' THEN 0
+          WHEN "author" ILIKE '${query}%' THEN 1
+          ELSE 2
+        END`),
         'ASC',
       ],
     ],
   })
 
-  // 2. Nếu không có kết quả chứa query → dùng similarity
-  if (results.length < limit) {
-    results = await db.Book.findAll({
+  // 4️⃣ Similarity nếu exactResults chưa đủ
+  let similarityResults = []
+  if (exactResults.length < limit) {
+    const exactIds = exactResults.map((r) => r.id)
+    similarityResults = await db.Book.findAll({
       attributes: {
         include: [
           [
@@ -53,19 +151,40 @@ exports.searchBooks = async (query) => {
           ],
         ],
       },
+      ...genreCondition,
       where: literal(
-        `GREATEST(similarity("title", '${query}'), similarity("author", '${query}')) >= ${similarityThreshold}`,
+        `GREATEST(similarity("title", '${query}'), similarity("author", '${query}')) >= ${similarityThreshold}` +
+          ` AND "chapter_count" BETWEEN ${minChapter} AND ${maxChapter}` +
+          (exactIds.length ? ` AND id NOT IN (${exactIds.join(',')})` : ''),
       ),
       order: [[literal('sim_score'), 'DESC']],
-      limit,
+      limit: limit - exactResults.length,
     })
   }
+
+  // 5️⃣ Gộp kết quả
+  const results = [...exactResults, ...similarityResults]
+
+  const endTime = performance.now()
+  const searchTime = (endTime - startTime).toFixed(2)
+  console.log(
+    `🔍 Search "${query}" mất ${searchTime} ms, kết quả: ${results.length}`,
+  )
 
   return results
 }
 
+
 exports.getBookById = async (id) => {
-  const book = await db.Book.findByPk(id)
+  const book = await db.Book.findByPk(id, {
+    include: [
+      {
+        model: db.Genre,
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+    ],
+  })
   if (!book) return null
   await book.increment('views', { by: 1 })
 

@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux'
 import { updateAvatar as updateAvatarAction } from '../redux/userSlice'
 import StoryCard from '../components/StoryCard'
 import { formatterStoryDetail } from '../utils/formatter'
+import GuestNotice from '../components/GuestNotice'
 
 const Profile = () => {
   const [profile, setProfile] = useState()
@@ -41,11 +42,7 @@ const Profile = () => {
   }, [user.token])
 
   if (!user.isLoggedIn) {
-    return (
-      <div className='d-flex justify-content-center align-items-center flex-grow-1 text-center'>
-        <p className='text-muted'>Bạn chưa đăng nhập</p>
-      </div>
-    )
+    return <GuestNotice />
   }
 
   const handleAvatarClick = () => {

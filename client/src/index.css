@@ -48,6 +48,8 @@
     --color-popup-background: #ccc;
 
     --color-text-blue: #2980b9;
+
+    --primary--color: #ae4ad9;
 }
 
 * {
@@ -145,10 +147,11 @@ body {
 }
 
 .tippy-box {
-    background-color: var(--color-popup-background);
+    background-color: var(--color-body-background);
     color: black;
     border-radius: 8px;
     border: 1px solid #000000;
+    opacity: 88%;
 }
 
 .tippy-content {
@@ -159,6 +162,11 @@ body {
 .fs-7 {
     font-size: 0.875rem;
 }
+
+.fs-8 {
+    font-size: 0.75rem;
+}
+
 .ratio-2x3 {
     aspect-ratio: 2 / 3;
 }
@@ -224,4 +232,30 @@ body {
     background-color: #f33;
     position: absolute;
     transform: translate(50%, 50%);
+}
+
+.slide-in-hover {
+    overflow: hidden;
+    position: relative;
+}
+
+.slide-in-hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(128, 128, 128, 0.3);
+    transform: translateX(calc(-100% - 2px));
+    transition: transform 0.3s ease;
+    z-index: 0;
+}
+
+.slide-in-hover:hover::before {
+    transform: translateX(0);
+}
+
+.slide-in-hover:hover {
+    color: var(--primary--color);
 }

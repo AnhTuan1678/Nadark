@@ -30,11 +30,12 @@ const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
+      const delta = currentScrollY - lastScrollY
 
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+      if (delta > 0 && currentScrollY > 50) {
         if (show) setAnimation('animate__slideOutUp')
         setShow(false)
-      } else {
+      } else if (delta < -10) {
         if (!show) setAnimation('animate__slideInDown')
         setShow(true)
       }

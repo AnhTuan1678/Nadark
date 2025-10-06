@@ -12,15 +12,9 @@ export const getAllStory = async ({ limit = 30, offset = 0 }) => {
   const data = await res.json()
 
   const list = Array.isArray(data.data) ? data.data : data
-
   return {
     total: data.total || list.length || 0,
-    data: list.map((book) => ({
-      ...book,
-      chapterCount: book.chapter_count,
-      publishedDate: book.created_at,
-      urlAvatar: book.url_avatar,
-    })),
+    data: list.map((book) => formatterStoryDetail(book)),
   }
 }
 
@@ -49,20 +43,27 @@ export const getChapterContent = async (index, bookId) => {
   return res.json()
 }
 
-export const searchBooks = async (query) => {
-  if (!query || query.trim() === '')
+export const searchBooks = async ({
+  query,
+  genres = [],
+  minChapter = 0,
+  maxChapter = 1e6,
+  limit = 8,
+}) => {
+  if (!query || query.trim() === '') {
     throw new Error('Query không được để trống')
+  }
 
-  const res = await fetch(
-    `${API_URL}/api/book/search?query=${encodeURIComponent(query)}`,
-  )
+  const params = new URLSearchParams()
+  params.append('query', query)
+  if (genres.length > 0) params.append('genres', genres.join(','))
+  if (minChapter > 0) params.append('minChapter', minChapter)
+  if (maxChapter && maxChapter < 1e6) params.append('maxChapter', maxChapter)
+  if (limit) params.append('limit', limit)
+
+  const res = await fetch(`${API_URL}/api/book/search?${params.toString()}`)
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
 
   const data = await res.json()
-  return data.map((book) => ({
-    ...book,
-    chapterCount: book.chapter_count,
-    publishedDate: book.created_at,
-    urlAvatar: book.url_avatar,
-  }))
+  return data.map((book) => formatterStoryDetail(book))
 }

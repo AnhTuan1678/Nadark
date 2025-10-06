@@ -1,0 +1,239 @@
+/* SearchPage.module.css */
+
+.container {
+    /* max-width: 1200px; */
+    margin: 0;
+    padding: 0;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.genreContainer {
+    margin-top: 10px;
+}
+
+.genreContainer h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.genreGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 cột */
+    gap: 10px;
+}
+
+.genreItem {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    text-align: center;
+    background-color: #f5f5f5;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.genreItem:hover {
+    background-color: #e0e0e0;
+}
+
+/* Khi được chọn */
+.selected {
+    background-color: #4caf50;
+    color: white;
+    border-color: #4caf50;
+}
+
+/* Tooltip mô tả */
+.genreItem::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+
+.genreItem:hover::after {
+    opacity: 1;
+}
+
+.chapterRange {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.chapterRange input {
+    width: 80px;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.submit {
+    padding: 10px 16px;
+    background-color: #1976d2;
+    color: white;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submit:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+.submit:hover:not(:disabled) {
+    background-color: #1565c0;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+}
+
+.results {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.bookCard {
+    display: flex;
+    gap: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    transition: box-shadow 0.2s;
+    background-color: #fff;
+}
+
+.bookCard:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.bookAvatar {
+    width: 100px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.bookInfo h4 {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+
+.bookInfo p {
+    margin: 2px 0;
+    font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .genreGrid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .bookCard {
+        flex-direction: column;
+        align-items: center;
+    }
+    .bookAvatar {
+        width: 120px;
+        height: 160px;
+    }
+}
+
+@media (max-width: 640px) {
+    .genreGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .chapterRange {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* 6 cột cho genre grid */
+.genreGrid6 {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+}
+
+/* mỗi item là label để checkbox dễ click */
+.genreItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.genreItem:hover {
+    background-color: #e0e0e0;
+}
+
+/* khi được chọn */
+.selected {
+    background-color: #4caf50;
+    color: white;
+    border-color: #4caf50;
+}
+
+/* tên thể loại bên cạnh checkbox */
+.genreName {
+    user-select: none;
+}
+
+/* responsive xuống tablet / mobile */
+@media (max-width: 1024px) {
+    .genreGrid6 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .genreGrid6 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

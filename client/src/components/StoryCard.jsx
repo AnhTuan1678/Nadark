@@ -3,8 +3,16 @@ import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import styles from './StoryCard.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart, faBookmark, faEye } from '@fortawesome/free-solid-svg-icons'
+import {
+  faHeart,
+  faBookmark,
+  faEye,
+  faUser,
+  faList,
+  faClock,
+} from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
+import { timeAgo } from '../utils/timeAgo'
 
 const StoryCard = ({ story, className }) => {
   const [hover, setHover] = useState(false)
@@ -13,25 +21,37 @@ const StoryCard = ({ story, className }) => {
   const popupContent = (
     <div className={`${styles['story-info-popup']} d-flex flex-column`}>
       <div className='d-flex'>
-        <img
-          src={story.urlAvatar}
-          alt={story.title}
-          className={styles['card-img']}
-        />
+        <div className='d-flex justify-content-center align-items-center'>
+          <img
+            src={story.urlAvatar}
+            alt={story.title}
+            className={`${styles['card-img']}`}
+          />
+        </div>
         <div className='d-flex flex-column p-2 ps-4'>
-          <h5>{story.title}</h5>
-          <p className='fst-italic fs-6'>{story.author}</p>
-          <p>{story.chapterCount} chương</p>
+          <h5 className='fs-4 text-success'>{story.title}</h5>
+          <p className='fs-7'>
+            <FontAwesomeIcon icon={faUser} />
+            {story.author}
+          </p>
+          <p className='fs-8 fw-light fst-italic'>{story.genres.join(', ')}</p>
+          <p>
+            <FontAwesomeIcon icon={faList} />
+            {story.chapterCount} chương
+          </p>
           <div>
-            <div className={`btn ${styles['cus-btn']}`}>
+            <span className={`p-0 m-0 me-3`}>
               <FontAwesomeIcon icon={faHeart} /> {story.like}
-            </div>
-            <div className={`btn ${styles['cus-btn']}`}>
+            </span>
+            <span className={`p-0 m-0 me-3`}>
               <FontAwesomeIcon icon={faBookmark} /> {story.followers}
-            </div>
-            <div className={`btn ${styles['cus-btn']}`}>
+            </span>
+            <span className={`p-0 m-0 me-3`}>
               <FontAwesomeIcon icon={faEye} /> {story.views}
-            </div>
+            </span>
+            <span className={`p-0 m-0 me-3`}>
+              <FontAwesomeIcon icon={faClock} /> {timeAgo(story.updateAt)}
+            </span>
           </div>
         </div>
       </div>
@@ -46,8 +66,8 @@ const StoryCard = ({ story, className }) => {
         placement='right'
         interactive={false}
         delay={[100, 0]}
-        offset={[50, -90]}
-        maxWidth={500}
+        offset={[240, -75]}
+        maxWidth={600}
         arrow={true}
         animation='fade'>
         <div

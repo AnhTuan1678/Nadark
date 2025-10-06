@@ -16,13 +16,36 @@ exports.getAllBooks = async (req, res) => {
 
 exports.searchBooks = async (req, res) => {
   try {
-    const { query } = req.query
+    const { query, genres, minChapter, maxChapter, limit } = req.query
+
     if (!query || query.trim() === '') {
       return res.status(400).json({ message: 'Query không được để trống' })
     }
-    const books = await bookService.searchBooks(query)
+
+    // Chuyển genres từ string sang array số nếu có
+    let genresArray = []
+    if (genres) {
+      genresArray = genres
+        .split(',')
+        .map((id) => parseInt(id))
+        .filter((id) => !isNaN(id))
+    }
+
+    // Chuyển min/maxChapter sang số, mặc định min=0, max=1e6
+    const minCh = minChapter ? parseInt(minChapter) : 0
+    const maxCh = maxChapter ? parseInt(maxChapter) : 1e6
+    const lim = limit ? parseInt(limit) : 8
+
+    const books = await bookService.searchBooks(
+      query,
+      lim,
+      genresArray,
+      minCh,
+      maxCh,
+    )
     res.json(books)
   } catch (err) {
+    console.error(err)
     res.status(500).json({ error: 'Internal server error' })
   }
 }

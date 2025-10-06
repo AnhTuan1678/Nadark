@@ -17,7 +17,7 @@ const NotifyBlock = ({ children, color = 'primary', icon = faInfoCircle }) => {
             <span className='core bg-danger'></span>
           </span>
           <div>
-            &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;
             {children}
           </div>
         </div>

@@ -39,11 +39,12 @@ const SearchBar = ({ className = '' }) => {
     if (debouncedQuery.trim().length < 2) return
 
     const fetchData = async () => {
-      const data = await bookAPI.searchBooks(debouncedQuery)
+      const data = await bookAPI.searchBooks({ query: debouncedQuery })
       if (data.length === 0) {
         closeDropdown()
         return
       }
+      console.log(data)
       setResults(data)
       setShowDropdown(true)
       setHighlightedIndex(-1) // reset highlight khi search mới
@@ -151,7 +152,7 @@ const SearchBar = ({ className = '' }) => {
                 onClick={() => handleSelect(book)}
                 onMouseEnter={() => setHighlightedIndex(index)}>
                 <img
-                  src={book.url_avatar}
+                  src={book.urlAvatar}
                   alt={book.title}
                   className={`${styles['book-cover']} flex-shrink-0 object-fit-cover`}
                 />
@@ -165,7 +166,7 @@ const SearchBar = ({ className = '' }) => {
                   </div>
                   <div className={styles['book-meta']}>
                     <span className='text-nowrap'>
-                      {book.total_rating / (book.review_count || 1)}
+                      {book.totalRating / (book.reviewCount || 1)}
                       <FontAwesomeIcon icon={faStar} color='gold' />
                     </span>
                     <span className='text-nowrap'>
@@ -175,7 +176,7 @@ const SearchBar = ({ className = '' }) => {
                   <div className={styles['book-meta']}>
                     <span className='text-nowrap'>
                       <FontAwesomeIcon icon={faClock} />
-                      {timeAgo(book.updated_at)}
+                      {timeAgo(book.updatedAt)}
                     </span>
                     <span className='text-nowrap'>
                       <FontAwesomeIcon icon={faList} />

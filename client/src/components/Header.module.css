@@ -19,19 +19,6 @@
     animation: gradientMove 5s linear infinite alternate;
 }
 
-.nav-bar {
-    background-color: var(--color-body-background);
-    z-index: 999 !important;
-}
-
-.active {
-    height: 100%;
-    background-color: #ffffff !important;
-    color: #ae4ad9 !important;
-    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1), 5px 0 10px rgba(0, 0, 0, 0.1);
-    opacity: 1 !important;
-}
-
 @keyframes gradientMove {
     0% {
         background-position: 0% 0%;

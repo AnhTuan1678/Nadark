@@ -93,6 +93,13 @@ const StoryDetail = () => {
   const handleFollowButton = async () => {
     const token = currentUser.token
     const res = await bookshelfAPI.addToBookshelf(token, id)
+    const formatted = formatterStoryDetail(res.book)
+    setStoryDetails((pre) => ({ ...formatted, genres: pre.genres }))
+    setAvgRating(
+      formatted.reviewCount > 0
+        ? (formatted.totalRating / formatted.reviewCount).toFixed(1)
+        : null,
+    )
     showSnackbar(res)
     if (res.ok) setStoryDetails(formatterStoryDetail(res.book))
   }
@@ -148,7 +155,6 @@ const StoryDetail = () => {
     <div className='container mx-auto p-0 p-top-4 p-end-4 flex-grow-1'>
       {storyDetails && (
         <div className='d-flex flex-column p-3 p-md-4 mb-4 border rounded cus-container'>
-          {/* d-flex flex-column flex-md-row mb-4 align-items-center */}
           <div className='row'>
             <div className='col col-12 col-md-4 col-lg-3 d-flex align-items-center justify-content-center'>
               <div className='w-50 w-md-100'>
@@ -213,7 +219,7 @@ const StoryDetail = () => {
                   </div>
                   <div className='btn opacity-hover-50 p-0'>
                     <FontAwesomeIcon icon={faClock} />
-                    {timeAgo(storyDetails.updatedDate)}
+                    {timeAgo(storyDetails.updatedAt)}
                   </div>
                   <div className='btn opacity-hover-50 p-0'>
                     <FontAwesomeIcon icon={faList} />

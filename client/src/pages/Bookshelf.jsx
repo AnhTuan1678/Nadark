@@ -34,19 +34,14 @@ const Bookshelf = () => {
 
   if (!token) {
     return (
-      <div className='container cus-container flex-grow-1 d-flex align-items-center justify-content-center'>
-        <h6 className='text-center'>Bạn chưa đăng nhập</h6>
+      <div className='d-flex align-items-center justify-content-center flex-grow-1 text-center'>
+        <h6 className='p-0 m-0'>Bạn chưa đăng nhập</h6>
       </div>
     )
   }
 
   return (
-    <div className='container cus-container shadow flex-grow-1'>
-      <NotifyBlock>
-        <strong>NaDark</strong> đang trong quá trình phát triển. Xin lỗi vì trải
-        nghiệm không thoải mái này!
-      </NotifyBlock>
-
+    <>
       <h2 className='m-3 fs-3 fw-normal text-blue'>Truyện đã lưu</h2>
 
       <div className='row ps-4 pe-4'>
@@ -86,7 +81,7 @@ const Bookshelf = () => {
           </ul>
         </nav>
       </div>
-    </div>
+    </>
   )
 }
 

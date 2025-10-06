@@ -6,7 +6,7 @@ const Footer = () => (
       color: '#fff',
       textAlign: 'center',
     }}>
-    <p>My App &copy; {new Date().getFullYear()}</p>
+    <p>NaDark &copy; {new Date().getFullYear()}</p>
   </footer>
 )
 
