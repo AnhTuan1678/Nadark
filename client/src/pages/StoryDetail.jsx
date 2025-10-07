@@ -44,6 +44,7 @@ const StoryDetail = () => {
     const fetchData = async () => {
       const data = await bookAPI.getStoryDetails(id)
       setStoryDetails(data)
+      console.log(data)
       setAvgRating(
         data.reviewCount > 0
           ? (data.totalRating / data.reviewCount).toFixed(1)
@@ -219,7 +220,7 @@ const StoryDetail = () => {
                   </div>
                   <div className='btn opacity-hover-50 p-0'>
                     <FontAwesomeIcon icon={faClock} />
-                    {timeAgo(storyDetails.updatedAt)}
+                    {timeAgo(storyDetails.updateAt)}
                   </div>
                   <div className='btn opacity-hover-50 p-0'>
                     <FontAwesomeIcon icon={faList} />

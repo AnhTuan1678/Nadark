@@ -5,7 +5,7 @@ import ProfileMenu from './ProfileMenu'
 import SearchBar from './SearchBar'
 import style from './Header.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
+import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 import NavBar from './NavBar'
 
 const Header = () => {
@@ -92,9 +92,12 @@ const MobileHeader = () => {
     <div className='d-flex h-100'>
       {/* Nút toggle */}
       <button
-        className='btn ps-1 pe-1 m-0 p-0 btn-light rounded-0 shadow'
+        className='btn ps-1 pe-1 m-0 p-0 btn-light rounded-0 shadow bg-transparent border-0 text-light'
         onClick={() => setShowSearch((prev) => !prev)}>
-        <FontAwesomeIcon icon={faArrowsRotate} />
+        <FontAwesomeIcon
+          icon={faExchangeAlt}
+          style={{ transform: 'rotate(90deg)' }}
+        />
       </button>
       <div className='d-flex w-100 flex-column p-0 ms-2 me-2 justify-content-center'>
         {/* Logo + Profile */}

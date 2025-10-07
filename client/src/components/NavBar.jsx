@@ -60,7 +60,7 @@ const NavBar = ({ className = '' }) => {
             return (
               <li
                 key={index}
-                className={`ps-1 pe-1 fs-7 fs-md-9 rounded-0 btn btn-slide opacity-hover-50 bg-opacity-50 text-uppercase ${
+                className={`ps-1 pe-1 fs-7 fs-md-8 rounded-0 btn btn-slide opacity-hover-50 bg-opacity-50 text-uppercase ${
                   isActive && showActive ? style.active : ''
                 }`}
                 onClick={() => {
@@ -119,7 +119,7 @@ const GenresDropdown = ({ onHover = () => {} }) => {
       onMouseEnter={() => !isMobile && setHovered(true)}
       onMouseLeave={() => !isMobile && setHovered(false)}>
       <span
-        className={`btn fs-7 fs-md-9 rounded-0 text-uppercase ${
+        className={`btn fs-7 fs-md-8 rounded-0 text-uppercase ${
           hovered && style.active
         }`}
         onClick={handleButtonClick}>

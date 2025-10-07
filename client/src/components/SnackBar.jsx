@@ -7,23 +7,22 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-const Snackbar = ({ status = 'success', message = '', onClose }) => {
-  const [show, setShow] = useState(true)
+const Snackbar = ({ status = 'success', message = '', onClose, progress }) => {
+  const [hideAnim, setHideAnim] = useState(false)
+
+  // Khi ấn nút close, bật animation rồi gọi onClose
+  const handleClose = () => setHideAnim(true)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShow(false)
-      if (onClose) onClose()
-    }, 2000) // 1 giây
-    return () => clearTimeout(timer)
-  }, [onClose])
+    if (hideAnim) {
+      const t = setTimeout(onClose, 300) // thời gian fade out
+      return () => clearTimeout(t)
+    }
+  }, [hideAnim, onClose])
 
-  if (!show) return null
-
-  // Chọn màu và icon dựa trên status
+  // Chọn màu và icon
   let bgClass = 'bg-success'
   let icon = faCheckCircle
-
   if (status === 'error') {
     bgClass = 'bg-danger'
     icon = faTimesCircle
@@ -32,25 +31,38 @@ const Snackbar = ({ status = 'success', message = '', onClose }) => {
     icon = faExclamationCircle
   }
 
+  const animClass = hideAnim
+    ? 'animate__animated animate__fadeOutRight animate__faster'
+    : 'animate__animated animate__fadeInLeft animate__faster'
+
   return (
     <div
-      className={`toast show position-fixed ${
-        window.innerWidth < 768 ? 'bottom-0 end-0' : 'top-0 end-0'
-      } m-3 ${bgClass} text-white`}
+      className={`toast show m-1 ${bgClass} text-white ${animClass}`}
       role='alert'
       aria-live='assertive'
-      aria-atomic='true'
-      style={{ minWidth: '250px', zIndex: 9999 }}>
-      <div className='d-flex'>
-        <div className='toast-body d-flex align-items-center'>
-          <FontAwesomeIcon icon={icon} className='me-2' />
-          {message}
+      aria-atomic='true'>
+      <div className='d-flex flex-column'>
+        <div className='d-flex'>
+          <div className='toast-body d-flex align-items-center fs-6 fs-md-7'>
+            <FontAwesomeIcon icon={icon} className='me-2' />
+            {message}
+          </div>
+          <button
+            type='button'
+            className='btn-close btn-close-white me-2 m-auto'
+            aria-label='Close'
+            onClick={handleClose}></button>
         </div>
-        <button
-          type='button'
-          className='btn-close btn-close-white me-2 m-auto'
-          aria-label='Close'
-          onClick={() => setShow(false)}></button>
+        {/* Thanh tiến trình */}
+        <div
+          style={{
+            height: '4px',
+            background: 'rgba(255,255,255,0.5)',
+            width: `${progress}%`,
+            transition: 'width 50ms linear',
+            borderRadius: '2px',
+            marginTop: '2px',
+          }}></div>
       </div>
     </div>
   )
