@@ -9,7 +9,7 @@
 body {
     margin: 0;
     min-height: 100vh;
-    background-color: var(--color-body-background);
+    background-color: var(--color-body-background) !important;
     background-size: cover;
     opacity: 50;
 }

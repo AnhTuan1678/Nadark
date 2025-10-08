@@ -19,6 +19,7 @@
     --color-body-background: #ebebeb;
     --color-header-background: #f6f7f8;
     --color-container-background: #f9f9f9;
+    --color-container-background-rgb: 249, 249, 249;
     --color-comment-background: #f3f4f6;
     --color-chapter-background: #eae4d3;
     --color-popup-background: #ccc;
@@ -29,6 +30,8 @@
     --color-bg-input: #e0e0e0;
     --color-input-icon: #444444;
     --color-search-dropdown-title: var(--second--color);
+    --color-theme-icon: var(--second--color);
+    --background-theme-toggle: var(--color-comment-background);
 
     --color-NotifyBlock-border: #4080ff;
     --background-NotifyBlock-icon: #4080ff;
@@ -44,17 +47,17 @@
 
 :root[data-theme='dark'] {
     --color-bg-dark: #121212;
-    --color-bg-hover: #1e1e1e;
+    --color-bg-hover: #72d3ff;
 
-    --color-bg-content: #1b1b1b;
+    --color-bg-content: #ffffff;
     --color-bg-sidebar: #1f1f1f;
 
-    --color-text-light: #f8f9fa;
+    --color-text-light: #000000;
     --color-text-dark: #e0e0e0;
     --color-text-muted: #9ca3af;
 
-    --color-bg-badge: #2e2e2e;
-    --color-bg-badge-hover: #3c3c3c;
+    --color-bg-badge: #707070;
+    --color-bg-badge-hover: #5e5e5e;
     --color-bg-disabled: #495057;
 
     --color-shadow: rgba(0, 0, 0, 0.6);
@@ -63,8 +66,9 @@
     --color-body-background: #1a1a1a;
     --color-header-background: #222;
     --color-container-background: #252525;
+    --color-container-background-rgb: 37, 37, 37;
     --color-comment-background: #242424;
-    --color-chapter-background: #2b2b2b;
+    --color-chapter-background: #252525;
     --color-popup-background: #333;
 
     /* Header */
@@ -74,15 +78,16 @@
     --color-bg-input: #2a2a2a;
     --color-input-icon: #ffffff;
     --color-search-dropdown-title: var(--second--color);
+    --color-theme-icon: var(--primary--color);
+    --background-theme-toggle: var(--background-NotifyBlock);
 
     --color-NotifyBlock-border: #ff9601;
     --background-NotifyBlock: #423e3e;
     --background-NotifyBlock-icon: #000000;
 
-    
     --color--page--title: var(--primary--color);
 
-    --color--theme--toggle:#00ffaa;
+    --color--theme--toggle: #00ffaa;
 
     --color-text-blue: #4fc3f7;
     --primary--color: #ff9601;

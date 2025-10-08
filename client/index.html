@@ -22,6 +22,25 @@
             sizes="16x16"
             href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
+
+        <script>
+            ;(function () {
+                try {
+                    // load theme trước khi render
+                    const theme = localStorage.getItem('theme') || 'light'
+                    document.documentElement.setAttribute('data-theme', theme)
+                    const bg = theme === 'dark' ? '#1a1a1a' : '#ebebeb'
+                    document.write(
+                        `<style>html,body{background-color:${bg};}</style>`,
+                    )
+                    window.addEventListener('DOMContentLoaded', () => {
+                        document.body.setAttribute('data-bs-theme', theme)
+                    })
+                } catch (e) {
+                    console.warn('Không thể đọc theme từ localStorage:', e)
+                }
+            })()
+        </script>
     </head>
     <body>
         <div id="root"></div>

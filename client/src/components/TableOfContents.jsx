@@ -69,15 +69,15 @@ const TableOfContents = ({ onClose, currentIndex = 1, bookId }) => {
                 <li
                   key={index}
                   ref={(el) => (listRef.current[index] = el)}
-                  className={`list-group-item cursor-pointer p-1 btn btn-light text-start text-nowrap text-truncate ${
+                  className={`list-group-item cursor-pointer p-1 btn btn-light text-start text-nowrap text-truncate bg-transparent text-dark ${
                     index < currentIndex - 1 ? 'opacity-75' : ''
                   }`}
                   style={
                     index === currentIndex - 1
                       ? {
-                          backgroundColor: '#ffeaa7',
+                          backgroundColor: 'var(--background--current-chapter) !important',
                           fontWeight: 'bold',
-                          border: '1px solid #fdcb6e',
+                          border: '1px solid var(--border-current-chapter)',
                         }
                       : {}
                   }

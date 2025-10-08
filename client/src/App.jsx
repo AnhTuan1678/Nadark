@@ -99,7 +99,9 @@ function App() {
           />
           <Route path='/user' element={<UserProfile />} />
           <Route path='/auth' element={<UserAuth />} />
-          <Route path='/hot' element={<DefaultLayout></DefaultLayout>} />
+          <Route path='/hot' element={<></>
+            // <DefaultLayout></DefaultLayout>
+          } />
           <Route
             path='/search'
             element={

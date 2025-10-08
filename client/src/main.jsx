@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <SnackbarProvider>
       <ThemeProvider>
-        <SnowEffect count={40} />
+        <SnowEffect />
         <App />
       </ThemeProvider>
     </SnackbarProvider>

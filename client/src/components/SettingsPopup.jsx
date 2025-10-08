@@ -102,6 +102,11 @@ const SettingsPopup = ({ defaultSetting, onClose, onSave, onChange }) => {
           <div className='flex-grow-1'></div>
           <select
             className='form-select w-auto'
+            style={{
+              backgroundColor: 'white',
+              color: 'black',
+              borderColor: '#ccc',
+            }}
             value={settings.fontFamily}
             onChange={(e) =>
               setSettings((prev) => ({

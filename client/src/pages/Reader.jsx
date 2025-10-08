@@ -138,6 +138,9 @@ const Reader = () => {
     if (!message || !message.trim()) return
 
     const token = currentUser.token
+    if (!token) {
+      showSnackbar({status: 'error', message:'Chưa đăng nhập'})
+    }
     const res = await commentAPI.createComment(
       token,
       content.id,

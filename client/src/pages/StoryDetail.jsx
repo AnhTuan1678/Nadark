@@ -90,7 +90,14 @@ const StoryDetail = () => {
     fetchReview()
   }, [currentUser.id, id])
 
-  if (!storyDetails || !chapters) return <div>Đang tải...</div>
+  if (!storyDetails || !chapters)
+    return (
+      <div className='d-flex justify-content-center align-items-center flex-grow-1'>
+        <div className='spinner-border text-muted' role='status'>
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </div>
+    )
 
   return (
     <div className='container mx-auto p-0 p-top-4 p-end-4 flex-grow-1'>
@@ -149,12 +156,32 @@ const StoryInfoSection = ({
     showSnackbar(res)
   }
 
+  const fallbackCopyTextToClipboard = (text) => {
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+    try {
+      document.execCommand('copy')
+      showSnackbar({ message: 'Đã copy link: ' + text })
+    } catch (err) {
+      console.warn(err)
+      showSnackbar({ status: 'error', message: 'Copy thất bại' })
+    }
+    document.body.removeChild(textArea)
+  }
+
   const handleShareClick = () => {
     const url = window.location.origin + window.location.pathname
-    navigator.clipboard
-      .writeText(url)
-      .then(() => showSnackbar({ message: 'Đã copy link: ' + url }))
-      .catch(() => showSnackbar({ status: 'error', message: 'Copy thất bại' }))
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard
+        .writeText(url)
+        .then(() => showSnackbar({ message: 'Đã copy link: ' + url }))
+        .catch(() => fallbackCopyTextToClipboard(url))
+    } else {
+      fallbackCopyTextToClipboard(url)
+    }
   }
 
   const InfoItem = ({ label, value, icon, onClick }) => (
@@ -333,7 +360,7 @@ const StoryChaptersSection = ({
               right: 0,
               height: '4rem',
               background:
-                'linear-gradient(180deg, hsla(0,0%,100%,0) 0%, #fff 75%, #fff)',
+                'linear-gradient(180deg, rgba(var(--color-container-background-rgb), 0) 0%, rgba(var(--color-container-background-rgb), 0.75) 75%, rgba(var(--color-container-background-rgb), 1) 100%)',
               pointerEvents: 'none',
             }}
           />
@@ -423,6 +450,7 @@ const Description = ({ description }) => {
 
         {!showAll && needsClamp && (
           <div
+            className='12345'
             style={{
               position: 'absolute',
               bottom: 0,
@@ -430,7 +458,7 @@ const Description = ({ description }) => {
               right: 0,
               height: '4rem',
               background:
-                'linear-gradient(180deg, hsla(0,0%,100%,0) 0%, #fff 75%, #fff)',
+                'linear-gradient(180deg, rgba(var(--color-container-background-rgb), 0) 10%, rgba(var(--color-container-background-rgb), 0.75) 75%, rgba(var(--color-container-background-rgb), 1) 100%)',
               pointerEvents: 'none',
             }}
           />
