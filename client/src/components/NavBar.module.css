@@ -1,12 +1,12 @@
 .nav-bar {
-    background-color: var(--color-body-background);
+    background-color: var(--color-nav-background);
     z-index: 999 !important;
 }
 
 .active {
     height: 100%;
-    background-color: #ffffff !important;
-    color: #ae4ad9 !important;
+    background-color: var(--color-nav-active) !important;
+    color: var(--primary--color) !important;
     box-shadow: -1px 0 2px rgba(0, 0, 0, 0.05), 1px 0 2px rgba(0, 0, 0, 0.05);
     opacity: 1 !important;
 }
@@ -16,9 +16,14 @@ li::marker {
     display: none;
 }
 
+.dropdown {
+    background-color: var(--background-nav-dropdown);
+}
+
 .column {
     display: flex;
     flex-direction: column;
+    background-color: transparent;
 }
 
 .genre {
@@ -27,9 +32,15 @@ li::marker {
     padding: 5px 10px;
     color: inherit;
     cursor: pointer;
+    color: var(--color-nav-dropdown);
+    background-color: transparent;
 }
 
 .genre span {
     position: relative;
     z-index: 1;
+}
+
+.description {
+    background-color: var(--background-nav-dropdown);
 }

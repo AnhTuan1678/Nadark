@@ -7,7 +7,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-const Snackbar = ({ status = 'success', message = '', onClose, progress }) => {
+const Snackbar = ({
+  status = 'success',
+  message = '',
+  onClose,
+  progress,
+  closing,
+}) => {
   const [hideAnim, setHideAnim] = useState(false)
 
   // Khi ấn nút close, bật animation rồi gọi onClose
@@ -15,10 +21,14 @@ const Snackbar = ({ status = 'success', message = '', onClose, progress }) => {
 
   useEffect(() => {
     if (hideAnim) {
-      const t = setTimeout(onClose, 300) // thời gian fade out
+      const t = setTimeout(onClose, 300)
       return () => clearTimeout(t)
     }
   }, [hideAnim, onClose])
+
+  useEffect(() => {
+    if (closing) setHideAnim(true)
+  }, [closing])
 
   // Chọn màu và icon
   let bgClass = 'bg-success'

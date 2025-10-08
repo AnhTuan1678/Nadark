@@ -3,6 +3,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: Tahoma, sans-serif, Helvetica, Arial;
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 body {
@@ -10,14 +11,14 @@ body {
     min-height: 100vh;
     background-color: var(--color-body-background);
     background-size: cover;
+    opacity: 50;
 }
 
 .app {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    /* background-color: var(--color-bg-content); */
-    color: var(--color-text-dark);
+    color: var(--color-input-icon);
 }
 
 .header {
@@ -27,7 +28,7 @@ body {
 }
 
 .container {
-    max-width: 1100px;
+    max-width: 1030px;
 }
 
 .cus-container {
@@ -35,7 +36,7 @@ body {
 }
 
 .cus-comment {
-    background-color: var(--color-comment-background);
+    background-color: var(--color-body-background);
 }
 
 .footer {
@@ -134,6 +135,10 @@ body {
     color: var(--color-text-blue);
 }
 
+.text-hover-blue:hover {
+    color: var(--color-text-blue);
+}
+
 @media (max-width: 768px) {
     .fs-md-7 {
         font-size: 0.875rem !important;
@@ -154,4 +159,54 @@ body {
 
 .primary-color {
     color: var(--primary--color);
+}
+
+.transition-collapse {
+    overflow: hidden;
+    transition: all 1s ease;
+    max-height: 0;
+    opacity: 0;
+}
+
+.transition-collapse.hide {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-5px);
+    pointer-events: none;
+}
+
+.transition-collapse.show {
+    max-height: 1000px; /* đủ lớn để chứa toàn bộ nội dung */
+    opacity: 1;
+}
+
+.page-title {
+    width: 100%;
+    color: var(--color--page--title);
+    margin: 12px;
+    font-size: 20px;
+    font-weight: 400;
+    position: relative;
+}
+
+.page-title::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -15px;
+    width: 10px;
+    height: 30px;
+    background-color: var(--color--page--title);
+    transform: translateY(-50%);
+    border-bottom: 1px solid var(--color--page--title);
+}
+
+.page-title::after {
+    content: '';
+    position: absolute;
+    left: -15px;
+    bottom: -5px;
+    height: 3px;
+    width: 100%;
+    background-color: var(--color--page--title);
 }

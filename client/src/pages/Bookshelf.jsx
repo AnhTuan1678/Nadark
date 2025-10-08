@@ -42,7 +42,7 @@ const Bookshelf = () => {
 
   return (
     <>
-      <h2 className='m-3 fs-3 fw-normal text-blue'>Truyện đã lưu</h2>
+      <h2 className='page-title'>Truyện đã lưu</h2>
 
       <div className='row ps-1 pe-1'>
         {stories.map((story) => (

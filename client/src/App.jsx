@@ -13,12 +13,13 @@ import Tutorial from './pages/Tutorial'
 import RecentlyRead from './pages/Recently'
 import UserProfile from './pages/UserProfile'
 import UserAuth from './pages/UserAuth'
+import Settings from './pages/Settings'
 import { getProfile } from './services/api/user'
 import { useEffect } from 'react'
 import { store } from './redux/store'
 import { login, logout } from './redux/userSlice'
+import { fetchGenres } from './redux/genreSlice'
 import SearchPage from './pages/SearchPage'
-import './assets/styles/index.css'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -48,6 +49,10 @@ function App() {
       }
     }
     if (token) fetchProfile()
+    const state = store.getState()
+    if (!state.genre?.list?.length) {
+      store.dispatch(fetchGenres())
+    }
   }, [])
 
   return (
@@ -63,7 +68,14 @@ function App() {
               </DefaultLayout>
             }
           />
-          <Route path='/story/:id' element={<StoryDetail />} />
+          <Route
+            path='/story/:id'
+            element={
+              <DefaultLayout>
+                <StoryDetail />
+              </DefaultLayout>
+            }
+          />
           <Route path='/story/:id/chapter/:chapterIndex' element={<Reader />} />
           <Route path='/profile' element={<Profile />} />
           <Route
@@ -93,6 +105,14 @@ function App() {
             element={
               <DefaultLayout>
                 <SearchPage />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path='/settings'
+            element={
+              <DefaultLayout>
+                <Settings />
               </DefaultLayout>
             }
           />

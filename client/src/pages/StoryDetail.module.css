@@ -6,14 +6,8 @@
 }
 
 .genre-badge {
-    /* flex: 0 0 auto; */
-    max-width: 120px;
     background-color: var(--color-bg-badge);
     color: var(--color-text-light);
-    border-radius: 5px;
-    padding: 5px 10px;
-    margin-right: 5px;
-    font-size: 0.9em;
     transition: background-color 0.3s, color 0.3s;
 }
 .genre-badge:hover {

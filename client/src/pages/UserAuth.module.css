@@ -1,18 +1,42 @@
+:root[data-theme='light'] {
+    --color-container-bg: #520044;
+    --color-title: #630049;
+    --color-label: #59565d;
+    --color-btn: #9c1b5d;
+    --color-submit-bg: #520044;
+    --color-submit-bg-hover: #b80099;
+    --color-submit-text: white;
+    --color-submit-disabled: #9b8f9f;
+    --color-footer-link: #9c1b5d;
+    --color-error: red;
+}
+
+:root[data-theme='dark'] {
+    --color-container-bg: #520044;
+    --color-title: #a194d0;
+    --color-label: #59565d;
+    --color-btn: var(--primary--color);
+    --color-submit-bg: #6c5aad;
+    --color-submit-bg-hover: #513e92;
+    --color-submit-disabled: #a194d0;
+    --color-footer-link: #9c1b5d;
+    --color-error: red;
+}
+
 .container {
     flex: 1;
     inset: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    background-color: #520044;
+    background-color: var(--color-container-bg);
     background-image: url(https://auth.fandom.com/_next/static/media/branding_background.c0ec82a7.png);
     background-repeat: repeat;
     background-size: 382px;
 }
 
 .modal {
-    background: #fff;
+    background: var(--color-submit-text);
     padding: 30px 25px;
     border-radius: 8px;
     width: 350px;
@@ -24,15 +48,14 @@
     margin-bottom: 20px;
     font-weight: 700;
     font-size: 16px;
-    color: #630049;
+    color: var(--color-title);
 }
 
 .label {
     font-size: 14px;
     pointer-events: auto;
     left: 0;
-    color: #59565d;
-    /* padding-bottom: 7px; */
+    color: var(--color-label);
     font-family: rubik, helvetica, arial, sans-serif;
 }
 
@@ -49,22 +72,20 @@
 .form input {
     padding: 10px;
     margin-bottom: 15px;
-    border: 1px solid #6666ff;
     border-radius: 6px;
     font-size: 14px;
 }
 
 .btn {
     font-size: 13px;
-    color: #9c1b5d;
+    color: var(--color-btn);
     text-decoration: none;
     margin-bottom: 15px;
 }
 
 .submit {
-    /* color: white; */
-    background-color: #520044;
-    color: white;
+    background-color: var(--color-submit-bg);
+    color: var(--color-submit-text);
     font-weight: bold;
     padding: 10px;
     border: none;
@@ -73,14 +94,14 @@
 }
 
 .submit:disabled {
-    background-color: #9b8f9f;
+    background-color: var(--color-submit-disabled);
     cursor: not-allowed;
     opacity: 0.6;
 }
 
 .submit:not(:disabled):hover {
     opacity: 0.9;
-    background-color: #b80099;
+    background-color: var(--color-submit-bg-hover);
 }
 
 .footerText {
@@ -90,12 +111,12 @@
 }
 
 .footerText a {
-    color: #9c1b5d;
+    color: var(--color-footer-link);
     text-decoration: none;
 }
 
 .error {
-    color: red;
+    color: var(--color-error);
     font-size: 12px;
     margin-bottom: 10px;
 }

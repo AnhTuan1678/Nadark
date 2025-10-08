@@ -7,17 +7,18 @@ import style from './Header.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 import NavBar from './NavBar'
+import ThemeToggle from './ThemeToggle'
 
 const Header = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   const [show, setShow] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const [animation, setAnimation] = useState('')
+  const [height, setHeight] = useState(0)
 
   const navigate = useNavigate()
 
   const fixedRef = useRef(null)
-  const [height, setHeight] = useState(0)
 
   useEffect(() => {
     if (fixedRef.current) {
@@ -58,22 +59,24 @@ const Header = () => {
   return (
     <>
       <div
-        className={`${style.header} animate__animated ${animation}`}
+        className={`${style.header} position-fixed top-0 start-0 end-0 animate__animated ${animation}`}
         ref={fixedRef}>
         {isMobile ? (
           <MobileHeader />
         ) : (
-          <div className={`d-flex align-items-center container p-1`}>
+          <div className={`d-flex align-items-center container p-0 h-100`}>
+            {/* Logo */}
             <div className='flex-grow-1 d-flex'>
               <h1
-                className={`pt-1 logo fs-4 animate__animated animate__fadeInLeft  cursor-pointer d-inline-block p-0 m-0 ${style.logo}`}
+                className={`logo fs-4 cursor-pointer d-inline-block p-0 m-0 ${style.logo}`}
                 onClick={() => navigate(`/`)}
                 style={{ fontFamily: 'Ananda' }}>
-                {/* Nadark */}
+                {/* NaDark */}
                 {import.meta.env.VITE_APP_NAME}
               </h1>
             </div>
-            <SearchBar />
+            <SearchBar className='flex-grow-1' />
+            <ThemeToggle />
             <ProfileMenu className='ps-2' />
           </div>
         )}
@@ -104,12 +107,13 @@ const MobileHeader = () => {
         {!showSearch && (
           <div className='d-flex align-items-center p-0 m-0 animate__animated animate__fadeInDown animate__faster'>
             <h1
-              className={`logo fs-4 m-0 ${style.logo} cursor-pointer`}
+              className={`logo fs-4 m-0 ${style.logo} cursor-pointer flex-grow-1`}
               style={{ fontFamily: 'Ananda' }}
               onClick={() => navigate('/')}>
               {import.meta.env.VITE_APP_NAME}
             </h1>
-            <ProfileMenu className='flex-grow-1' />
+            <ThemeToggle />
+            <ProfileMenu className='ps-2' />
           </div>
         )}
 

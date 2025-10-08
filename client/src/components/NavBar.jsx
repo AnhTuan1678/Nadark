@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react'
 import style from './NavBar.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faHome } from '@fortawesome/free-solid-svg-icons'
-import genres from '../assets/genres.json'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchGenres } from '../redux/genreSlice'
 
 const NavBar = ({ className = '' }) => {
   const items = ['Hot', 'Theo dõi', 'Lịch sử', 'Thể loại', 'Tìm truyện']
@@ -80,10 +81,17 @@ const NavBar = ({ className = '' }) => {
 }
 
 const GenresDropdown = ({ onHover = () => {} }) => {
-  const navigate = useNavigate()
   const [hovered, setHovered] = useState(false)
   const [activeGenre, setActiveGenre] = useState(null)
   const [isMobile, setIsMobile] = useState(false)
+
+  const navigate = useNavigate()
+  const genres = useSelector((state) => state.genre.list)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!genres.length) dispatch(fetchGenres())
+  }, [dispatch, genres.length])
 
   // Phát hiện thiết bị mobile
   useEffect(() => {
@@ -107,9 +115,9 @@ const GenresDropdown = ({ onHover = () => {} }) => {
 
   const handleButtonClick = () => {
     if (isMobile) {
-      navigate('/search') // 👉 mobile: chuyển ngay
+      navigate('/search')
     } else {
-      setHovered(!hovered) // 👉 desktop: bật/tắt dropdown
+      setHovered(!hovered)
     }
   }
 
@@ -130,7 +138,7 @@ const GenresDropdown = ({ onHover = () => {} }) => {
       {/* Dropdown chỉ hiển thị trên desktop */}
       {!isMobile && hovered && (
         <div
-          className={`position-absolute bg-white shadow p-2 top-100 left-0 d-flex ${style.dropdown}`}
+          className={`position-absolute shadow p-2 top-100 left-0 d-flex ${style.dropdown}`}
           style={{ zIndex: 1000 }}>
           {columns.map((col, colIndex) => (
             <ul key={colIndex} className={`p-0 m-0 ${style.column}`}>
@@ -152,7 +160,7 @@ const GenresDropdown = ({ onHover = () => {} }) => {
 
           {activeGenre && (
             <div
-              className={`${style.description} p-2 bg-light shadow position-absolute top-100 start-0 w-100 border-top`}
+              className={`${style.description} p-2 shadow position-absolute top-100 start-0 w-100 border-top`}
               style={{ zIndex: 1000 }}>
               {activeGenre.description}
             </div>

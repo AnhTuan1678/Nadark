@@ -107,7 +107,7 @@ export function ReviewForm({ bookId }) {
     <div className='mb-4'>
       {review && !editing ? (
         // Hiển thị bình luận hiện có
-        <div className='mb-4 border p-1 p-md-3 rounded-3'>
+        <div className='mb-4 border p-1 p-md-3 shadow-lg'>
           <StarSelector
             rating={review.rating}
             setRating={setRating}

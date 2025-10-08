@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { bookAPI } from '../services/api'
-import genresData from '../assets/genres.json'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchGenres } from '../redux/genreSlice'
 import StoryCard from '../components/StoryCard'
 
 const chapterRanges = [
@@ -41,6 +42,13 @@ const SearchPage = () => {
   const [error, setError] = useState('')
 
   const limit = 360
+
+  const dispatch = useDispatch()
+  const { list: genresData } = useSelector((state) => state.genre)
+
+  useEffect(() => {
+    if (!genresData.length) dispatch(fetchGenres())
+  }, [dispatch, genresData.length])
 
   useEffect(() => {
     const range = chapterRanges.find((r) => r.label === selectedRange)
@@ -138,7 +146,7 @@ const SearchPage = () => {
   return (
     <>
       <div className='m-0 ms-md-5 me-md-5'>
-        <h2 className='fs-3 mb-3'>Tìm kiếm sách</h2>
+        <h2 className='page-title'>Tìm kiếm sách</h2>
         <SearchForm
           query={query}
           setQuery={setQuery}
@@ -185,6 +193,13 @@ const SearchForm = ({
 }) => {
   const [showGenreLabel, setShowGenreLabel] = useState(false)
 
+  const dispatch = useDispatch()
+  const { list: genresData } = useSelector((state) => state.genre)
+
+  useEffect(() => {
+    if (!genresData.length) dispatch(fetchGenres())
+  }, [dispatch, genresData.length])
+
   const handleGenreToggle = (id) => {
     setSelectedGenres((prev) =>
       prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id],
@@ -200,6 +215,7 @@ const SearchForm = ({
       onSubmit={(e) => {
         e.preventDefault()
         onSubmit()
+        setShowGenreLabel(false)
       }}
       className='mb-4'>
       {/* Ô nhập tìm kiếm */}
@@ -240,7 +256,7 @@ const SearchForm = ({
               onClick={() =>
                 setSelectedGenres(selectedGenres.filter((g) => genre !== g))
               }>
-              {genresData[genre - 1]?.name || '??'}
+              {genresData.find((g) => g.id === genre)?.name}
             </span>
           ))}
         </div>
@@ -251,7 +267,10 @@ const SearchForm = ({
           {showGenreLabel ? '[Ẩn]' : '[Hiện]'}
         </button>
 
-        {showGenreLabel && (
+        <div
+          className={`genre-container transition-collapse ${
+            showGenreLabel ? 'show' : 'hide'
+          }`}>
           <div className='d-flex flex-wrap gap-2'>
             {genresData.map((g) => (
               <div key={g.id} className='form-check'>
@@ -271,7 +290,7 @@ const SearchForm = ({
               </div>
             ))}
           </div>
-        )}
+        </div>
       </div>
 
       <button type='submit' disabled={loading} className='btn btn-primary'>

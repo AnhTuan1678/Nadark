@@ -1,13 +1,8 @@
 .search-bar {
-    max-width: 600px;
-    flex: 1;
+    max-width: 400px;
     transition: box-shadow 0.3s;
-    background-color: var(--color-bg-input);
     height: 30px;
-}
-
-.search-bar:hover {
-    box-shadow: 0 4px 10px rgba(190, 60, 60, 0.15);
+    background-color: var(--color-bg-input);
 }
 
 .search-bar ul {
@@ -16,7 +11,11 @@
 
 .search-input {
     outline: none;
-    background-color: transparent;
+    height: 30px;
+}
+
+.search-input:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* tương đương .shadow */
 }
 
 .search-btn {
@@ -43,7 +42,7 @@
 }
 
 .dropdown-item {
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.2s, color 0.2s;
     /* border-bottom: 1px solid var(--color-bg-dark); */
 }
 
@@ -63,6 +62,7 @@
 
 .book-title {
     text-overflow: ellipsis;
+    color: var(--color-search-dropdown-title);
 }
 
 .book-author,

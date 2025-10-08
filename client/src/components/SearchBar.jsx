@@ -114,11 +114,11 @@ const SearchBar = ({ className = '' }) => {
       }
       ref={wrapperRef}>
       <form
-        className='d-flex align-items-center w-100 rounded-pill overflow-hidden rounded-t-3 p-1 pb-0'
+        className='d-flex align-items-center rounded-pill overflow-hidden p-0 shadow m-0'
         onSubmit={(e) => e.preventDefault()}>
         <input
           type='text'
-          className={`${styles['search-input']} flex-grow-1 border-0 ps-2`}
+          className={`${styles['search-input']} flex-grow-1 border-0 ps-2 bg-transparent`}
           placeholder='Nhập ít nhất 2 kí tự'
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -138,7 +138,9 @@ const SearchBar = ({ className = '' }) => {
           borderBottomLeftRadius: '12px',
           borderBottomRightRadius: '12px',
         }}>
-        {(showDropdown || isClosing) && (
+        {
+          // (showDropdown || isClosing) &&
+          (
           <ul
             className={`show p-0 overflow-hidden m-0 animate__animated animate__faster ${
               isClosing ? 'animate__fadeOutUp' : 'animate__fadeInDown'
@@ -176,7 +178,7 @@ const SearchBar = ({ className = '' }) => {
                   <div className={styles['book-meta']}>
                     <span className='text-nowrap'>
                       <FontAwesomeIcon icon={faClock} />
-                      {timeAgo(book.updatedAt)}
+                      {timeAgo(book.updateAt)}
                     </span>
                     <span className='text-nowrap'>
                       <FontAwesomeIcon icon={faList} />

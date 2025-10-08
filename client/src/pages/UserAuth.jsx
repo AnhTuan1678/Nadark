@@ -87,7 +87,7 @@ const Login = ({ onSuccess = () => {} }) => {
   }
 
   return (
-    <div className={styles.modal}>
+    <div className={`${styles.modal} cus-container`}>
       <h2 className={styles.title}>Đăng nhập</h2>
 
       <form onSubmit={handleLogin} className={styles.form}>
@@ -179,7 +179,7 @@ const Register = ({ onSwitchTab }) => {
   }
 
   return (
-    <div className={styles.modal}>
+    <div className={`${styles.modal} cus-container`}>
       <h2 className={styles.title}>Đăng ký</h2>
 
       <form onSubmit={handleRegister} className={styles.form}>
@@ -284,8 +284,10 @@ const ChangePassword = ({ onSuccess = () => {} }) => {
   }
 
   return (
-    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-      <h3>Đổi mật khẩu</h3>
+    <div
+      className={`${styles.modal} cus-container`}
+      onClick={(e) => e.stopPropagation()}>
+      <h3 className={styles.title}>Đổi mật khẩu</h3>
       <form onSubmit={handleChangePassword} className={styles.form}>
         <div className='floating-label'>
           <input

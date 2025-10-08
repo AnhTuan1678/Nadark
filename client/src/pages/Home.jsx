@@ -40,7 +40,7 @@ const Home = () => {
 
   return (
     <>
-      <h2 className='m-3 fs-3 fw-normal text-blue'>
+      <h2 className='page-title '>
         {import.meta.env.VITE_APP_NAME} - Truyện online {'>'}
       </h2>
 

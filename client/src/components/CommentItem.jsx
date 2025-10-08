@@ -9,20 +9,15 @@ export const CommentItem = ({ comment }) => {
         height={40}
       />
 
-      <div className='rounded p-2 w-100 position-relative cus-comment'>
+      <div className='rounded p-1 w-100 position-relative cus-comment'>
         {/* Rating góc trên bên phải */}
         {comment.rating != null && (
           <div
-            style={{
-              position: 'absolute',
-              top: '5px',
-              right: '10px',
-              fontSize: '0.85rem',
-              color: '#ffc107', // vàng sao
-              fontWeight: 'bold',
-            }}>
+            className='position-absolute fs-6 fs-bold top-0 end-0 me-1'>
             {Array.from({ length: comment.rating }).map((_, i) => (
-              <span key={i}>★</span>
+              <span className='text-warning' key={i}>
+                ★
+              </span>
             ))}
             {Array.from({ length: 5 - comment.rating }).map((_, i) => (
               <span key={i} style={{ color: '#ffffffff' }}>
@@ -32,10 +27,10 @@ export const CommentItem = ({ comment }) => {
           </div>
         )}
 
-        <a href={`/user?id=${comment?.User?.id}`} className='mb-1 ms-1 fw-bold'>
+        <a href={`/user?id=${comment?.User?.id}`} className='ms-1 fs-6 fs-md-7 fw-bold'>
           {comment?.User?.username}
         </a>
-        <p className='mb-0 ms-1' style={{ whiteSpace: 'pre-wrap' }}>
+        <p className='mb-0 ms-1 fs-6 fs-md-7' style={{ whiteSpace: 'pre-wrap' }}>
           {comment.content}
         </p>
       </div>
