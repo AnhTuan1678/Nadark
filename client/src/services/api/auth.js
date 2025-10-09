@@ -27,7 +27,6 @@ export const changePassword = async (token, oldPassword, newPassword) => {
     },
     body: JSON.stringify({ oldPassword, newPassword }),
   })
-  console.log(res)
   if (!res.ok) throw new Error('Đổi mật khẩu thất bại')
   return res.json()
 }

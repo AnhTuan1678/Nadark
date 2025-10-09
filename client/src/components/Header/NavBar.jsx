@@ -4,7 +4,7 @@ import style from './NavBar.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faHome } from '@fortawesome/free-solid-svg-icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchGenres } from '../redux/genreSlice'
+import { fetchGenres } from '../../redux/genreSlice'
 
 const NavBar = ({ className = '' }) => {
   const items = ['Hot', 'Theo dõi', 'Lịch sử', 'Thể loại', 'Tìm truyện']
@@ -34,7 +34,7 @@ const NavBar = ({ className = '' }) => {
       <div className='container'>
         <ul className='d-flex m-0 p-0'>
           <li
-            className={`ps-1 fs-7 fs-md-9 pe-1 rounded-0 btn opacity-hover-50 bg-opacity-50 text-uppercase ${
+            className={`h-100 ps-1 fs-7 fs-md-8 pe-1 rounded-0 btn opacity-hover-50 bg-opacity-50 text-uppercase ${
               (active === 0 && hovered === null && showActive) || hovered === 0
                 ? style.active
                 : ''
@@ -111,7 +111,7 @@ const GenresDropdown = ({ onHover = () => {} }) => {
   useEffect(() => {
     if (hovered) onHover(false)
     else onHover(true)
-  }, [hovered])
+  }, [hovered, onHover])
 
   const handleButtonClick = () => {
     if (isMobile) {

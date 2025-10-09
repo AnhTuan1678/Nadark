@@ -15,17 +15,6 @@
     border-radius: 10px;
 }
 
-.genre-badge {
-    background-color: var(--color-bg-badge);
-    color: var(--color-text-light);
-    transition: background-color 0.3s, color 0.3s;
-}
-.genre-badge:hover {
-    background-color: var(--color-bg-badge-hover);
-    color: var(--color-bg-content);
-    cursor: pointer;
-}
-
 .label {
     font-weight: bold;
     margin-right: 10px;
@@ -54,4 +43,14 @@
     background-color: var(--background--current-chapter);
     font-weight: bold;
     border: 1px solid var(--border-current-chapter);
+}
+
+.genre {
+    background-color: var(--color-bg-badge);
+    color: var(--color-text-light);
+    transition: background-color 0.3s, color 0.3s;
+}
+.genre:hover {
+    background-color: var(--color-bg-badge-hover);
+    color: var(--color-bg-content);
 }

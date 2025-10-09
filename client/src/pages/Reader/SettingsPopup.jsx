@@ -2,17 +2,23 @@ import { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRefresh, faSave, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { useSelector } from 'react-redux'
-import { userAPI } from '../services/api'
+import { userAPI } from '../../services/api'
+import { useSnackbar } from '../../context/SnackbarContext'
 
 const SettingsPopup = ({ defaultSetting, onClose, onSave, onChange }) => {
   const [settings, setSettings] = useState(defaultSetting)
-  const [closing, setClosing] = useState(false) // để trigger animation out
+  const [closing, setClosing] = useState(false)
 
   const currentUser = useSelector((state) => state.user)
+  const { showSnackbar } = useSnackbar()
 
   useEffect(() => {
     onChange && onChange(settings)
   }, [onChange, settings])
+
+    useEffect(() => {
+      console.log(settings)
+    }, [settings])
 
   const handleResetButton = async () => {
     const DEFAULT_SETTINGS = {
@@ -31,14 +37,24 @@ const SettingsPopup = ({ defaultSetting, onClose, onSave, onChange }) => {
     if (token) {
       try {
         await userAPI.updateSettings(token, settings)
-        console.log('Đã lưu setting lên server')
+        showSnackbar({
+          message: 'Lưu thành công lên server',
+        })
         onSave(settings)
         handleClose() // đóng sau khi lưu
       } catch (err) {
         console.error('Lỗi khi lưu setting:', err)
+        showSnackbar({
+          status: 'error',
+          message: 'Lỗi khi lưu settings',
+        })
       }
     } else {
       handleClose()
+      showSnackbar({
+        status: 'warning',
+        message: 'Chưa đăng nhập không thể lưu',
+      })
     }
   }
 

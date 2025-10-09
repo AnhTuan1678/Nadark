@@ -1,11 +1,11 @@
 import './Header.module.css'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import ProfileMenu from './ProfileMenu'
-import SearchBar from './SearchBar'
 import style from './Header.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
+import ProfileMenu from './ProfileMenu'
+import SearchBar from './SearchBar'
 import NavBar from './NavBar'
 import ThemeToggle from './ThemeToggle'
 

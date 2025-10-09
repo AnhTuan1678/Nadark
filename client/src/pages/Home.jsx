@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { bookAPI } from '../services/api'
 import StoryCard from '../components/StoryCard'
 import Pagination from '../components/Pagination'
+import Loading from '../components/Loading'
 
 const Home = () => {
   const [stories, setStories] = useState([])
@@ -37,6 +38,8 @@ const Home = () => {
   const handleChangePage = (newPage) => {
     setSearchParams({ page: newPage })
   }
+
+  if (!stories.length) return <Loading />
 
   return (
     <>

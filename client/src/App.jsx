@@ -2,8 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import DefaultLayout from './layout/DefaultLayout'
 import Home from './pages/Home'
 import StoryDetail from './pages/StoryDetail'
-import Reader from './pages/Reader'
-import Header from './components/Header'
+import Reader from './pages/Reader/index'
+import Header from './components/Header/index'
 import Footer from './components/Footer'
 import Profile from './pages/Profile'
 import Bookshelf from './pages/Bookshelf'
@@ -99,9 +99,7 @@ function App() {
           />
           <Route path='/user' element={<UserProfile />} />
           <Route path='/auth' element={<UserAuth />} />
-          <Route path='/hot' element={<></>
-            // <DefaultLayout></DefaultLayout>
-          } />
+          <Route path='/hot' element={<DefaultLayout></DefaultLayout>} />
           <Route
             path='/search'
             element={

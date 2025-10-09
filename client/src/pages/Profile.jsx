@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux'
 import { updateAvatar as updateAvatarAction } from '../redux/userSlice'
 import StoryCard from '../components/StoryCard'
 import { formatterStoryDetail } from '../utils/formatter'
-import GuestNotice from '../components/GuestNotice'
+import EmptyState from '../components/EmptyState'
 
 const Profile = () => {
   const [profile, setProfile] = useState()
@@ -42,7 +42,7 @@ const Profile = () => {
   }, [user.token])
 
   if (!user.isLoggedIn) {
-    return <GuestNotice />
+    return <EmptyState message='Chưa đăng nhập' />
   }
 
   const handleAvatarClick = () => {

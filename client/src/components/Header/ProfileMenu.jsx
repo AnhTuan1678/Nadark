@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import styles from './ProfileMenu.module.css'
 import { useSelector, useDispatch } from 'react-redux'
-import { useSnackbar } from '../context/SnackbarContext'
-import { logout } from '../redux/userSlice'
+import { useSnackbar } from '../../context/SnackbarContext'
+import { logout } from '../../redux/userSlice'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faUser,
@@ -14,8 +14,8 @@ import {
   faTrash,
   faUserPlus,
 } from '@fortawesome/free-solid-svg-icons'
-import { clearCache } from '../services/cacheFetch'
-import nova from '../assets/image/GuestAvatar.png' // avatar mặc định
+import { clearCache } from '../../services/cacheFetch'
+import nova from '../../assets/image/GuestAvatar.png' // avatar mặc định
 
 const ProfileMenu = ({ className }) => {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn)

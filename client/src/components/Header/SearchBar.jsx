@@ -9,9 +9,9 @@ import {
   faStar,
 } from '@fortawesome/free-solid-svg-icons'
 import styles from './SearchBar.module.css'
-import { bookAPI } from '../services/api'
+import { bookAPI } from '../../services/api'
 import { useNavigate } from 'react-router-dom'
-import { timeAgo } from '../utils/timeAgo'
+import { timeAgo } from '../../utils/timeAgo'
 
 const SearchBar = ({ className = '' }) => {
   const [query, setQuery] = useState('')
@@ -44,7 +44,6 @@ const SearchBar = ({ className = '' }) => {
         closeDropdown()
         return
       }
-      console.log(data)
       setResults(data)
       setShowDropdown(true)
       setHighlightedIndex(-1) // reset highlight khi search mới
@@ -140,7 +139,6 @@ const SearchBar = ({ className = '' }) => {
         }}>
         {
           // (showDropdown || isClosing) &&
-          (
           <ul
             className={`show p-0 overflow-hidden m-0 animate__animated animate__faster ${
               isClosing ? 'animate__fadeOutUp' : 'animate__fadeInDown'
@@ -197,7 +195,7 @@ const SearchBar = ({ className = '' }) => {
               </li>
             ))}
           </ul>
-        )}
+        }
       </div>
     </div>
   )

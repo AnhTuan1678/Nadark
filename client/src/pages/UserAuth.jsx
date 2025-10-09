@@ -14,7 +14,6 @@ const UserAuth = () => {
 
   // trang trước đo
   const from = location.state?.from || '/'
-  console.log(from)
 
   const handleSuccess = () => {
     navigate(from, { replace: true })

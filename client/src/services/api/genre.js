@@ -6,7 +6,6 @@ export const getAll = async () => {
     if (!response.ok) throw new Error('Lỗi khi gọi API')
 
     const genres = await response.json()
-    console.log('Danh sách thể loại:', genres)
     return genres
   } catch (error) {
     console.error('Lỗi:', error)

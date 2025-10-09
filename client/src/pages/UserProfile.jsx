@@ -10,17 +10,14 @@ const UserProfile = () => {
   const [progress, setProgress] = useState()
   // const navigate = useNavigate()
 
-  console.log(profile)
   useEffect(() => {
     async function fetchData() {
       const id = searchParams.get('id')
       try {
         const data = await userAPI.getUserById(id)
         setProfile(formatterProfile(data))
-        console.log(data)
         const res = await progressAPI.getUserProgress(id, { limit: 12 })
         setProgress(res.data)
-        console.log(res)
       } catch (err) {
         console.error('Lấy thông tin user thất bại', err)
       }

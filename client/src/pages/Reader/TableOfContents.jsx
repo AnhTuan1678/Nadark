@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { bookAPI } from '../services/api'
+import { bookAPI } from '../../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
@@ -75,7 +75,8 @@ const TableOfContents = ({ onClose, currentIndex = 1, bookId }) => {
                   style={
                     index === currentIndex - 1
                       ? {
-                          backgroundColor: 'var(--background--current-chapter) !important',
+                          backgroundColor:
+                            'var(--background--current-chapter) !important',
                           fontWeight: 'bold',
                           border: '1px solid var(--border-current-chapter)',
                         }
