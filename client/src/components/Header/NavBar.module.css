@@ -44,3 +44,7 @@ li::marker {
 .description {
     background-color: var(--background-nav-dropdown);
 }
+
+.label {
+    font-family: Tahoma, sans-serif, Helvetica, Arial;
+}

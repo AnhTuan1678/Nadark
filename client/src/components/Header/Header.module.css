@@ -1,7 +1,8 @@
 .header {
     height: 40px;
     z-index: 1000;
-    background-image: url('../assets/image/bg-header.jpg');
+    background-image: var(--bg-header);
+    transition: background-image 0.5s ease-in-out;
 }
 
 .logo {

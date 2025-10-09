@@ -31,7 +31,9 @@
     --color-input-icon: #444444;
     --color-search-dropdown-title: var(--second--color);
     --color-theme-icon: var(--second--color);
+    --background-theme-icon: #cccccc;
     --background-theme-toggle: var(--color-comment-background);
+    --bg-header: url('../../assets/image/bg-header.jpg');
 
     --color-NotifyBlock-border: #4080ff;
     --background-NotifyBlock-icon: #4080ff;
@@ -68,7 +70,7 @@
     --color-container-background: #252525;
     --color-container-background-rgb: 37, 37, 37;
     --color-comment-background: #242424;
-    --color-chapter-background: #252525;
+    --color-chapter-background: #2a2a2a;
     --color-popup-background: #333;
 
     /* Header */
@@ -79,7 +81,9 @@
     --color-input-icon: #ffffff;
     --color-search-dropdown-title: var(--second--color);
     --color-theme-icon: var(--primary--color);
+    --background-theme-icon: #555555;
     --background-theme-toggle: var(--background-NotifyBlock);
+    --bg-header: url('../../assets/image/bg-header-dark.webp');
 
     --color-NotifyBlock-border: #ff9601;
     --background-NotifyBlock: #423e3e;

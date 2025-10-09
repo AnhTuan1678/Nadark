@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './userSlice'
 import genreReducer from './genreSlice'
+import settingReducer from './settingSlice'
 
 // Key lưo vào localStorage
 const STORAGE_KEY = 'userState'
@@ -31,6 +32,7 @@ export const store = configureStore({
   reducer: {
     user: userReducer,
     genre: genreReducer,
+    setting: settingReducer,
   },
   preloadedState: persistedState,
 })

@@ -94,7 +94,7 @@ const Reader = () => {
   // Đổi màu body
   useEffect(() => {
     const prevColor = document.body.style.backgroundColor
-    document.body.style.backgroundColor = 'var(--color-chapter-background)'
+    document.body.style.backgroundColor = 'var(--color-chapter-background) !important'
     return () => {
       document.body.style.backgroundColor = prevColor
     }

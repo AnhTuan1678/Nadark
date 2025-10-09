@@ -36,7 +36,7 @@ const ThemeToggle = () => {
           style={{
             aspectRatio: '2/ 1',
             borderRadius: '9999px',
-            backgroundColor: 'var(--color-body-background)',
+            backgroundColor: 'var(--background-theme-icon)',
             transition: 'background-color 0.5s',
           }}>
           <div

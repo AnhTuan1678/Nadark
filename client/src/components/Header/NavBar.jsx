@@ -61,7 +61,7 @@ const NavBar = ({ className = '' }) => {
             return (
               <li
                 key={index}
-                className={`ps-1 pe-1 fs-7 fs-md-8 rounded-0 btn btn-slide opacity-hover-50 bg-opacity-50 text-uppercase ${
+                className={`ps-1 pe-1 fs-7 fs-md-8 rounded-0 btn btn-slide opacity-hover-50 bg-opacity-50 text-uppercase ${style.label} ${
                   isActive && showActive ? style.active : ''
                 }`}
                 onClick={() => {
