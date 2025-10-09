@@ -71,7 +71,8 @@ const StoryCard = ({ story, className }) => {
         offset={[-200, -10]}
         maxWidth={400}
         arrow={true}
-        animation='fade'>
+        animation='fade'
+        touch={false} >
         <div
           className={`cursor-pointer overflow-hidden animate__animated animate__faster ${
             hover ? 'animate__pulse' : ''

@@ -38,13 +38,13 @@
     --color-NotifyBlock-border: #4080ff;
     --background-NotifyBlock-icon: #4080ff;
 
-    --color--page--title: var(--second--color);
+    --color--page--title: var(--primary--color);
 
     --color--theme--toggle: #f8e535;
 
     --color-text-blue: #2980b9;
-    --primary--color: #ae4ad9;
-    --second--color: #6a9cff;
+    --primary--color: #4080ff;
+    --second--color: #ae4ad9;
 }
 
 :root[data-theme='dark'] {

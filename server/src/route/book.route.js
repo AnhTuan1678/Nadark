@@ -2,6 +2,12 @@ const router = require('express').Router()
 const bookController = require('../controllers/book.controller')
 const authenticateToken = require('../middleware/authenticateToken')
 
+// Lấy top truyện theo lượt xem
+router.get('/top/stats', bookController.getTopBooksStats)
+router.get('/top/today', bookController.getTopBooksToday)
+router.get('/top/week', bookController.getTopBooksThisWeek)
+router.get('/top/month', bookController.getTopBooksThisMonth)
+
 // Books
 router.get('/', bookController.getAllBooks)
 router.get('/search', bookController.searchBooks)

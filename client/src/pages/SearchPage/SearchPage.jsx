@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
-import { bookAPI } from '../services/api'
+import { bookAPI } from '../../services/api'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchGenres } from '../redux/genreSlice'
-import StoryCard from '../components/StoryCard'
+import { fetchGenres } from '../../redux/genreSlice'
+import StoryCard from '../../components/StoryCard'
+import EmptyState from '../../components/EmptyState'
 
 const chapterRanges = [
   { label: 'Tất cả', min: 0, max: 1e6 },
@@ -37,7 +38,7 @@ const SearchPage = () => {
     return found ? found.label : 'Tất cả'
   })
 
-  const [books, setBooks] = useState([])
+  const [books, setBooks] = useState()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -145,8 +146,8 @@ const SearchPage = () => {
 
   return (
     <>
-      <div className='m-0 ms-md-5 me-md-5'>
-        <h2 className='page-title'>Tìm kiếm sách</h2>
+      <h2 className='page-title mb-4'>Tìm kiếm sách</h2>
+      <div className='row'>
         <SearchForm
           query={query}
           setQuery={setQuery}
@@ -157,25 +158,28 @@ const SearchPage = () => {
           onSubmit={handleSubmit}
           loading={loading}
           error={error}
+          className='col col-12 col-md-4 p-2 rounded h-100'
         />
-      </div>
 
-      {/* Kết quả */}
-      {loading ? (
-        <div className='text-center my-4'>🔍 Đang tìm kiếm...</div>
-      ) : error ? (
-        <div className='text-center my-4 text-danger'>❌ {error}</div>
-      ) : books.length === 0 ? (
-        <div className='text-center my-4 text-muted'>
-          Không tìm thấy kết quả nào.
+        {/* Kết quả */}
+        <div className='col col-12 col-md-8'>
+          {loading ? (
+            <EmptyState message='🔍 Đang tìm kiếm...' />
+          ) : error ? (
+            <EmptyState message={error} />
+          ) : !books ? (
+            <EmptyState message='Kết quả' />
+          ) : books.length === 0 ? (
+            <EmptyState message='Không có kết quả' />
+          ) : (
+            <div className='row'>
+              {books.map((story) => (
+                <StoryCard story={story} key={story.id} className='p-0 m-0' />
+              ))}
+            </div>
+          )}
         </div>
-      ) : (
-        <div className='row ps-1 pe-1'>
-          {books.map((story) => (
-            <StoryCard story={story} key={story.id} />
-          ))}
-        </div>
-      )}
+      </div>
     </>
   )
 }
@@ -190,6 +194,7 @@ const SearchForm = ({
   onSubmit,
   loading,
   error,
+  className,
 }) => {
   const [showGenreLabel, setShowGenreLabel] = useState(false)
 
@@ -211,94 +216,96 @@ const SearchForm = ({
   }
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        onSubmit()
-        setShowGenreLabel(false)
-      }}
-      className='mb-4'>
-      {/* Ô nhập tìm kiếm */}
-      <div className='mb-2 floating-label'>
-        <input
-          type='text'
-          placeholder=''
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className='form-control'
-        />
-        <label>Nhập tên sách hoặc tác giả</label>
-      </div>
-
-      {/* Chọn khoảng chương */}
-      <div className='mb-3'>
-        <label className='form-label'>Số chương:</label>
-        <select
-          className='form-select w-auto d-inline-block'
-          value={selectedRange}
-          onChange={handleRangeChange}>
-          {chapterRanges.map((r) => (
-            <option key={r.label} value={r.label}>
-              {r.label}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Chọn thể loại */}
-      <div className='mb-3'>
-        <div className='d-flex flex-wrap align-items-center gap-2 mb-2'>
-          <h3 className='h6 mb-0'>Thể loại:</h3>
-          {selectedGenres.map((genre) => (
-            <span
-              key={genre}
-              className='text-decoration-underline cursor-pointer opacity-hover-50 primary-color fst-italic'
-              onClick={() =>
-                setSelectedGenres(selectedGenres.filter((g) => genre !== g))
-              }>
-              {genresData.find((g) => g.id === genre)?.name}
-            </span>
-          ))}
+    <div className={className}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          onSubmit()
+          setShowGenreLabel(false)
+        }}
+        className='mb-4'>
+        {/* Ô nhập tìm kiếm */}
+        <div className='mb-2 floating-label'>
+          <input
+            type='text'
+            placeholder=''
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className='form-control'
+          />
+          <label>Nhập tên sách hoặc tác giả</label>
         </div>
-        <button
-          type='button'
-          className='btn btn-link btn-sm'
-          onClick={() => setShowGenreLabel((pre) => !pre)}>
-          {showGenreLabel ? '[Ẩn]' : '[Hiện]'}
-        </button>
 
-        <div
-          className={`genre-container transition-collapse ${
-            showGenreLabel ? 'show' : 'hide'
-          }`}>
-          <div className='d-flex flex-wrap gap-2'>
-            {genresData.map((g) => (
-              <div key={g.id} className='form-check'>
-                <input
-                  type='checkbox'
-                  className='form-check-input'
-                  id={`genre-${g.id}`}
-                  checked={selectedGenres.includes(g.id)}
-                  onChange={() => handleGenreToggle(g.id)}
-                />
-                <label
-                  className='form-check-label'
-                  htmlFor={`genre-${g.id}`}
-                  title={g.description}>
-                  {g.name}
-                </label>
-              </div>
+        {/* Chọn khoảng chương */}
+        <div className='mb-3'>
+          <label className='form-label'>Số chương:</label>
+          <select
+            className='form-select w-auto d-inline-block'
+            value={selectedRange}
+            onChange={handleRangeChange}>
+            {chapterRanges.map((r) => (
+              <option key={r.label} value={r.label}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Chọn thể loại */}
+        <div className='mb-3'>
+          <div className='d-flex flex-wrap align-items-center gap-2 mb-2'>
+            <h3 className='h6 mb-0'>Thể loại:</h3>
+            {selectedGenres.map((genre) => (
+              <span
+                key={genre}
+                className='text-decoration-underline cursor-pointer opacity-hover-50 primary-color fst-italic'
+                onClick={() =>
+                  setSelectedGenres(selectedGenres.filter((g) => genre !== g))
+                }>
+                {genresData.find((g) => g.id === genre)?.name}
+              </span>
             ))}
           </div>
+          <button
+            type='button'
+            className='btn btn-link btn-sm'
+            onClick={() => setShowGenreLabel((pre) => !pre)}>
+            {showGenreLabel ? '[Ẩn]' : '[Hiện]'}
+          </button>
+
+          <div
+            className={`genre-container transition-collapse ${
+              showGenreLabel ? 'show' : 'hide'
+            }`}>
+            <div className='d-flex flex-wrap gap-2'>
+              {genresData.map((g) => (
+                <div key={g.id} className='form-check'>
+                  <input
+                    type='checkbox'
+                    className='form-check-input'
+                    id={`genre-${g.id}`}
+                    checked={selectedGenres.includes(g.id)}
+                    onChange={() => handleGenreToggle(g.id)}
+                  />
+                  <label
+                    className='form-check-label'
+                    htmlFor={`genre-${g.id}`}
+                    title={g.description}>
+                    {g.name}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
 
-      <button type='submit' disabled={loading} className='btn btn-primary'>
-        {loading ? 'Đang tìm...' : 'Tìm kiếm'}
-      </button>
+        <button type='submit' disabled={loading} className='btn btn-primary'>
+          {loading ? 'Đang tìm...' : 'Tìm kiếm'}
+        </button>
 
-      {error && <div className='text-danger mt-2'>{error}</div>}
-    </form>
+        {error && <div className='text-danger mt-2'>{error}</div>}
+      </form>
+    </div>
   )
 }
 

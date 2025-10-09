@@ -57,9 +57,28 @@ export const searchBooks = async ({
   if (maxChapter && maxChapter < 1e6) params.append('maxChapter', maxChapter)
   if (limit) params.append('limit', limit)
 
-  const res = await cacheFetch(`${API_URL}/api/book/search?${params.toString()}`)
+  const res = await cacheFetch(
+    `${API_URL}/api/book/search?${params.toString()}`,
+  )
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
 
   const data = await res.json()
   return data.map((book) => formatterStoryDetail(book))
+}
+
+export const getTopStoriesStats = async (limit = 10) => {
+  const res = await cacheFetch(`${API_URL}/api/book/top/stats?limit=${limit}`)
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+
+  const data = await res.json()
+
+  // Đảm bảo dữ liệu hợp lệ và format từng phần
+  const formatList = (list = []) =>
+    list.map((book) => formatterStoryDetail(book))
+
+  return {
+    today: formatList(data.today),
+    week: formatList(data.week),
+    month: formatList(data.month),
+  }
 }

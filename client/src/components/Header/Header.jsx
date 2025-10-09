@@ -64,7 +64,7 @@ const Header = () => {
         {isMobile ? (
           <MobileHeader />
         ) : (
-          <div className={`d-flex align-items-center container p-0 h-100`}>
+          <div className={`d-flex align-items-center container py-0 px-2 h-100`}>
             {/* Logo */}
             <div className='flex-grow-1 d-flex'>
               <h1

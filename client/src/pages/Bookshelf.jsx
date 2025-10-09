@@ -14,7 +14,7 @@ const Bookshelf = () => {
   const [page, setPage] = useState(1)
 
   const token = useSelector((state) => state.user.token)
-  const showSnackbar = useSnackbar()
+  const { showSnackbar } = useSnackbar()
 
   useEffect(() => {
     const fetchStories = async (currentPage) => {

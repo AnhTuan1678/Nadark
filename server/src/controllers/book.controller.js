@@ -1,4 +1,5 @@
 const bookService = require('../services/book.service')
+const bookTraffic = require('../services/bookTraffic.service')
 
 exports.getAllBooks = async (req, res) => {
   try {
@@ -48,8 +49,10 @@ exports.searchBooks = async (req, res) => {
 
 exports.getBook = async (req, res) => {
   try {
-    const book = await bookService.getBookById(req.params.id)
+    const bookId = req.params.id
+    const book = await bookService.getBookById(bookId)
     if (!book) return res.status(404).json({ error: 'Book not found' })
+    await bookTraffic.increaseBookView(bookId)
     res.json(book)
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' })
@@ -128,5 +131,59 @@ exports.deleteReview = async (req, res) => {
     if (err.message === 'FORBIDDEN')
       return res.status(403).json({ message: 'Forbidden' })
     res.status(500).json({ message: 'Server error' })
+  }
+}
+
+exports.getTopBooksToday = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10
+    const books = await bookTraffic.getTopBooksToday(limit)
+    res.json(books)
+  } catch (err) {
+    console.error('Lỗi khi lấy top sách hôm nay:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+exports.getTopBooksThisWeek = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10
+    const books = await bookTraffic.getTopBooksThisWeek(limit)
+    res.json(books)
+  } catch (err) {
+    console.error('Lỗi khi lấy top sách tuần này:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+exports.getTopBooksThisMonth = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10
+    const books = await bookTraffic.getTopBooksThisMonth(limit)
+    res.json(books)
+  } catch (err) {
+    console.error('Lỗi khi lấy top sách tháng này:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+exports.getTopBooksStats = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10
+
+    const [today, week, month] = await Promise.all([
+      bookTraffic.getTopBooksToday(limit),
+      bookTraffic.getTopBooksThisWeek(limit),
+      bookTraffic.getTopBooksThisMonth(limit),
+    ])
+
+    res.json({
+      today,
+      week,
+      month,
+    })
+  } catch (err) {
+    console.error('Lỗi khi lấy thống kê top books:', err)
+    res.status(500).json({ error: 'Internal server error' })
   }
 }

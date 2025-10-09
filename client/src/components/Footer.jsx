@@ -33,7 +33,6 @@ const Footer = () => (
             <strong className='text-danger fst-normal fs-6 fs-md-7'>
               Từ chối trách nhiệm:
             </strong>{' '}
-            Website này được tạo ra dùng để ứng tuyển vị trí thực tập sinh CNTT.
             Toàn bộ các truyện được đăng tải trên trang web được sưu tầm chủ yếu
             từ{' '}
             <a

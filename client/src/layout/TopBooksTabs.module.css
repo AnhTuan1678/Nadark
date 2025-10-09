@@ -1,0 +1,98 @@
+:root {
+    /* ===== BẢNG MÀU CHUNG CHO TopBooksTabs ===== */
+    --TopBooksTabs-border: #444;
+    --TopBooksTabs-border-bottom: #333;
+    --TopBooksTabs-bg: var(--color-body-background);
+
+    --TopBooksTabs-text: var(--color-text-dark);
+    --TopBooksTabs-text-secondary: #aaa;
+    --TopBooksTabs-text-muted: #888;
+    --TopBooksTabs-text-dark: #333;
+    --TopBooksTabs-text-light: var(--color-input-icon);
+
+    /* ===== MÀU TAB ===== */
+    --TopBooksTabs-tab-hover-bg: var(--background-NotifyBlock);
+    --TopBooksTabs-tab-active-bg: var(--primary--color);
+    --TopBooksTabs-tab-active-text: #fff;
+
+    /* ===== MÀU RANKING ===== */
+    --TopBooksTabs-rank-1: #ff6600;
+    --TopBooksTabs-rank-2: #00ccff;
+    --TopBooksTabs-rank-3: #cc0000;
+    --TopBooksTabs-rank-default: #aaa;
+}
+
+.wrapper {
+    border: 1px solid var(--primary--color);
+    background-color: var(--color-container-background);
+    overflow: hidden;
+}
+
+.bookRow {
+    border-bottom: 1px solid
+        var(--bs-border-color, var(--TopBooksTabs-border-bottom));
+    background: transparent;
+}
+
+.avatar {
+    width: 45px;
+    height: 60px;
+    object-fit: cover;
+}
+
+.title {
+    font-weight: 540;
+    color: var(--TopBooksTabs-text-light);
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+.chapter {
+    color: var(--TopBooksTabs-text-secondary);
+}
+
+.views {
+    color: var(--TopBooksTabs-text-muted);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
+.tabs {
+    margin: 0;
+    padding: 0;
+}
+
+.tab .nav-item button {
+    padding: 0;
+    color: var(--TopBooksTabs-text-dark);
+}
+
+.tabButton {
+    color: var(--TopBooksTabs-text) !important;
+    background-color: var(--TopBooksTabs-bg);
+    border: none;
+    border-radius: 0 !important;
+    padding: 4px !important;
+    font-weight: 500;
+    transition: 0.3s;
+    height: 100%;
+}
+
+.tabButton:hover {
+    color: var(--TopBooksTabs-text-light) !important;
+    background-color: var(--TopBooksTabs-tab-hover-bg) !important;
+  box-shadow: inset 0 3px 0 0 var(--TopBooksTabs-tab-active-bg);
+    /* border-top: 3px solid var(--TopBooksTabs-tab-active-bg) */
+}
+
+.tabButton[aria-selected='true'] {
+    color: var(--TopBooksTabs-tab-active-text) !important;
+    background-color: var(--TopBooksTabs-tab-active-bg) !important;
+}

@@ -19,8 +19,10 @@ import { useEffect } from 'react'
 import { store } from './redux/store'
 import { login, logout } from './redux/userSlice'
 import { fetchGenres } from './redux/genreSlice'
-import SearchPage from './pages/SearchPage'
+import SearchPage from './pages/SearchPage/SearchPage'
 import NotFound from './pages/NotFound'
+import TwoColumnLayout from './layout/TwoColumnLayout'
+import EmptyState from './components/EmptyState'
 
 function App() {
   // Lấy dữ liệu user
@@ -63,9 +65,9 @@ function App() {
           <Route
             path='/'
             element={
-              <DefaultLayout>
+              <TwoColumnLayout>
                 <Home />
-              </DefaultLayout>
+              </TwoColumnLayout>
             }
           />
           <Route
@@ -81,9 +83,9 @@ function App() {
           <Route
             path='/bookshelf'
             element={
-              <DefaultLayout>
+              <TwoColumnLayout>
                 <Bookshelf />
-              </DefaultLayout>
+              </TwoColumnLayout>
             }
           />
           <Route path='/action/addStory' element={<AddStory />} />
@@ -92,14 +94,21 @@ function App() {
           <Route
             path='/recently'
             element={
-              <DefaultLayout>
+              <TwoColumnLayout>
                 <RecentlyRead />
-              </DefaultLayout>
+              </TwoColumnLayout>
             }
           />
           <Route path='/user' element={<UserProfile />} />
           <Route path='/auth' element={<UserAuth />} />
-          <Route path='/hot' element={<DefaultLayout></DefaultLayout>} />
+          <Route
+            path='/hot'
+            element={
+              <DefaultLayout>
+                <EmptyState message='Trang này vẫn chưa có gì' />
+              </DefaultLayout>
+            }
+          />
           <Route
             path='/search'
             element={
