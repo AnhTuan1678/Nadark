@@ -32,12 +32,14 @@ export const SnackbarProvider = ({ children }) => {
   // Cập nhật progress mỗi 50ms
   useEffect(() => {
     const interval = setInterval(() => {
-      setSnackBars((prev) =>
-        prev.map((s) => ({
+      setSnackBars((prev) => {
+        // Tránh việc vẽ lại khi không có gì
+        if (prev.length === 0) return prev
+        return prev.map((s) => ({
           ...s,
           progress: Math.max(s.progress - 100 / (s.duration / 50), 0),
-        })),
-      )
+        }))
+      })
     }, 50)
     return () => clearInterval(interval)
   }, [])

@@ -1,8 +1,8 @@
 const express = require('express')
 const cors = require('cors')
-const db = require('./src/models/index')
 const route = require('./src/route/index')
 const path = require('path')
+require('./src/models/sync')
 
 const app = express()
 const PORT = process.env.PORT || 3000

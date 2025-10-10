@@ -40,16 +40,4 @@ const Comment = sequelize.define(
   },
 )
 
-// Quan hệ với User
-Comment.belongsTo(User, { foreignKey: 'user_id' })
-User.hasMany(Comment, { foreignKey: 'user_id' })
-
-// Quan hệ với Chapter
-Comment.belongsTo(Chapter, { foreignKey: 'chapter_id', onDelete: 'CASCADE' })
-Chapter.hasMany(Comment, { foreignKey: 'chapter_id' })
-
-// Quan hệ tự tham chiếu (comment lồng nhau)
-Comment.belongsTo(Comment, { as: 'Parent', foreignKey: 'parent_id' })
-Comment.hasMany(Comment, { as: 'Replies', foreignKey: 'parent_id' })
-
 module.exports = Comment

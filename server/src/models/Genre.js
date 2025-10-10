@@ -11,7 +11,4 @@ const Genre = sequelize.define(
   { tableName: 'genre', timestamps: false },
 )
 
-Book.belongsToMany(Genre, { through: 'book_genres', foreignKey: 'bookId' })
-Genre.belongsToMany(Book, { through: 'book_genres', foreignKey: 'genreId' })
-
 module.exports = Genre

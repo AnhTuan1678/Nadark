@@ -1,58 +1,75 @@
-const fs = require('fs')
-const path = require('path')
 const sequelize = require('../config/database')
-const db = {}
-const Genre = require('./Genre')
+const { Sequelize } = require('sequelize')
+const User = require('./User')
 const Book = require('./Book')
+const BookTraffic = require('./BookTraffic')
+const Chapter = require('./Chapter')
+const Comment = require('./Comment')
+const Genre = require('./Genre')
+const Review = require('./Review')
+const UserBookshelf = require('./UserBookshelf')
+const UserProgress = require('./UserProgress')
 
-fs.readdirSync(__dirname).forEach((file) => {
-  if (file !== 'index.js' && file.endsWith('.js')) {
-    const model = require(path.join(__dirname, file))
-    db[model.name] = model
-  }
-})
-;(async () => {
-  await sequelize.query(`CREATE EXTENSION IF NOT EXISTS pg_trgm;`)
-  await sequelize.sync({ alter: false })
-  console.log('All tables are ready!')
+// --- User ↔ Book ---
+Book.belongsTo(User, { foreignKey: 'uploader_id', as: 'uploader' })
+User.hasMany(Book, { foreignKey: 'uploader_id', as: 'books' })
 
-  // async function syncBookGenres() {
-  //   try {
-  //     // đảm bảo bảng đã được tạo
-  //     await sequelize.sync()
+// --- Book ↔ Genre ---
+Book.belongsToMany(Genre, { through: 'book_genres', foreignKey: 'bookId' })
+Genre.belongsToMany(Book, { through: 'book_genres', foreignKey: 'genreId' })
 
-  //     // Lấy tất cả sách
-  //     const books = await Book.findAll()
+// --- Book ↔ Chapter ---
+Book.hasMany(Chapter, { foreignKey: 'book_id', onDelete: 'CASCADE' })
+Chapter.belongsTo(Book, { foreignKey: 'book_id', onDelete: 'CASCADE' })
 
-  //     for (const book of books) {
-  //       if (!book.genres || book.genres.length === 0) continue // nếu không có genre thì bỏ qua
+// --- Book ↔ BookTraffic ---
+Book.hasMany(BookTraffic, { foreignKey: 'book_id', as: 'traffic' })
+BookTraffic.belongsTo(Book, { foreignKey: 'book_id', as: 'book' })
 
-  //       for (const genreName of book.genres) {
-  //         // Tìm hoặc tạo genre
-  //         const [genre] = await Genre.findOrCreate({
-  //           where: { name: genreName },
-  //           defaults: { description: 'Tạo tự động' }, // nếu muốn có mô tả, có thể map từ JSON trước
-  //         })
+// --- User ↔ Review ---
+Review.belongsTo(User, { foreignKey: 'user_id' })
+User.hasMany(Review, { foreignKey: 'user_id' })
 
-  //         // Thêm quan hệ nhiều-nhiều
-  //         await book.addGenre(genre) // Sequelize tự động chèn vào bảng BookGenres
-  //       }
-  //       console.log(`Xong book: ${book.title}`)
-  //     }
+// --- Book ↔ Review ---
+Review.belongsTo(Book, { foreignKey: 'book_id', onDelete: 'CASCADE' })
+Book.hasMany(Review, { foreignKey: 'book_id', onDelete: 'CASCADE' })
 
-  //     console.log('Đã đồng bộ genres từ books vào BookGenres!')
-  //   } catch (err) {
-  //     console.error('Lỗi khi đồng bộ genres:', err)
-  //   } finally {
-  //     await sequelize.close()
-  //   }
-  // }
+// --- User ↔ Comment ---
+Comment.belongsTo(User, { foreignKey: 'user_id' })
+User.hasMany(Comment, { foreignKey: 'user_id' })
 
-  // syncBookGenres()
-  // console.log('Thêm dữ liệu thành công')
-})()
+// --- Chapter ↔ Comment ---
+Comment.belongsTo(Chapter, { foreignKey: 'chapter_id', onDelete: 'CASCADE' })
+Chapter.hasMany(Comment, { foreignKey: 'chapter_id' })
 
-db.sequelize = sequelize
-db.Sequelize = require('sequelize')
+// --- Comment tự tham chiếu (comment lồng nhau) ---
+Comment.belongsTo(Comment, { as: 'Parent', foreignKey: 'parent_id' })
+Comment.hasMany(Comment, { as: 'Replies', foreignKey: 'parent_id' })
+
+// --- User ↔ Bookshelf ---
+UserBookshelf.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' })
+UserBookshelf.belongsTo(Book, { foreignKey: 'book_id', onDelete: 'CASCADE' })
+User.hasMany(UserBookshelf, { foreignKey: 'user_id' })
+Book.hasMany(UserBookshelf, { foreignKey: 'book_id' })
+
+// --- User ↔ Progress ---
+UserProgress.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' })
+UserProgress.belongsTo(Book, { foreignKey: 'book_id', onDelete: 'CASCADE' })
+User.hasMany(UserProgress, { foreignKey: 'user_id' })
+Book.hasMany(UserProgress, { foreignKey: 'book_id' })
+
+const db = {
+  sequelize,
+  Sequelize,
+  User,
+  Book,
+  BookTraffic,
+  Chapter,
+  Comment,
+  Genre,
+  Review,
+  UserBookshelf,
+  UserProgress,
+}
 
 module.exports = db

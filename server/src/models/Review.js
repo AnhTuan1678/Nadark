@@ -27,16 +27,6 @@ const Review = sequelize.define(
   },
 )
 
-Review.belongsTo(User, { foreignKey: 'user_id' })
-User.hasMany(Review, { foreignKey: 'user_id' })
-
-Review.belongsTo(Book, { foreignKey: 'book_id', onDelete: 'CASCADE' })
-Book.hasMany(Review, { foreignKey: 'book_id', onDelete: 'CASCADE' })
-
-// ========================
-// Hooks cập nhật Book
-// ========================
-
 // Khi thêm review
 Review.afterCreate(async (review, options) => {
   const book = await Book.findByPk(review.book_id)

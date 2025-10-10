@@ -25,7 +25,24 @@ const sequelize = new Sequelize(
 // Kiểm tra kết nối
 sequelize
   .authenticate()
-  .then(() => console.log('DB connected!'))
-  .catch((err) => console.error('DB connection error:', err))
+  .then(() => {
+    console.log('✅ DB connected!')
+
+    // Postgresql trên Render tự ngủ nếu 10p không có truy cập
+    // => Ping database mỗi 5 phút
+    setInterval(async () => {
+      try {
+        await sequelize.query('SELECT NOW()') // Lấy thời gian thực từ DB
+        const now = new Date()
+        const timeStr = now
+          .toTimeString()
+          .split(' ')[0]
+        console.log(`${timeStr}: giữ kết nối db`)
+      } catch (err) {
+        console.error('❌ DB ping error:', err.message)
+      }
+    }, 5 * 60 * 1000)
+  })
+  .catch((err) => console.error('❌ DB connection error:', err))
 
 module.exports = sequelize

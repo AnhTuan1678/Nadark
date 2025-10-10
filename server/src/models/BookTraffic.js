@@ -29,8 +29,4 @@ const BookTraffic = sequelize.define(
   },
 )
 
-// Quan hệ
-Book.hasMany(BookTraffic, { foreignKey: 'book_id', as: 'traffic' })
-BookTraffic.belongsTo(Book, { foreignKey: 'book_id', as: 'book' })
-
 module.exports = BookTraffic

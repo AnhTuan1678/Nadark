@@ -187,3 +187,22 @@ exports.getTopBooksStats = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' })
   }
 }
+
+exports.createBookController = async (req, res) => {
+  try {
+    const uploaderId = req.user?.id || null
+    const bookData = req.body
+
+    const createdBook = await bookService.createBook(bookData, uploaderId)
+
+    res.status(201).json(createdBook)
+  } catch (err) {
+    console.error('Lỗi khi tạo sách:', err)
+
+    if (err.message === 'BOOK_ALREADY_EXISTS') {
+      return res.status(400).json({ error: 'Sách đã tồn tại' })
+    }
+
+    res.status(500).json({ error: 'Internal server error' })
+  }
+}

@@ -82,3 +82,22 @@ export const getTopStoriesStats = async (limit = 10) => {
     month: formatList(data.month),
   }
 }
+
+export const createBook = async (bookData, token) => {
+  const res = await fetch(`${API_URL}/api/book`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(bookData),
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json()
+    throw new Error(errorData.error || `HTTP error! status: ${res.status}`)
+  }
+
+  const data = await res.json()
+  return formatterStoryDetail(data)
+}

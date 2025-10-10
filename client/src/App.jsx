@@ -86,7 +86,7 @@ function App() {
                 </TwoColumnLayout>
               }
             />
-            <Route path='/action/addStory' element={<Pages.AddStory />} />
+            <Route path='/action/addBook' element={<Pages.AddStory />} />
             <Route path='/action/addChapter' element={<Pages.AddChapter />} />
             <Route path='/tutorial' element={<Pages.Tutorial />} />
 

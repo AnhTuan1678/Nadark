@@ -29,10 +29,4 @@ const UserProgress = sequelize.define(
   },
 )
 
-// Quan hệ
-UserProgress.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' })
-UserProgress.belongsTo(Book, { foreignKey: 'book_id', onDelete: 'CASCADE' })
-User.hasMany(UserProgress, { foreignKey: 'user_id' })
-Book.hasMany(UserProgress, { foreignKey: 'book_id' })
-
 module.exports = UserProgress

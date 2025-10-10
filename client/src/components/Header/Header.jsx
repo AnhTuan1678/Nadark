@@ -22,7 +22,7 @@ const Header = () => {
 
   useEffect(() => {
     if (fixedRef.current) {
-      setHeight(fixedRef.current.offsetHeight) // Hoặc .getBoundingClientRect().height
+      setHeight(fixedRef.current.offsetHeight)
     }
   }, [])
 
@@ -36,7 +36,7 @@ const Header = () => {
       if (delta > 0 && currentScrollY > 50) {
         if (show) setAnimation('animate__slideOutUp')
         setShow(false)
-      } else if (delta < -10) {
+      } else if (delta < -10 || currentScrollY === 0) {
         if (!show) setAnimation('animate__slideInDown')
         setShow(true)
       }

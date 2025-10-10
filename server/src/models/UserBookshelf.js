@@ -25,10 +25,4 @@ const UserBookshelf = sequelize.define(
   },
 )
 
-// Quan hệ
-UserBookshelf.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' })
-UserBookshelf.belongsTo(Book, { foreignKey: 'book_id', onDelete: 'CASCADE' })
-User.hasMany(UserBookshelf, { foreignKey: 'user_id' })
-Book.hasMany(UserBookshelf, { foreignKey: 'book_id' })
-
 module.exports = UserBookshelf

@@ -10,6 +10,7 @@ router.get('/top/month', bookController.getTopBooksThisMonth)
 
 // Books
 router.get('/', bookController.getAllBooks)
+router.post('/', authenticateToken, bookController.createBookController)
 router.get('/search', bookController.searchBooks)
 router.get('/:id', bookController.getBook)
 

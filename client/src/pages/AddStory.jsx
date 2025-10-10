@@ -1,50 +1,77 @@
-import React, { useState } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import './AddStory.css' // import file css tùy chỉnh
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchGenres } from '../redux/genreSlice'
+import { bookAPI } from '../services/api'
+import './AddStory.css'
+import GenreSelector from '../components/GenreSelector'
 
 const AddStory = () => {
   const [formData, setFormData] = useState({
     title: '',
-    altName: '',
-    sensitive: false,
     author: '',
-    illustrator: '',
-    storyType: 'Truyện sáng tác',
     genres: [],
     summary: '',
-    notes: '',
     status: 'Đang tiến hành',
   })
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState('')
+  const [error, setError] = useState('')
 
-  const genresList = ['Action', 'Comedy', 'Web Novel']
+  const dispatch = useDispatch()
+  const { list: genresData } = useSelector((state) => state.genre)
+  const user = useSelector((state) => state.user)
+
+  useEffect(() => {
+    if (!genresData.length) dispatch(fetchGenres())
+  }, [dispatch, genresData.length])
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    })
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleGenresChange = (e) => {
-    const options = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value,
-    )
-    setFormData({ ...formData, genres: options })
-  }
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(formData)
+    setLoading(true)
+    setSuccess('')
+    setError('')
+
+    try {
+      const payload = {
+        title: formData.title,
+        author: formData.author,
+        description: formData.summary,
+        genres: formData.genres,
+        status: formData.status,
+      }
+      const newBook = await bookAPI.createBook(payload, user.token)
+      setSuccess(`Tạo truyện thành công: ${newBook.title}`)
+      setFormData({
+        title: '',
+        author: '',
+        genres: [],
+        summary: '',
+        status: 'Đang tiến hành',
+      })
+      console.log(newBook)
+    } catch (err) {
+      setError(err.message || 'Có lỗi xảy ra')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <div className='container mt-5'>
-      <div className='card shadow-sm p-4'>
-        <h3 className='mb-4 text-center text-primary'>Thêm truyện mới</h3>
-        <form onSubmit={handleSubmit}>
-          <div className='mb-3'>
+    <div className='container border cus-container shadow-sm p-4'>
+      <h3 className='mb-4 text-center text-primary'>Thêm truyện mới</h3>
+
+      {success && <div className='alert alert-success'>{success}</div>}
+      {error && <div className='alert alert-danger'>{error}</div>}
+
+      <form onSubmit={handleSubmit}>
+        <div className='row g-3'>
+          {/* Tiêu đề */}
+          <div className='col-12 col-md-6'>
             <label className='form-label fw-semibold'>Tiêu đề *</label>
             <input
               type='text'
@@ -52,26 +79,13 @@ const AddStory = () => {
               name='title'
               value={formData.title}
               onChange={handleChange}
-              placeholder='Nhập tiêu đề truyện'
               required
+              placeholder='Nhập tiêu đề truyện'
             />
           </div>
 
-          <div className='mb-3 form-check'>
-            <input
-              type='checkbox'
-              className='form-check-input'
-              name='sensitive'
-              checked={formData.sensitive}
-              onChange={handleChange}
-              id='sensitiveCheck'
-            />
-            <label className='form-check-label' htmlFor='sensitiveCheck'>
-              Nội dung nhạy cảm?
-            </label>
-          </div>
-
-          <div className='mb-3'>
+          {/* Tác giả */}
+          <div className='col-12 col-md-6'>
             <label className='form-label fw-semibold'>Tác giả *</label>
             <input
               type='text'
@@ -79,56 +93,14 @@ const AddStory = () => {
               name='author'
               value={formData.author}
               onChange={handleChange}
-              placeholder='Nhập tên tác giả'
               required
+              placeholder='Nhập tên tác giả'
             />
           </div>
 
-          <div className='mb-3'>
-            <label className='form-label fw-semibold'>Loại truyện *</label>
-            <select
-              className='form-select'
-              name='storyType'
-              value={formData.storyType}
-              onChange={handleChange}>
-              <option>Truyện đăng</option>
-              <option>Truyện sáng tác</option>
-              <option>Truyện dịch</option>
-            </select>
-          </div>
-
-          <div className='mb-3'>
-            <label className='form-label fw-semibold'>Thể loại *</label>
-            <select
-              className='form-select'
-              multiple
-              value={formData.genres}
-              onChange={handleGenresChange}>
-              {genresList.map((genre) => (
-                <option key={genre} value={genre}>
-                  {genre}
-                </option>
-              ))}
-            </select>
-            <small className='text-muted'>
-              Nhấn Ctrl để chọn nhiều thể loại
-            </small>
-          </div>
-
-          <div className='mb-3'>
-            <label className='form-label fw-semibold'>Tóm tắt *</label>
-            <textarea
-              className='form-control'
-              name='summary'
-              rows='4'
-              value={formData.summary}
-              onChange={handleChange}
-              placeholder='Nhập tóm tắt truyện'
-              required></textarea>
-          </div>
-
-          <div className='mb-3'>
-            <label className='form-label fw-semibold'>Tình trạng dịch *</label>
+          {/* Tình trạng */}
+          <div className='col-12 col-md-6'>
+            <label className='form-label fw-semibold'>Tình trạng *</label>
             <select
               className='form-select'
               name='status'
@@ -140,16 +112,42 @@ const AddStory = () => {
             </select>
           </div>
 
-          <div className='d-flex justify-content-center mt-4'>
-            <button type='submit' className='btn btn-primary me-3 px-4'>
-              Thêm truyện
-            </button>
-            <button type='button' className='btn btn-outline-secondary px-4'>
-              Quay lại
+          {/* Thể loại */}
+          <div className='col-12'>
+            <GenreSelector
+              selectedGenres={formData.genres}
+              onChange={(allIds) =>
+                setFormData((prev) => ({ ...prev, genres: allIds }))
+              }
+              classNameTitle='form-label fw-semibold mb-0'
+            />
+          </div>
+
+          {/* Tóm tắt */}
+          <div className='col-12'>
+            <label className='form-label fw-semibold'>Tóm tắt *</label>
+            <textarea
+              className='form-control'
+              name='summary'
+              value={formData.summary}
+              onChange={handleChange}
+              rows={4}
+              placeholder='Nhập tóm tắt truyện'
+              required
+            />
+          </div>
+
+          {/* Submit */}
+          <div className='col-12 d-flex justify-content-center mt-3'>
+            <button
+              type='submit'
+              className='btn btn-primary px-4'
+              disabled={loading}>
+              {loading ? 'Đang gửi...' : 'Thêm truyện'}
             </button>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   )
 }

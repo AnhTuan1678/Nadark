@@ -194,3 +194,53 @@ exports.deleteReview = async (userId, reviewId) => {
   await review.destroy()
   return true
 }
+
+exports.createBook = async (bookData, uploaderId = null) => {
+  const {
+    title,
+    author,
+    description,
+    status,
+    genres = [],
+    url_avatar,
+  } = bookData
+
+  // Kiểm tra trùng tên sách + tác giả
+  // const existing = await db.Book.findOne({
+  //   where: { title, author },
+  // })
+  // if (existing) throw new Error('BOOK_ALREADY_EXISTS')
+
+  // Tạo sách mới
+  const newBook = await db.Book.create({
+    title,
+    author,
+    description,
+    status: status || 'Đang ra',
+    url_avatar: url_avatar || 'https://docln.net/img/nocover.jpg',
+    uploader_id: uploaderId, // có thể null
+    created_at: new Date(),
+    updated_at: new Date(),
+  })
+
+  // Gắn thể loại (nếu có)
+  if (Array.isArray(genres) && genres.length > 0) {
+    const genreRecords = await db.Genre.findAll({
+      where: { id: genres },
+    })
+    await newBook.setGenres(genreRecords)
+  }
+
+  // Trả lại sách vừa tạo kèm thể loại
+  const createdBook = await db.Book.findByPk(newBook.id, {
+    include: [
+      {
+        model: db.Genre,
+        attributes: ['id', 'name', 'description'],
+        through: { attributes: [] },
+      },
+    ],
+  })
+
+  return createdBook
+}

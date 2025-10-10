@@ -24,14 +24,6 @@ const Chapter = sequelize.define(
   },
 )
 
-// Quan hệ
-Chapter.belongsTo(Book, { foreignKey: 'book_id', onDelete: 'CASCADE', })
-Book.hasMany(Chapter, {
-  foreignKey: 'book_id',
-  onDelete: 'CASCADE',
-  hooks: true,
-})
-
 // Hook tự động cập nhật Book
 Chapter.beforeCreate(async (chapter, options) => {
   try {

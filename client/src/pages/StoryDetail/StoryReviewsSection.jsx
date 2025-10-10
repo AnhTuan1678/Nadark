@@ -1,10 +1,20 @@
+import { useState } from 'react'
 import { CommentItem } from '../../components/CommentItem'
 import ReviewForm from './ReviewForm'
 import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
 const StoryReviewsSection = ({ bookId, reviews }) => {
   const user = useSelector((state) => state.user)
-  const myReview = reviews.find((r) => r.User.id === user.id)
+
+  const [myReview, setMyReview] = useState(null)
+
+  useEffect(() => {
+    if (reviews.length && user.id) {
+      const review = reviews.find((r) => r.User?.id === user.id)
+      setMyReview(review || null)
+    }
+  }, [reviews, user.id])
 
   return (
     <div className='mb-4'>

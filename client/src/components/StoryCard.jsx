@@ -15,7 +15,7 @@ import { useState } from 'react'
 import { timeAgo } from '../utils/timeAgo'
 import ImageWithFallback from './ImageWithFallback'
 
-const StoryCard = ({ story, className = ' ' }) => {
+const StoryCard = ({ story, className = '' }) => {
   const [hover, setHover] = useState(false)
   const navigate = useNavigate()
 

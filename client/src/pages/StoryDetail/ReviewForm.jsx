@@ -43,6 +43,10 @@ const ReviewForm = ({ bookId, initialReview }) => {
   const user = useSelector((state) => state.user)
 
   useEffect(() => {
+    setReview(initialReview)
+  }, [initialReview])
+
+  useEffect(() => {
     if (editing && textareaRef.current) {
       textareaRef.current.focus()
       const length = textareaRef.current.value.length
