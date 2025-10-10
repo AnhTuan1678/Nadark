@@ -50,11 +50,12 @@ const RecentlyRead = () => {
         {import.meta.env.VITE_APP_NAME} - Truyện đã đọc {'>'}
       </h2>
 
-      <div className='row ps-1 pe-1 flex-grow-1'>
+      <div className='row ps-1 pe-1'>
         {stories.map((book) => (
           <StoryCard key={book.id} story={formatterStoryDetail(book.Book)} />
         ))}
       </div>
+      <div className='flex-grow-1'></div>
       <Pagination
         page={page}
         totalPages={Math.ceil(total / limit) || 1}

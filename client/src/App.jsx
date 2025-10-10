@@ -1,55 +1,46 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Suspense, useEffect } from 'react'
+import * as Pages from './pages'
+
 import DefaultLayout from './layout/DefaultLayout'
-import Home from './pages/Home'
-import StoryDetail from './pages/StoryDetail'
-import Reader from './pages/Reader/index'
-import Header from './components/Header/index'
+import TwoColumnLayout from './layout/TwoColumnLayout'
+import Header from './components/Header'
 import Footer from './components/Footer'
-import Profile from './pages/Profile'
-import Bookshelf from './pages/Bookshelf'
-import AddStory from './pages/AddStory'
-import AddChapter from './pages/AddChapter'
-import Tutorial from './pages/Tutorial'
-import RecentlyRead from './pages/Recently'
-import UserProfile from './pages/UserProfile'
-import UserAuth from './pages/UserAuth'
-import Settings from './pages/Settings'
+import EmptyState from './components/EmptyState'
+
 import { getProfile } from './services/api/user'
-import { useEffect } from 'react'
 import { store } from './redux/store'
 import { login, logout } from './redux/userSlice'
 import { fetchGenres } from './redux/genreSlice'
-import SearchPage from './pages/SearchPage/SearchPage'
-import NotFound from './pages/NotFound'
-import TwoColumnLayout from './layout/TwoColumnLayout'
-import EmptyState from './components/EmptyState'
 
 function App() {
-  // Lấy dữ liệu user
+  // Lấy dữ liệu user + thể loại
   useEffect(() => {
     const token = localStorage.getItem('token')
+
     async function fetchProfile() {
       try {
         const data = await getProfile(token)
-        if (!data.error)
+        if (!data.error) {
           store.dispatch(
             login({
               username: data.username,
-              token: token,
+              token,
               id: data.id,
-              avatarUrl: data['avatar_url'],
+              avatarUrl: data.avatar_url,
             }),
           )
-        else {
+        } else {
           store.dispatch(logout())
           localStorage.removeItem('token')
         }
       } catch (error) {
-        console.log(error)
+        console.error(error)
         store.dispatch(logout())
         localStorage.removeItem('token')
       }
     }
+
     if (token) fetchProfile()
     const state = store.getState()
     if (!state.genre?.list?.length) {
@@ -61,72 +52,83 @@ function App() {
     <div className='app'>
       <BrowserRouter>
         <Header />
-        <Routes>
-          <Route
-            path='/'
-            element={
-              <TwoColumnLayout>
-                <Home />
-              </TwoColumnLayout>
-            }
-          />
-          <Route
-            path='/story/:id'
-            element={
-              <DefaultLayout>
-                <StoryDetail />
-              </DefaultLayout>
-            }
-          />
-          <Route path='/story/:id/chapter/:chapterIndex' element={<Reader />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route
-            path='/bookshelf'
-            element={
-              <TwoColumnLayout>
-                <Bookshelf />
-              </TwoColumnLayout>
-            }
-          />
-          <Route path='/action/addStory' element={<AddStory />} />
-          <Route path='/action/addChapter' element={<AddChapter />} />
-          <Route path='/tutorial' element={<Tutorial />} />
-          <Route
-            path='/recently'
-            element={
-              <TwoColumnLayout>
-                <RecentlyRead />
-              </TwoColumnLayout>
-            }
-          />
-          <Route path='/user' element={<UserProfile />} />
-          <Route path='/auth' element={<UserAuth />} />
-          <Route
-            path='/hot'
-            element={
-              <DefaultLayout>
-                <EmptyState message='Trang này vẫn chưa có gì' />
-              </DefaultLayout>
-            }
-          />
-          <Route
-            path='/search'
-            element={
-              <DefaultLayout>
-                <SearchPage />
-              </DefaultLayout>
-            }
-          />
-          <Route
-            path='/settings'
-            element={
-              <DefaultLayout>
-                <Settings />
-              </DefaultLayout>
-            }
-          />
-          <Route path='/*' element={<NotFound />} />
-        </Routes>
+
+        {/* Suspense để hiển thị khi trang đang tải */}
+        <Suspense fallback={<div className='p-8 text-center'>Đang tải...</div>}>
+          <Routes>
+            <Route
+              path='/'
+              element={
+                <TwoColumnLayout>
+                  <Pages.Home />
+                </TwoColumnLayout>
+              }
+            />
+            <Route
+              path='/story/:id'
+              element={
+                <DefaultLayout>
+                  <Pages.StoryDetail />
+                </DefaultLayout>
+              }
+            />
+            <Route
+              path='/story/:id/chapter/:chapterIndex'
+              element={<Pages.Reader />}
+            />
+            <Route path='/profile' element={<Pages.Profile />} />
+
+            <Route
+              path='/bookshelf'
+              element={
+                <TwoColumnLayout>
+                  <Pages.Bookshelf />
+                </TwoColumnLayout>
+              }
+            />
+            <Route path='/action/addStory' element={<Pages.AddStory />} />
+            <Route path='/action/addChapter' element={<Pages.AddChapter />} />
+            <Route path='/tutorial' element={<Pages.Tutorial />} />
+
+            <Route
+              path='/recently'
+              element={
+                <TwoColumnLayout>
+                  <Pages.RecentlyRead />
+                </TwoColumnLayout>
+              }
+            />
+
+            <Route path='/user' element={<Pages.UserProfile />} />
+            <Route path='/auth' element={<Pages.UserAuth />} />
+            <Route
+              path='/hot'
+              element={
+                <DefaultLayout>
+                  <EmptyState message='Trang này vẫn chưa có gì' />
+                </DefaultLayout>
+              }
+            />
+            <Route
+              path='/search'
+              element={
+                <DefaultLayout>
+                  <Pages.SearchPage />
+                </DefaultLayout>
+              }
+            />
+            <Route
+              path='/settings'
+              element={
+                <DefaultLayout>
+                  <Pages.Settings />
+                </DefaultLayout>
+              }
+            />
+            <Route path='/*' element={<Pages.NotFound />} />
+          </Routes>
+        </Suspense>
+
         <Footer />
       </BrowserRouter>
     </div>

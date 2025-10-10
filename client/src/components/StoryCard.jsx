@@ -13,8 +13,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
 import { timeAgo } from '../utils/timeAgo'
+import ImageWithFallback from './ImageWithFallback'
 
-const StoryCard = ({ story, className }) => {
+const StoryCard = ({ story, className = ' ' }) => {
   const [hover, setHover] = useState(false)
   const navigate = useNavigate()
 
@@ -22,12 +23,11 @@ const StoryCard = ({ story, className }) => {
     <div className={`${styles['story-info-popup']} d-flex flex-column`}>
       <div className='d-flex'>
         <div className='d-flex justify-content-center align-items-center'>
-          <img
-            src={story.urlAvatar}
-            alt={story.title}
-            className={`${styles['card-img']}`}
-          />
         </div>
+        <ImageWithFallback
+          urlAvatar={story.urlAvatar}
+          className={`ratio ratio-2x3 ${styles['card-img']}`}
+        />
         <div className='d-flex flex-column p-2 ps-4'>
           <h5 className={`fs-6 text-success ${styles['limit-2-lines']}`}>
             {story.title}
@@ -70,9 +70,9 @@ const StoryCard = ({ story, className }) => {
         delay={[100, 0]}
         offset={[-200, -10]}
         maxWidth={400}
-        arrow={true}
+        arrow={false}
         animation='fade'
-        touch={false} >
+        touch={false}>
         <div
           className={`cursor-pointer overflow-hidden animate__animated animate__faster ${
             hover ? 'animate__pulse' : ''
@@ -80,13 +80,12 @@ const StoryCard = ({ story, className }) => {
           onClick={() => navigate(`/story/${story.id}`)}
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}>
-          <div className='card text-white'>
+          <div className='text-white position-relative'>
             {story.urlAvatar && (
-              <div
-                className='ratio ratio-2x3 bg-cover bg-center'
-                style={{
-                  backgroundImage: `url(${story.urlAvatar})`,
-                }}></div>
+              <ImageWithFallback
+                urlAvatar={story.urlAvatar}
+                className='ratio ratio-2x3'
+              />
             )}
 
             {story?.chapters?.length === 1 && (

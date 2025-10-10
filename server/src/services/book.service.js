@@ -31,7 +31,6 @@ exports.searchBooks = async (
   maxChapter = 1e6,
 ) => {
   const similarityThreshold = query.length < 4 ? 0.1 : 0.25
-  const startTime = performance.now()
 
   // Điều kiện cơ bản
   const whereCondition = {
@@ -119,12 +118,6 @@ exports.searchBooks = async (
 
   // Kết quả cuối
   const results = [...exactResults, ...similarityResults]
-
-  const endTime = performance.now()
-  const searchTime = (endTime - startTime).toFixed(2)
-  console.log(
-    `🔍 Search "${query}" mất ${searchTime} ms, kết quả: ${results.length}`,
-  )
 
   return results
 }

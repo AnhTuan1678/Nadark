@@ -22,6 +22,7 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import styles from './styles.module.css'
 import { useEffect, useState } from 'react'
+import ImageWithFallback from '../../components/ImageWithFallback'
 
 const StoryInfoSection = ({ storyDetails, genres, progress }) => {
   const [details, setDetails] = useState(storyDetails)
@@ -107,11 +108,10 @@ const StoryInfoSection = ({ storyDetails, genres, progress }) => {
     <div className='row mb-4'>
       <div className='col col-12 col-md-4 col-lg-3 d-flex align-items-center justify-content-center'>
         <div className='w-50 w-md-100'>
-          <div
+          <ImageWithFallback
             className='ratio ratio-2x3 bg-cover bg-center'
-            style={{
-              backgroundImage: `url(${details.urlAvatar})`,
-            }}></div>
+            urlAvatar={details.urlAvatar}
+          />
         </div>
       </div>
 

@@ -47,11 +47,12 @@ const Bookshelf = () => {
     <>
       <h2 className='page-title'>Truyện đã lưu</h2>
 
-      <div className='row ps-1 pe-1 flex-grow-1'>
+      <div className='row ps-1 pe-1'>
         {stories.map((story) => (
           <StoryCard key={story.id} story={story} />
         ))}
       </div>
+      <div className='flex-grow-1'></div>
       <Pagination page={page} totalPages={totalPages} onChangePage={setPage} />
     </>
   )

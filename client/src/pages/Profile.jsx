@@ -120,7 +120,7 @@ const Profile = () => {
 
         <div className='d-flex justify-content-end mb-4 mt-5'>
           <button
-            className='btn btn-warning'
+            className='btn btn-warning text-white'
             onClick={() => {
               navigate('/auth?action=cp', {
                 state: { from: location.pathname },
@@ -133,8 +133,8 @@ const Profile = () => {
 
         <div className='row'>
           {/* Left: Progress & info */}
-          <div className='col-md-4 m-0'>
-            <div className='card p-3'>
+          <div className='col-md-4 m-0 p-1'>
+            <div className='rounded border shadow p-3 cus-container'>
               <h5>{profile.level}</h5>
               <div className='progress mb-2' style={{ height: '20px' }}>
                 <div
@@ -149,16 +149,13 @@ const Profile = () => {
               </div>
               <p>{profile.status}</p>
               <ul className='list-group list-group-flush'>
-                <li className='list-group-item'>
-                  <strong>Id:</strong> {profile.id}
-                </li>
-                <li className='list-group-item'>
+                <li className='list-group-item bg-transparent'>
                   <strong>Username:</strong> {profile.username}
                 </li>
-                <li className='list-group-item'>
+                <li className='list-group-item bg-transparent'>
                   <strong>Email:</strong> {profile.email}
                 </li>
-                <li className='list-group-item'>
+                <li className='list-group-item bg-transparent'>
                   <strong>Ngày tạo:</strong>{' '}
                   {new Date(profile.createdDate).toLocaleDateString()}
                 </li>
@@ -167,15 +164,15 @@ const Profile = () => {
           </div>
 
           {/* Right: Story info */}
-          <div className='col-md-8 m-0 p-0'>
-            <div className='mb-3 border shadow p-2 m-0 rounded cus-container'>
+          <div className='col-md-8 m-0 p-0'> 
+            <div className='mb-1 border shadow p-2 m-1 mb-2 rounded cus-container'>
               <h5 className='border-bottom pb-2 m-3 fs-3 fw-normal text-blue'>
                 Truyện đã đăng ({profile.storiesPosted})
               </h5>
               {profile.storiesPosted === 0 && <p>Không có truyện nào</p>}
             </div>
             {progress && (
-              <div className='mb-3 border shadow p-2 m-0 rounded cus-container'>
+              <div className='mb-3 border shadow p-2 m-1 rounded cus-container'>
                 <h5 className='border-bottom pb-2 m-3 fs-3 fw-normal text-blue'>
                   Truyện đã đọc ({progress?.length})
                 </h5>
