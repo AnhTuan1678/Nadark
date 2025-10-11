@@ -23,14 +23,17 @@ app.use('/public', express.static(publicPath))
 // =====================
 // PHỤC VỤ FRONTEND VITE BUILD
 // =====================
-const clientBuildPath = path.join(__dirname, './dist');
-app.use(express.static(clientBuildPath));
+const clientBuildPath = path.join(__dirname, './dist')
+app.use(express.static(clientBuildPath))
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' })
+})
 
 // Bắt tất cả route còn lại trả về index.html để React Router xử lý
 app.get(/^\/.*$/, (req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'))
 })
-
 
 app.listen(PORT, HOST, () => {
   console.log(`Server running at http://${HOST}:${PORT}/ in ${ENV} mode`)
