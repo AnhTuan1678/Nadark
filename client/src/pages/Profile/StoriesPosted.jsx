@@ -11,7 +11,11 @@ const StoriesPosted = ({ stories }) => {
       </h5>
       <div className='row mx-0'>
         {stories.map((book) => (
-          <StoryCard key={book.id} story={book} />
+          <StoryCard
+            key={book.id}
+            story={book}
+            className='col-4 col-sm-3 col-md-2 p-1'
+          />
         ))}
       </div>
     </div>

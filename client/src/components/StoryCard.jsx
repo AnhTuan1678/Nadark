@@ -15,15 +15,14 @@ import { useState } from 'react'
 import { timeAgo } from '../utils/timeAgo'
 import ImageWithFallback from './ImageWithFallback'
 
-const StoryCard = ({ story, className = '' }) => {
+const StoryCard = ({ story, className = '', clickable = true }) => {
   const [hover, setHover] = useState(false)
   const navigate = useNavigate()
 
   const popupContent = (
     <div className={`${styles['story-info-popup']} d-flex flex-column`}>
       <div className='d-flex'>
-        <div className='d-flex justify-content-center align-items-center'>
-        </div>
+        <div className='d-flex justify-content-center align-items-center'></div>
         <ImageWithFallback
           urlAvatar={story.urlAvatar}
           className={`ratio ratio-2x3 ${styles['card-img']}`}
@@ -62,7 +61,7 @@ const StoryCard = ({ story, className = '' }) => {
   )
 
   return (
-    <div className={`col-4 col-sm-3 col-md-2 p-1 ${className}`}>
+    <div className={className}>
       <Tippy
         content={popupContent}
         placement='right'
@@ -74,10 +73,12 @@ const StoryCard = ({ story, className = '' }) => {
         animation='fade'
         touch={false}>
         <div
-          className={`cursor-pointer overflow-hidden animate__animated animate__faster ${
-            hover ? 'animate__pulse' : ''
+          className={`${
+            clickable && 'cursor-pointer'
+          } overflow-hidden animate__animated animate__faster ${
+            hover && clickable ? 'animate__pulse' : ''
           }`}
-          onClick={() => navigate(`/story/${story.id}`)}
+          onClick={() => clickable && navigate(`/story/${story.id}`)}
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}>
           <div className='text-white position-relative'>

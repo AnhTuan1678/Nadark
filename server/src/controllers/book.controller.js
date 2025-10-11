@@ -298,3 +298,33 @@ exports.getUserBooks = async (req, res) => {
     res.status(500).json({ error: err.message })
   }
 }
+
+exports.updateBook = async (req, res) => {
+  try {
+    const bookId = req.params.id
+    const updateData = req.body
+
+    const updatedBook = await bookService.updateBook(bookId, updateData)
+    res.json(updatedBook)
+  } catch (err) {
+    console.error('Lỗi khi cập nhật sách:', err)
+    if (err.message === 'BOOK_NOT_FOUND') {
+      return res.status(404).json({ error: 'Không tìm thấy sách' })
+    }
+    res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+exports.deleteBook = async (req, res) => {
+  try {
+    const bookId = req.params.id
+    await bookService.deleteBook(bookId)
+    res.json({ message: 'Xóa sách thành công' })
+  } catch (err) {
+    console.error('Lỗi khi xóa sách:', err)
+    if (err.message === 'BOOK_NOT_FOUND') {
+      return res.status(404).json({ error: 'Không tìm thấy sách' })
+    }
+    res.status(500).json({ error: 'Internal server error' })
+  }
+}

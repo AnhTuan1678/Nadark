@@ -44,7 +44,11 @@ const Hot = () => {
           </h2>
           <div className='row ps-1 pe-1'>
             {newUpdated.map((story) => (
-              <StoryCard key={story.id} story={story} />
+              <StoryCard
+                key={story.id}
+                story={story}
+                className='col-4 col-sm-3 col-md-2 p-1'
+              />
             ))}
           </div>
         </section>
@@ -58,7 +62,11 @@ const Hot = () => {
           </h2>
           <div className='row ps-1 pe-1'>
             {newCreated.map((story) => (
-              <StoryCard key={story.id} story={story} />
+              <StoryCard
+                key={story.id}
+                story={story}
+                className='col-4 col-sm-3 col-md-2 p-1'
+              />
             ))}
           </div>
         </section>
@@ -72,7 +80,11 @@ const Hot = () => {
           </h2>
           <div className='row ps-1 pe-1'>
             {mostFollowed.map((story) => (
-              <StoryCard key={story.id} story={story} />
+              <StoryCard
+                key={story.id}
+                story={story}
+                className='col-4 col-sm-3 col-md-2 p-1'
+              />
             ))}
           </div>
         </section>

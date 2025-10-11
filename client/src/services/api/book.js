@@ -143,3 +143,39 @@ export const createBook = async (bookData, token) => {
   const data = await res.json()
   return formatterStoryDetail(data)
 }
+
+export const updateBook = async (bookId, updateData, token) => {
+  const res = await fetch(`${API_URL}/api/book/${bookId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(updateData),
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json()
+    throw new Error(errorData.error || `HTTP error! status: ${res.status}`)
+  }
+
+  const data = await res.json()
+  return formatterStoryDetail(data)
+}
+
+export const deleteBook = async (bookId, token) => {
+  const res = await fetch(`${API_URL}/api/book/${bookId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json()
+    throw new Error(errorData.error || `HTTP error! status: ${res.status}`)
+  }
+
+  const data = await res.json()
+  return data // { message: 'Xóa sách thành công' }
+}

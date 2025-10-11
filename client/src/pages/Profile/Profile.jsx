@@ -102,7 +102,7 @@ const Profile = () => {
         </div>
 
         {/* thông tin + stories */}
-        <div className='row'>
+        <div className='row flex-grow-1'>
           <ProfileInfo profile={profile} />
 
           <div className='col-md-8 m-0 p-0'>

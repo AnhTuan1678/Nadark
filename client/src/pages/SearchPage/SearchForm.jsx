@@ -13,7 +13,6 @@ const SearchForm = ({
   initialData = {},
   onSubmit,
   loading,
-  error,
   className,
 }) => {
   const [query, setQuery] = useState(initialData.query || '')
@@ -95,8 +94,6 @@ const SearchForm = ({
         <button type='submit' disabled={loading} className='btn btn-primary'>
           {loading ? 'Đang tìm...' : 'Tìm kiếm'}
         </button>
-
-        {error && <div className='text-danger mt-2'>{error}</div>}
       </form>
     </div>
   )

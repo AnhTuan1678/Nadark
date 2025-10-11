@@ -271,3 +271,61 @@ exports.getBooksByUploader = async (
     data: books,
   }
 }
+
+exports.updateBook = async (bookId, updateData) => {
+  const {
+    title,
+    author,
+    description,
+    status,
+    genres = [],
+    url_avatar,
+  } = updateData
+
+  const book = await db.Book.findByPk(bookId)
+  if (!book) throw new Error('BOOK_NOT_FOUND')
+
+  // Cập nhật thông tin cơ bản
+  await book.update({
+    title: title !== undefined ? title : book.title,
+    author: author !== undefined ? author : book.author,
+    description: description !== undefined ? description : book.description,
+    status: status !== undefined ? status : book.status,
+    url_avatar: url_avatar !== undefined ? url_avatar : book.url_avatar,
+    updated_at: new Date(),
+  })
+
+  // Cập nhật thể loại (nếu có)
+  if (Array.isArray(genres)) {
+    const genreRecords = await db.Genre.findAll({
+      where: { id: genres },
+    })
+    await book.setGenres(genreRecords)
+  }
+
+  // Trả về sách đã cập nhật kèm thể loại
+  const updatedBook = await db.Book.findByPk(book.id, {
+    include: [
+      {
+        model: db.Genre,
+        attributes: ['id', 'name', 'description'],
+        through: { attributes: [] },
+      },
+    ],
+  })
+
+  return updatedBook
+}
+
+exports.deleteBook = async (bookId) => {
+  const book = await db.Book.findByPk(bookId)
+  if (!book) throw new Error('BOOK_NOT_FOUND')
+
+  // Nếu muốn xóa luôn các chapter liên quan
+  await db.Chapter.destroy({ where: { book_id: bookId } })
+
+  // Xóa sách
+  await book.destroy()
+
+  return { success: true, message: `Book ${bookId} deleted` }
+}

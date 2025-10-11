@@ -63,7 +63,7 @@ const SearchPage = () => {
   return (
     <>
       <h2 className='page-title mb-4'>Tìm kiếm sách</h2>
-      <div className='row'>
+      <div className='row flex-grow-1'>
         <SearchForm
           initialData={{
             query: searchParams.get('query') || '',
@@ -74,11 +74,10 @@ const SearchPage = () => {
           }}
           onSubmit={handleSubmit}
           loading={loading}
-          error={error}
           className='col col-12 col-md-4 p-2 rounded h-100'
         />
 
-        <div className='col col-12 col-md-8'>
+        <div className='col col-12 col-md-8 d-flex flex-column'>
           {loading ? (
             <EmptyState message='🔍 Đang tìm kiếm...' />
           ) : error ? (

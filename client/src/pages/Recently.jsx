@@ -51,7 +51,11 @@ const RecentlyRead = () => {
 
       <div className='row ps-1 pe-1'>
         {processes.map((process) => (
-          <StoryCard key={process.id} story={process.Book} />
+          <StoryCard
+            key={process.id}
+            story={process.Book}
+            className='col-4 col-sm-3 col-md-2 p-1'
+          />
         ))}
       </div>
       <div className='flex-grow-1'></div>

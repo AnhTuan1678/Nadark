@@ -39,3 +39,8 @@ export const cacheFetch = async (
 export const clearCache = async () => {
   await db.cache.clear()
 }
+
+export const clearCacheKey = async (url, options = {}) => {
+  const key = JSON.stringify({ url, options })
+  await db.cache.delete(key)
+}

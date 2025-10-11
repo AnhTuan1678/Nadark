@@ -18,6 +18,8 @@ router.get('/newly-updated', bookController.getNewlyUpdatedBooks)
 router.get('/newly-created', bookController.getNewlyCreatedBooks)
 router.get('/most-followed', bookController.getMostFollowedBooks)
 router.get('/:id', bookController.getBook)
+router.put('/:id', authenticateToken, bookController.updateBook)
+router.delete('/:id', authenticateToken, bookController.deleteBook)
 
 // Chapters
 router.get('/:id/chapters', bookController.getChapters)

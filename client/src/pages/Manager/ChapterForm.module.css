@@ -1,0 +1,52 @@
+.wrapper {
+    transition: background-color 0.3s ease;
+}
+
+.card {
+    background-color: var(--bs-dark-bg-subtle);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+}
+
+.title {
+    letter-spacing: 0.5px;
+}
+
+.contentBox {
+    resize: vertical;
+    min-height: 180px;
+    line-height: 1.5;
+    background-color: #1e1e1e;
+    color: #eaeaea;
+    border: 1px solid #444;
+    border-radius: 8px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.contentBox:focus {
+    outline: none;
+    border-color: #0d6efd;
+    background-color: #2b2b2b;
+}
+
+.btnSubmit {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btnSubmit:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.btnCancel {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btnCancel:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}

@@ -22,7 +22,7 @@ const TwoColumnLayout = ({ children }) => {
       <NotifyBlock>
         <strong>Lưu ý</strong> Đa số ảnh trên trang web đều cần vpn để load
       </NotifyBlock>
-      <div className='row'>
+      <div className='row flex-grow-1'>
         <div className='col col-12 col-md-8 d-flex flex-column'>{children}</div>
         <div className='col col-12 col-md-4 m-0 p-1'>
           <TopBooksTabs data={topBooksData} />

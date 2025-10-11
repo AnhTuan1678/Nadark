@@ -16,6 +16,7 @@ const ProgressList = ({ progress }) => {
           <StoryCard
             key={process.id}
             story={process.Book}
+            className='col-4 col-sm-3 col-md-2 p-1'
           />
         ))}
       </div>

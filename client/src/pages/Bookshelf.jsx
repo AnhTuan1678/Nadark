@@ -45,13 +45,15 @@ const Bookshelf = () => {
 
   return (
     <>
-      <h2 className='page-title'>
-        {import.meta.env.VITE_APP_NAME} - Tủ sách
-      </h2>
+      <h2 className='page-title'>{import.meta.env.VITE_APP_NAME} - Tủ sách</h2>
 
       <div className='row ps-1 pe-1'>
         {stories.map((story) => (
-          <StoryCard key={story.id} story={story} />
+          <StoryCard
+            key={story.id}
+            story={story}
+            className='col-4 col-sm-3 col-md-2 p-1'
+          />
         ))}
       </div>
       <div className='flex-grow-1'></div>

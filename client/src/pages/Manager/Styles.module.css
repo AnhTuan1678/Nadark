@@ -1,0 +1,59 @@
+.book:hover {
+    background-color: #303030;
+}
+
+.btn {
+    width: 80%;
+    margin: 10%;
+    opacity: 0.5;
+    visibility: hidden;
+}
+
+.btn:hover {
+    scale: 1.1;
+    opacity: 1;
+}
+
+.active {
+    background: var(--color-bg-hover) !important;
+}
+
+button.btnDelete {
+    background-color: red !important;
+    color: white;
+}
+
+button.btnEdit {
+    background-color: green !important;
+    color: white;
+}
+
+.btnAction {
+    opacity: 0.7;
+    transition: all 0.2s;
+}
+
+.btnAction:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.overlay:hover .btn,
+.active .btn {
+    visibility: visible;
+}
+
+.table {
+    border: 1px solid var(--color-bg-badge);
+    border-radius: 4px;
+    overflow-y: auto;
+}
+
+.transparentTable {
+    background-color: transparent !important;
+}
+
+.transparentTable th,
+.transparentTable td {
+    background-color: transparent !important;
+}
