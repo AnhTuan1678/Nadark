@@ -1,6 +1,7 @@
+import { formatterStoryDetail } from '../../utils/formatter'
 import { API_URL } from './config'
 
-export const getMyProgress = async (token, { limit = 30, offset = 0 } = {}) => {
+export const getMyProgress = async (token, { limit = 24, offset = 0 } = {}) => {
   const res = await fetch(
     `${API_URL}/api/progress?limit=${limit}&offset=${offset}`,
     {
@@ -14,17 +15,37 @@ export const getMyProgress = async (token, { limit = 30, offset = 0 } = {}) => {
 
   if (!res.ok) throw new Error('Lấy tiến trình thất bại')
 
-  return res.json() //{ total, data }
+  const raw = await res.json()
+  const formatted = {
+    ...raw,
+    data: (raw.data || []).map((progress) => ({
+      ...progress,
+      Book: formatterStoryDetail(progress.Book),
+    })),
+  }
+
+  return formatted
 }
 
-export const getUserProgress = async (userId, { limit = 30, offset = 0 } = {}) => {
+export const getUserProgress = async (
+  userId,
+  { limit = 24, offset = 0 } = {},
+) => {
   const res = await fetch(
     `${API_URL}/api/progress/user?limit=${limit}&offset=${offset}&id=${userId}`,
   )
 
   if (!res.ok) throw new Error('Lấy tiến trình thất bại')
 
-  return res.json() //{ total, data }
+  const raw = await res.json()
+  const formatted = {
+    ...raw,
+    data: (raw.data || []).map((progress) => ({
+      ...progress,
+      Book: formatterStoryDetail(progress.Book),
+    })),
+  }
+  return formatted
 }
 
 export const saveProgress = async (

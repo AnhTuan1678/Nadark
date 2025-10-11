@@ -1,3 +1,4 @@
+import { formatterStoryDetail } from '../../utils/formatter'
 import { API_URL } from './config'
 
 export const getProfile = async (token) => {
@@ -46,4 +47,50 @@ export const updateSettings = async (token, settings) => {
     body: JSON.stringify({ settings }),
   })
   return res.json()
+}
+
+export const getMyBooks = async (token, limit = 24, offset = 0) => {
+  const url = `${API_URL}/api/book/my-books?limit=${limit}&offset=${offset}`
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.error || `HTTP error! status: ${res.status}`)
+  }
+
+  const data = await res.json()
+  const formattedBooks = (data.data || []).map((book) =>
+    formatterStoryDetail(book),
+  )
+
+  return {
+    total: data.total || 0,
+    data: formattedBooks,
+  }
+}
+
+export const getUserBooks = async (userId, limit = 24, offset = 0) => {
+  if (!userId) throw new Error('USER_ID_REQUIRED')
+
+  const url = `${API_URL}/api/book/user/${userId}?limit=${limit}&offset=${offset}`
+  const res = await fetch(url)
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.error || `HTTP error! status: ${res.status}`)
+  }
+
+  const data = await res.json()
+  const formattedBooks = (data.data || []).map((book) =>
+    formatterStoryDetail(book),
+  )
+
+  return {
+    total: data.total || 0,
+    data: formattedBooks,
+  }
 }

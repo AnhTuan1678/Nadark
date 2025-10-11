@@ -14,9 +14,10 @@
 :root[data-theme='dark'] {
     --color-container-bg: #520044;
     --color-title: #a194d0;
-    --color-label: #59565d;
+    --color-label: #979797;
     --color-btn: var(--primary--color);
     --color-submit-bg: #6c5aad;
+    --color-submit-text: rgb(65, 65, 65);
     --color-submit-bg-hover: #513e92;
     --color-submit-disabled: #a194d0;
     --color-footer-link: #9c1b5d;
@@ -55,7 +56,8 @@
     font-size: 14px;
     pointer-events: auto;
     left: 0;
-    color: var(--color-label);
+    color: var(--color-label) !important;
+    background-color: var(--color-submit-text) !important;
     font-family: rubik, helvetica, arial, sans-serif;
 }
 

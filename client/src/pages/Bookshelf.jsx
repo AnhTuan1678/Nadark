@@ -45,7 +45,9 @@ const Bookshelf = () => {
 
   return (
     <>
-      <h2 className='page-title'>Truyện đã lưu</h2>
+      <h2 className='page-title'>
+        {import.meta.env.VITE_APP_NAME} - Tủ sách
+      </h2>
 
       <div className='row ps-1 pe-1'>
         {stories.map((story) => (

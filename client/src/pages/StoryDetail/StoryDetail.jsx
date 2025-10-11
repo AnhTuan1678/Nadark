@@ -61,7 +61,6 @@ const StoryDetail = () => {
     const fetchReview = async () => {
       const data = await reviewAPI.getReviewsByBook(id)
       setReviews(data)
-      console.log(data)
     }
     fetchReview()
   }, [currentUser.id, id])

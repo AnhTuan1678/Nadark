@@ -12,7 +12,6 @@ import {
   faUser,
 } from '@fortawesome/free-solid-svg-icons'
 import { bookshelfAPI } from '../../services/api'
-import { formatterStoryDetail } from '../../utils/formatter'
 import { timeAgo } from '../../utils/timeAgo'
 import { StarRating } from '../../components/StartRating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -51,11 +50,11 @@ const StoryInfoSection = ({ storyDetails, genres, progress }) => {
     }
     const token = user.token
     const res = await bookshelfAPI.addToBookshelf(token, details.id)
-    const formatted = formatterStoryDetail(res.book)
-    setDetails((pre) => ({ ...formatted, genres: pre.genres }))
+    const book = res.book
+    setDetails((pre) => ({ ...book, genres: pre.genres }))
     setAvgRating(
-      formatted?.reviewCount > 0
-        ? (formatted.totalRating / formatted.reviewCount).toFixed(1)
+      book?.reviewCount > 0
+        ? (book.totalRating / book.reviewCount).toFixed(1)
         : null,
     )
     showSnackbar(res)

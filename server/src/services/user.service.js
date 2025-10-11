@@ -15,12 +15,12 @@ exports.getMe = async (userId) => {
   return user
 }
 
-exports.getUserById = async (id) => {
-  const user = await db.User.findByPk(id, {
-    attributes: ['id', 'username', 'avatar_url'],
-  })
+exports.getUserById = async (userId) => {
+  const user = await db.User.findByPk(userId)
   if (!user) {
-    return { error: 'User không tồn tại', status: 404 }
+    const err = new Error('User không tồn tại')
+    err.status = 404
+    throw err
   }
   return user
 }

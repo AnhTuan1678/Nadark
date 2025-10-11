@@ -10,7 +10,9 @@ export const addToBookshelf = async (token, bookId) => {
     },
     body: JSON.stringify({ book_id: bookId }),
   })
-  return res.json()
+  const raw = await res.json()
+
+  return { ...raw, book: formatterStoryDetail(raw.book) }
 }
 
 export const getBookshelf = async (token, { limit = 30, offset = 0 } = {}) => {

@@ -21,7 +21,7 @@ const Reader = () => {
     zoom: 1,
   }
 
-  const { chapterIndex, id } = useParams(1)
+  const { chapterIndex, id } = useParams()
   const navigate = useNavigate()
   const user = useSelector((state) => state.user)
   const { showSnackbar } = useSnackbar()

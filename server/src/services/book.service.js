@@ -23,6 +23,46 @@ exports.getAllBooks = async ({ limit, offset }) => {
   }
 }
 
+exports.getBooksByCriteria = async (criteria, limit = 12, offset = 0) => {
+  if (!['new_update', 'new_create', 'most_follow'].includes(criteria)) {
+    throw new Error('INVALID_CRITERIA')
+  }
+
+  let order = []
+  switch (criteria) {
+    case 'new_update':
+      order = [['updated_at', 'DESC']]
+      break
+    case 'new_create':
+      order = [['created_at', 'DESC']]
+      break
+    case 'most_follow':
+      order = [['followers', 'DESC']]
+      break
+  }
+
+  const whereCondition = { chapter_count: { [Op.gt]: 1 } }
+
+  const { count, rows } = await db.Book.findAndCountAll({
+    where: whereCondition,
+    limit,
+    offset,
+    order,
+    include: [
+      {
+        model: db.Genre,
+        attributes: ['id', 'name', 'description'],
+        through: { attributes: [] },
+      },
+    ],
+  })
+
+  return {
+    total: count,
+    data: rows,
+  }
+}
+
 exports.searchBooks = async (
   query,
   limit = 8,
@@ -154,47 +194,6 @@ exports.getChapterByIndex = async (bookId, index) => {
   })
 }
 
-exports.createReview = async (userId, { book_id, content, rating }) => {
-  const book = await db.Book.findByPk(book_id)
-  if (!book) throw new Error('BOOK_NOT_FOUND')
-
-  const existing = await db.Review.findOne({
-    where: { book_id, user_id: userId },
-  })
-  if (existing) throw new Error('ALREADY_REVIEWED')
-
-  return db.Review.create({ user_id: userId, book_id, content, rating })
-}
-
-exports.getReviews = async (bookId) => {
-  return db.Review.findAll({
-    where: { book_id: bookId },
-    include: [{ model: db.User, attributes: ['id', 'username', 'avatar_url'] }],
-    order: [['created_at', 'DESC']],
-  })
-}
-
-exports.updateReview = async (userId, reviewId, { content, rating }) => {
-  const review = await db.Review.findByPk(reviewId)
-  if (!review) throw new Error('REVIEW_NOT_FOUND')
-  if (review.user_id !== userId) throw new Error('FORBIDDEN')
-
-  review.content = content || review.content
-  review.rating = rating || review.rating
-  review.updated_at = new Date()
-
-  return review.save()
-}
-
-exports.deleteReview = async (userId, reviewId) => {
-  const review = await db.Review.findByPk(reviewId)
-  if (!review) throw new Error('REVIEW_NOT_FOUND')
-  if (review.user_id !== userId) throw new Error('FORBIDDEN')
-
-  await review.destroy()
-  return true
-}
-
 exports.createBook = async (bookData, uploaderId = null) => {
   const {
     title,
@@ -243,4 +242,32 @@ exports.createBook = async (bookData, uploaderId = null) => {
   })
 
   return createdBook
+}
+
+exports.getBooksByUploader = async (
+  uploaderId,
+  { limit = 30, offset = 0 } = {},
+) => {
+  if (!uploaderId) throw new Error('MISSING_UPLOADER_ID')
+
+  const count = await db.Book.count({ where: { uploader_id: uploaderId } })
+
+  const books = await db.Book.findAll({
+    where: { uploader_id: uploaderId },
+    limit,
+    offset,
+    order: [['updated_at', 'DESC']],
+    include: [
+      {
+        model: db.Genre,
+        attributes: ['id', 'name', 'description'],
+        through: { attributes: [] },
+      },
+    ],
+  })
+
+  return {
+    total: count,
+    data: books,
+  }
 }

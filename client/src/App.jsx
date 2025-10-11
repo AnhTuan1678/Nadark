@@ -99,14 +99,13 @@ function App() {
               }
             />
 
-            <Route path='/user' element={<Pages.UserProfile />} />
             <Route path='/auth' element={<Pages.UserAuth />} />
             <Route
               path='/hot'
               element={
-                <DefaultLayout>
-                  <EmptyState message='Trang này vẫn chưa có gì' />
-                </DefaultLayout>
+                <TwoColumnLayout>
+                  <Pages.Hot />
+                </TwoColumnLayout>
               }
             />
             <Route

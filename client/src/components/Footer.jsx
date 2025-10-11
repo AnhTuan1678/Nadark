@@ -23,7 +23,6 @@ const Footer = () => (
           </p>
           <p className='mb-0 fs-7'>
             SĐT: 0839817228{' '}
-            <span className='text-warning'>(không khuyến khích)</span>
           </p>
         </div>
 

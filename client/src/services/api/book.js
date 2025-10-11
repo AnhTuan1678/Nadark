@@ -18,6 +18,48 @@ export const getAllStory = async ({ limit = 30, offset = 0 }) => {
   }
 }
 
+export const getNewlyUpdatedBooks = async (limit = 20, offset = 0) => {
+  const res = await cacheFetch(
+    `${API_URL}/api/book/newly-updated?limit=${limit}&offset=${offset}`,
+  )
+
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+
+  const data = await res.json()
+  return {
+    total: data.total || 0,
+    data: (data.data || []).map((book) => formatterStoryDetail(book)),
+  }
+}
+
+export const getNewlyCreatedBooks = async (limit = 20, offset = 0) => {
+  const res = await cacheFetch(
+    `${API_URL}/api/book/newly-created?limit=${limit}&offset=${offset}`,
+  )
+
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+
+  const data = await res.json()
+  return {
+    total: data.total || 0,
+    data: (data.data || []).map((book) => formatterStoryDetail(book)),
+  }
+}
+
+export const getMostFollowedBooks = async (limit = 20, offset = 0) => {
+  const res = await cacheFetch(
+    `${API_URL}/api/book/most-followed?limit=${limit}&offset=${offset}`,
+  )
+
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+
+  const data = await res.json()
+  return {
+    total: data.total || 0,
+    data: (data.data || []).map((book) => formatterStoryDetail(book)),
+  }
+}
+
 export const getStoryDetails = async (storyId) => {
   const res = await cacheFetch(`${API_URL}/api/book/${storyId}`)
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)

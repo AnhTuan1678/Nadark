@@ -10,8 +10,13 @@ router.get('/top/month', bookController.getTopBooksThisMonth)
 
 // Books
 router.get('/', bookController.getAllBooks)
-router.post('/', authenticateToken, bookController.createBookController)
+router.post('/', authenticateToken, bookController.createBook)
+router.get('/my-books', authenticateToken, bookController.getMyBooks)
+router.get('/user/:userId', bookController.getUserBooks)
 router.get('/search', bookController.searchBooks)
+router.get('/newly-updated', bookController.getNewlyUpdatedBooks)
+router.get('/newly-created', bookController.getNewlyCreatedBooks)
+router.get('/most-followed', bookController.getMostFollowedBooks)
 router.get('/:id', bookController.getBook)
 
 // Chapters

@@ -27,7 +27,7 @@ export const CommentItem = ({ comment }) => {
           </div>
         )}
 
-        <a href={`/user?id=${comment?.User?.id}`} className='ms-1 fs-6 fs-md-7 fw-bold'>
+        <a href={`/profile?user=${comment?.User?.id}`} className='ms-1 fs-6 fs-md-7 fw-bold'>
           {comment?.User?.username}
         </a>
         <p className='mb-0 ms-1 fs-6 fs-md-7' style={{ whiteSpace: 'pre-wrap' }}>

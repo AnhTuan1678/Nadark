@@ -1,5 +1,6 @@
 const bookService = require('../services/book.service')
-const bookTraffic = require('../services/bookTraffic.service')
+const bookTrafficService = require('../services/bookTraffic.service')
+const reviewService = require('../services/review.service')
 
 exports.getAllBooks = async (req, res) => {
   try {
@@ -12,6 +13,57 @@ exports.getAllBooks = async (req, res) => {
   } catch (err) {
     console.error('Lỗi khi lấy danh sách truyện:', err)
     res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+exports.getNewlyUpdatedBooks = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 20
+    const offset = parseInt(req.query.offset) || 0
+
+    const result = await bookService.getBooksByCriteria(
+      'new_update',
+      limit,
+      offset,
+    )
+    res.json(result)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: err.message })
+  }
+}
+
+exports.getNewlyCreatedBooks = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 20
+    const offset = parseInt(req.query.offset) || 0
+
+    const result = await bookService.getBooksByCriteria(
+      'new_create',
+      limit,
+      offset,
+    )
+    res.json(result)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: err.message })
+  }
+}
+
+exports.getMostFollowedBooks = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 20
+    const offset = parseInt(req.query.offset) || 0
+
+    const result = await bookService.getBooksByCriteria(
+      'most_follow',
+      limit,
+      offset,
+    )
+    res.json(result)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: err.message })
   }
 }
 
@@ -52,7 +104,7 @@ exports.getBook = async (req, res) => {
     const bookId = req.params.id
     const book = await bookService.getBookById(bookId)
     if (!book) return res.status(404).json({ error: 'Book not found' })
-    await bookTraffic.increaseBookView(bookId)
+    await bookTrafficService.increaseBookView(bookId)
     res.json(book)
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' })
@@ -84,7 +136,7 @@ exports.getChapterByIndex = async (req, res) => {
 
 exports.createReview = async (req, res) => {
   try {
-    const review = await bookService.createReview(req.user.id, req.body)
+    const review = await reviewService.createReview(req.user.id, req.body)
     res.status(201).json(review)
   } catch (err) {
     if (err.message === 'BOOK_NOT_FOUND')
@@ -97,7 +149,7 @@ exports.createReview = async (req, res) => {
 
 exports.getReviews = async (req, res) => {
   try {
-    const reviews = await bookService.getReviews(req.params.bookId)
+    const reviews = await reviewService.getReviews(req.params.bookId)
     res.json(reviews)
   } catch (err) {
     res.status(500).json({ message: 'Server error' })
@@ -106,7 +158,7 @@ exports.getReviews = async (req, res) => {
 
 exports.updateReview = async (req, res) => {
   try {
-    const updated = await bookService.updateReview(
+    const updated = await reviewService.updateReview(
       req.user.id,
       req.params.id,
       req.body,
@@ -123,7 +175,7 @@ exports.updateReview = async (req, res) => {
 
 exports.deleteReview = async (req, res) => {
   try {
-    await bookService.deleteReview(req.user.id, req.params.id)
+    await reviewService.deleteReview(req.user.id, req.params.id)
     res.json({ message: 'Review deleted successfully' })
   } catch (err) {
     if (err.message === 'REVIEW_NOT_FOUND')
@@ -137,7 +189,7 @@ exports.deleteReview = async (req, res) => {
 exports.getTopBooksToday = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10
-    const books = await bookTraffic.getTopBooksToday(limit)
+    const books = await bookTrafficService.getTopBooksToday(limit)
     res.json(books)
   } catch (err) {
     console.error('Lỗi khi lấy top sách hôm nay:', err)
@@ -148,7 +200,7 @@ exports.getTopBooksToday = async (req, res) => {
 exports.getTopBooksThisWeek = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10
-    const books = await bookTraffic.getTopBooksThisWeek(limit)
+    const books = await bookTrafficService.getTopBooksThisWeek(limit)
     res.json(books)
   } catch (err) {
     console.error('Lỗi khi lấy top sách tuần này:', err)
@@ -159,7 +211,7 @@ exports.getTopBooksThisWeek = async (req, res) => {
 exports.getTopBooksThisMonth = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10
-    const books = await bookTraffic.getTopBooksThisMonth(limit)
+    const books = await bookTrafficService.getTopBooksThisMonth(limit)
     res.json(books)
   } catch (err) {
     console.error('Lỗi khi lấy top sách tháng này:', err)
@@ -172,9 +224,9 @@ exports.getTopBooksStats = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10
 
     const [today, week, month] = await Promise.all([
-      bookTraffic.getTopBooksToday(limit),
-      bookTraffic.getTopBooksThisWeek(limit),
-      bookTraffic.getTopBooksThisMonth(limit),
+      bookTrafficService.getTopBooksToday(limit),
+      bookTrafficService.getTopBooksThisWeek(limit),
+      bookTrafficService.getTopBooksThisMonth(limit),
     ])
 
     res.json({
@@ -188,7 +240,7 @@ exports.getTopBooksStats = async (req, res) => {
   }
 }
 
-exports.createBookController = async (req, res) => {
+exports.createBook = async (req, res) => {
   try {
     const uploaderId = req.user?.id || null
     const bookData = req.body
@@ -204,5 +256,45 @@ exports.createBookController = async (req, res) => {
     }
 
     res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+exports.getMyBooks = async (req, res) => {
+  try {
+    const userId = req.user?.id
+    if (!userId) return res.status(401).json({ error: 'UNAUTHORIZED' })
+
+    const limit = parseInt(req.query.limit) || 24
+    const offset = parseInt(req.query.offset) || 0
+
+    const result = await bookService.getBooksByUploader(userId, {
+      limit,
+      offset,
+    })
+
+    res.json(result)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: err.message })
+  }
+}
+
+exports.getUserBooks = async (req, res) => {
+  try {
+    const { userId } = req.params
+    if (!userId) return res.status(400).json({ error: 'USER_ID_REQUIRED' })
+
+    const limit = parseInt(req.query.limit) || 24
+    const offset = parseInt(req.query.offset) || 0
+
+    const result = await bookService.getBooksByUploader(userId, {
+      limit,
+      offset,
+    })
+
+    res.json(result)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: err.message })
   }
 }

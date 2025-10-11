@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { progressAPI } from '../services/api'
 import StoryCard from '../components/StoryCard'
-import { formatterStoryDetail } from '../utils/formatter'
 import Pagination from '../components/Pagination'
 import Loading from '../components/Loading'
 import EmptyState from '../components/EmptyState'
 
 const RecentlyRead = () => {
-  const [stories, setStories] = useState(null)
+  const [processes, setProcesses] = useState(null)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const limit = 36
@@ -26,10 +25,10 @@ const RecentlyRead = () => {
         })
 
         if (res && Array.isArray(res.data)) {
-          setStories(res.data)
+          setProcesses(res.data)
           setTotal(res.total || res.data.length)
         } else {
-          setStories([])
+          setProcesses([])
           setTotal(0)
         }
         window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -42,8 +41,8 @@ const RecentlyRead = () => {
   }, [page, user.token])
 
   if (!user.isLoggedIn) return <EmptyState message='Bạn chưa đăng nhập' />
-  if (!stories) return <Loading />
-  if (stories.length === 0) <EmptyState message='Danh sách trống' />
+  if (!processes) return <Loading />
+  if (processes.length === 0) <EmptyState message='Danh sách trống' />
   return (
     <>
       <h2 className='page-title'>
@@ -51,8 +50,8 @@ const RecentlyRead = () => {
       </h2>
 
       <div className='row ps-1 pe-1'>
-        {stories.map((book) => (
-          <StoryCard key={book.id} story={formatterStoryDetail(book.Book)} />
+        {processes.map((process) => (
+          <StoryCard key={process.id} story={process.Book} />
         ))}
       </div>
       <div className='flex-grow-1'></div>
