@@ -1,5 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { setReaderSpeed, setReaderVoice, toggleAutoNextChapter } from '../../redux/settingSlice'
+import {
+  setReaderSpeed,
+  setReaderVoice,
+  toggleAutoNextChapter,
+} from '../../redux/settingSlice'
 
 import Dropdown from '../../components/Dropdown'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -20,7 +24,7 @@ function ReaderControls({ reading, onStart, onStop, onPrev, onNext, voices }) {
   return (
     <div className={`d-flex align-items-center p-1 rounded ${style.controls}`}>
       {!reading ? (
-        <div onClick={onStart} className={style.btn}>
+        <div onClick={() => onStart()} className={style.btn}>
           <FontAwesomeIcon className={style.icon} icon={faPlayCircle} />
         </div>
       ) : (

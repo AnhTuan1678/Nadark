@@ -24,6 +24,9 @@ const Reader = () => {
   const { chapterIndex, id } = useParams()
   const navigate = useNavigate()
   const user = useSelector((state) => state.user)
+  const autoNextChapter = useSelector(
+    (state) => state.setting.reader.autoNextChapter,
+  )
   const { showSnackbar } = useSnackbar()
 
   const [content, setContent] = useState('')
@@ -196,7 +199,19 @@ const Reader = () => {
         </h6>
 
         <div ref={contentRef} className=''>
-          <ReaderContent content={content} setting={setting} />
+          <ReaderContent
+            content={content}
+            setting={setting}
+            onEnd={() => {
+              if (autoNextChapter) {
+                navigate(
+                  `/story/${storyDetails.id}/chapter/${
+                    parseInt(chapterIndex) + 1
+                  }`,
+                )
+              }
+            }}
+          />
         </div>
 
         <div

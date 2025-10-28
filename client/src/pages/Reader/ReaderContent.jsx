@@ -1,10 +1,13 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { useReaderTTS } from '../../hooks/useReaderTTS'
 import Loading from '../../components/Loading'
 import Sentence from './Sentence'
 import FloatingButton from './FloatingButton'
 
-function ReaderContent({ content, setting }) {
+function ReaderContent({ content, setting, onEnd }) {
+  const lineRefs = useRef([])
+  const [isFinished, setIsFinished] = useState(false)
+
   const {
     lines,
     reading,
@@ -15,13 +18,19 @@ function ReaderContent({ content, setting }) {
     stop,
     prevLine,
     nextLine,
-  } = useReaderTTS(content)
-
-  const lineRefs = useRef([])
+  } = useReaderTTS(content, () => setIsFinished(true))
 
   useEffect(() => {
     lineRefs.current = lines.map((_, i) => lineRefs.current[i] || null)
+    setIsFinished(false)
   }, [lines])
+
+  useEffect(() => {
+    if (isFinished && content?.content) {
+      onEnd && onEnd()
+      setIsFinished(false)
+    }
+  }, [isFinished, onEnd])
 
   // Cuộn đến dòng đang đọc
   useEffect(() => {

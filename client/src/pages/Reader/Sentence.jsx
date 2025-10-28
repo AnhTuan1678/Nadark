@@ -19,7 +19,7 @@ const Sentence = memo(
 
     const words = text.split(/\s+/)
     return (
-      <p ref={ref} style={style}>
+      <p ref={ref} style={{...style, boxShadow: '0 0 0 1px var(--secondary--color)'}}>
         {words.map((w, i) => (
           <span key={i} style={i === highlightWord ? activeStyle : wordStyle}>
             {w + ' '}
