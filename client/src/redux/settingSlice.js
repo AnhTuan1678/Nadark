@@ -14,6 +14,12 @@ const initialState = {
     swingSpeedMin: 0.01,
     swingSpeedMax: 0.03,
   },
+  // === TTS & Reader Settings ===
+  reader: {
+    speed: 1,
+    voiceName: null,
+    autoNextChapter: false,
+  },
 }
 
 const settingSlice = createSlice({
@@ -32,6 +38,15 @@ const settingSlice = createSlice({
     updateSnowSettings: (state, action) => {
       state.snowSettings = { ...state.snowSettings, ...action.payload }
     },
+    setReaderSpeed: (state, action) => {
+      state.reader.speed = action.payload
+    },
+    setReaderVoice: (state, action) => {
+      state.reader.voiceName = action.payload
+    },
+    toggleAutoNextChapter: (state) => {
+      state.reader.autoNextChapter = !state.reader.autoNextChapter
+    },
   },
 })
 
@@ -40,5 +55,8 @@ export const {
   setFontFamily,
   toggleSnowEffect,
   updateSnowSettings,
+  setReaderSpeed,
+  setReaderVoice,
+  toggleAutoNextChapter,
 } = settingSlice.actions
 export default settingSlice.reducer
