@@ -2,11 +2,62 @@
     font-family: OpenSans, sans-serif;
 }
 
-.paragraph{
-    font-family: Times New Roman,Georgia,serif;
+.paragraph {
+    font-family: Times New Roman, Georgia, serif;
     overflow-wrap: break-word;
 }
 
 .img {
     width: 100%;
+}
+
+.btn {
+    cursor: pointer;
+    display: inline-flex;
+    padding: 4px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 99999px;
+
+    background-color: transparent;
+    color: #596578;
+}
+
+.btn:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.icon {
+    margin: 0;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+}
+
+.controls {
+    background-color: var(--color-header-background);
+    width: fit-content;
+}
+
+.floatingButton {
+    position: fixed;
+    margin: 4px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #004a77;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    z-index: 1000;
+    user-select: none;
+    touch-action: none;
+}
+
+.controlsWrapper {
+    position: fixed;
+    z-index: 999;
 }

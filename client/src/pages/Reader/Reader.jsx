@@ -9,9 +9,9 @@ import { useSelector } from 'react-redux'
 import { timeAgo } from '../../utils/timeAgo'
 import { useSnackbar } from '../../context/SnackbarContext'
 import SettingsPopup from './SettingsPopup'
-import ReaderContent from './ReaderContent'
 import CommentSection from './CommentSection'
 import ChapterNavigation from './ChapterNavigation'
+import ReaderContent from './ReaderContent'
 
 const Reader = () => {
   const defaultSetting = {
@@ -94,7 +94,8 @@ const Reader = () => {
   // Đổi màu body
   useEffect(() => {
     const prevColor = document.body.style.backgroundColor
-    document.body.style.backgroundColor = 'var(--color-chapter-background) !important'
+    document.body.style.backgroundColor =
+      'var(--color-chapter-background) !important'
     return () => {
       document.body.style.backgroundColor = prevColor
     }
@@ -194,7 +195,7 @@ const Reader = () => {
           từ
         </h6>
 
-        <div ref={contentRef} className='row'>
+        <div ref={contentRef} className=''>
           <ReaderContent content={content} setting={setting} />
         </div>
 
