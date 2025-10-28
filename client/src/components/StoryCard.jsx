@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import styles from './StoryCard.module.css'
+import 'tippy.js/animations/shift-away.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faHeart,
@@ -14,10 +15,13 @@ import {
 import { useState } from 'react'
 import { timeAgo } from '../utils/timeAgo'
 import ImageWithFallback from './ImageWithFallback'
+import { followCursor } from 'tippy.js'
 
 const StoryCard = ({ story, className = '', clickable = true }) => {
   const [hover, setHover] = useState(false)
   const navigate = useNavigate()
+
+  if (!story) return null
 
   const popupContent = (
     <div className={`${styles['story-info-popup']} d-flex flex-column`}>
@@ -64,18 +68,22 @@ const StoryCard = ({ story, className = '', clickable = true }) => {
     <div className={className}>
       <Tippy
         content={popupContent}
-        placement='right'
+        placement='right-end'
         interactive={false}
         delay={[100, 0]}
-        offset={[-200, -10]}
+        offset={[0, 0]}
         maxWidth={400}
         arrow={false}
-        animation='fade'
+        animation='shift-away'
+        duration={[300, 300]}
+        inertia={true}
+        followCursor={true}
+        plugins={[followCursor]}
         touch={false}>
         <div
           className={`${
-            clickable && 'cursor-pointer'
-          } overflow-hidden animate__animated animate__faster ${
+            clickable && `${styles['story-card-clickable']}`
+          } p-1 rounded overflow-hidden animate__animated animate__faster ${
             hover && clickable ? 'animate__pulse' : ''
           }`}
           onClick={() => clickable && navigate(`/story/${story.id}`)}
@@ -105,11 +113,9 @@ const StoryCard = ({ story, className = '', clickable = true }) => {
             )}
           </div>
 
-          <div className={`p-0`}>
-            <p className={`fs-7 text-center p-1 ${styles['limit-2-lines']}`}>
-              {story.title}
-            </p>
-          </div>
+          <p className={`fs-8 text-center m-0 ${styles['limit-2-lines']}`}>
+            {story.title}
+          </p>
         </div>
       </Tippy>
     </div>

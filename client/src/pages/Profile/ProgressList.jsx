@@ -7,23 +7,21 @@ const ProgressList = ({ progress }) => {
   if (!progress?.length) return null
 
   return (
-    <div className='mb-3 border shadow p-0 m-0 rounded cus-container'>
-      <h5 className='border-bottom pb-2 m-3 fs-3 fw-normal text-blue'>
-        Truyện đã đọc ({progress.length})
-      </h5>
+    <div className='container cus-container shadow flex-grow-1 d-flex flex-column mb-2'>
+      <h2 className='page-title'>Truyện đã đọc ({progress.length})</h2>
       <div className='row mx-0'>
         {progress.map((process) => (
           <StoryCard
             key={process.id}
             story={process.Book}
-            className='col-4 col-sm-3 col-md-2 p-1'
+            className='col-4 col-md-3 col-lg-2 p-0'
           />
         ))}
       </div>
       <div className='text-center'>
         <button
           className='btn btn-outline-primary mb-3'
-          onClick={() => navigate('/history')}>
+          onClick={() => navigate('/recently')}>
           Xem tất cả
         </button>
       </div>

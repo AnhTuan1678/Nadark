@@ -1,5 +1,10 @@
-.tippy{
-    background-color: aqua;
+.story-card-clickable {
+    cursor: pointer;
+}
+
+.story-card-clickable:hover {
+    background-color: var(--background-NotifyBlock);
+    box-shadow: 0 0 0 1px var(--primary--color);
 }
 
 .card-title {

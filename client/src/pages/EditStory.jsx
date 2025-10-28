@@ -56,6 +56,7 @@ const EditStory = () => {
         })
       } catch (err) {
         setError('Không tải được thông tin truyện.')
+        console.log(err)
       } finally {
         setLoading(false)
       }

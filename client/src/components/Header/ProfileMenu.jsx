@@ -95,7 +95,7 @@ const ProfileMenu = ({ className }) => {
                 className={`dropdown-item slide-in-hover ${styles.dropdownItem} text-danger hover-bg-danger`}
                 onClick={() => {
                   clearCache()
-                  showSnackbar({ message: 'Đã xoá cache' })
+                  showSnackbar({ message: 'Đã xóa cache' })
                 }}>
                 <FontAwesomeIcon icon={faTrash} />
                 Xóa cache
@@ -132,10 +132,16 @@ const ProfileMenu = ({ className }) => {
                 Đăng ký
               </button>
               <button
+                className={`dropdown-item slide-in-hover ${styles.dropdownItem}`}
+                onClick={() => navigate('/settings')}>
+                <FontAwesomeIcon icon={faCog} />
+                Cài đặt
+              </button>
+              <button
                 className={`dropdown-item slide-in-hover ${styles.dropdownItem} text-danger hover-bg-danger`}
                 onClick={() => {
                   clearCache()
-                  showSnackbar({ message: 'Đã xoá cache' })
+                  showSnackbar({ message: 'Đã xóa cache' })
                 }}>
                 <FontAwesomeIcon icon={faTrash} />
                 Xóa cache

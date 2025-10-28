@@ -13,7 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { bookshelfAPI } from '../../services/api'
 import { timeAgo } from '../../utils/timeAgo'
-import { StarRating } from '../../components/StartRating'
+import { StarRating } from './StartRating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Description from './Description'
 import { useSnackbar } from '../../context/SnackbarContext'

@@ -16,6 +16,10 @@ const SnowEffect = () => {
   )
 
   useEffect(() => {
+    setSnowflakes([])
+  }, [snowEffectEnabled])
+
+  useEffect(() => {
     if (!snowEffectEnabled) return
 
     const initialFlakes = Array.from({ length: count }).map(() => ({

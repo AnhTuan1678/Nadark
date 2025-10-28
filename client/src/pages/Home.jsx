@@ -43,7 +43,7 @@ const Home = () => {
 
   return (
     <>
-      <h2 className='page-title '>
+      <h2 className='page-title'>
         {import.meta.env.VITE_APP_NAME} - Truyện online {'>'}
       </h2>
 
@@ -52,7 +52,7 @@ const Home = () => {
           <StoryCard
             key={story.id}
             story={story}
-            className='col-4 col-sm-3 col-md-2 p-1'
+            className='col-4 col-md-3 col-lg-2 p-0'
           />
         ))}
       </div>

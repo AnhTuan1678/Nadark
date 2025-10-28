@@ -6,8 +6,8 @@ const initialState = {
   snowEffect: true, // bật/tắt hiệu ứng tuyết
   snowSettings: {
     countFactor: 41472, // màn hình 1920*1080 ~ 50 bông
-    minSize: 5,
-    maxSize: 25,
+    minSize: 10,
+    maxSize: 20,
     minSpeed: 0.5,
     maxSpeed: 2,
     swingAmplitude: 50,

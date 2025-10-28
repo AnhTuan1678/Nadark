@@ -1,7 +1,7 @@
 const ProfileInfo = ({ profile }) => {
   return (
-    <div className='col-md-4 m-0 p-0 pe-1'>
-      <div className='rounded border shadow p-3 cus-container'>
+    <div className='col-md-4 m-0 p-0 pe-0 pe-sm-1 pe-lg-3'>
+      <div className='container cus-container shadow flex-grow-1 d-flex flex-column mb-2 p-2'>
         <h5>{profile.level}</h5>
         <div className='progress mb-2' style={{ height: '20px' }}>
           <div

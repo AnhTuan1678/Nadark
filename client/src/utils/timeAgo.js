@@ -1,7 +1,7 @@
 export function timeAgo(dateString) {
   const date = new Date(dateString)
   const now = new Date()
-  const diffMs = now - date // chênh lệch mili giây
+  const diffMs = now - date // chênh lệch ms
   const diffSec = Math.floor(diffMs / 1000)
   const diffMin = Math.floor(diffSec / 60)
   const diffHour = Math.floor(diffMin / 60)

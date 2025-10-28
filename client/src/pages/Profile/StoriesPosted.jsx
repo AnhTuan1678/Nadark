@@ -5,16 +5,14 @@ const StoriesPosted = ({ stories }) => {
   if (!stories?.length) return null
 
   return (
-    <div className='mb-1 border shadow p-0 m-0 mb-2 rounded cus-container'>
-      <h5 className='border-bottom pb-2 m-3 fs-3 fw-normal text-blue'>
-        Truyện đã đăng ({stories.length})
-      </h5>
+    <div className='container cus-container shadow flex-grow-1 d-flex flex-column mb-2'>
+      <h2 className='page-title'>Truyện đã đăng ({stories.length})</h2>
       <div className='row mx-0'>
         {stories.map((book) => (
           <StoryCard
             key={book.id}
             story={book}
-            className='col-4 col-sm-3 col-md-2 p-1'
+            className='col-4 col-md-3 col-lg-2 p-0'
           />
         ))}
       </div>

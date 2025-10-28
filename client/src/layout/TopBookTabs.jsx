@@ -20,8 +20,7 @@ const TopBooksTabs = ({ data }) => {
 
   const renderList = (books) => {
     if (!books) return <EmptyState message='Đang lấy dữ liệu' />
-    if (books.length === 0);
-    ;<EmptyState message='Không có dữ lieejuF' />
+    if (books.length === 0) return <EmptyState message='Không có dữ liệu' />
     return (
       <div className=''>
         {books.map((book, index) => (

@@ -6,14 +6,14 @@ import DefaultLayout from './layout/DefaultLayout'
 import TwoColumnLayout from './layout/TwoColumnLayout'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import EmptyState from './components/EmptyState'
 
 import { getProfile } from './services/api/user'
 import { store } from './redux/store'
 import { login, logout } from './redux/userSlice'
 import { fetchGenres } from './redux/genreSlice'
+import Loading from './components/Loading'
 
-function App() {
+const App = () => {
   // Lấy dữ liệu user + thể loại
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -21,7 +21,7 @@ function App() {
     async function fetchProfile() {
       try {
         const data = await getProfile(token)
-        if (!data.error) {
+        if (data.id) {
           store.dispatch(
             login({
               username: data.username,
@@ -54,7 +54,7 @@ function App() {
         <Header />
 
         {/* Suspense để hiển thị khi trang đang tải */}
-        <Suspense fallback={<div className='p-8 text-center'>Đang tải...</div>}>
+        <Suspense fallback={<Loading />}>
           <Routes>
             <Route
               path='/'

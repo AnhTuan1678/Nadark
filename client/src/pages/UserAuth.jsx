@@ -96,6 +96,7 @@ const Login = ({ onSuccess = () => {} }) => {
             placeholder=''
             value={usernameOrEmail}
             onChange={(e) => setUsernameOrEmail(e.target.value)}
+            autoFocus={true}
           />
           <label className={styles.label}>Tên tài khoản hoặc email *</label>
         </div>
@@ -188,6 +189,7 @@ const Register = ({ onSwitchTab }) => {
             placeholder=''
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            autoFocus={true}
           />
           <label className={styles.label}>Tên tài khoản *</label>
         </div>
@@ -294,6 +296,7 @@ const ChangePassword = ({ onSuccess = () => {} }) => {
             placeholder=''
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
+            autoFocus={true}
           />
           <label className={styles.label}>Mật khẩu cũ</label>
         </div>

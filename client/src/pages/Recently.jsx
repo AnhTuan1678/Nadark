@@ -54,7 +54,7 @@ const RecentlyRead = () => {
           <StoryCard
             key={process.id}
             story={process.Book}
-            className='col-4 col-sm-3 col-md-2 p-1'
+            className='col-4 col-md-3 col-lg-2 p-0'
           />
         ))}
       </div>
