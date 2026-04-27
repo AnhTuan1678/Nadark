@@ -6,6 +6,12 @@ function ImageWithFallback({ urlAvatar, className, defaultUrl = null }) {
   const [shouldLoad, setShouldLoad] = useState(false)
   const ref = useRef(null)
 
+  // reset khi url đổi
+  useEffect(() => {
+    setBgUrl(df)
+    setShouldLoad(false)
+  }, [urlAvatar, df])
+
   useEffect(() => {
     // Nếu chưa có URL ảnh thì hiển thị ảnh mặc định luôn
     if (!urlAvatar) return setBgUrl(df)
@@ -16,7 +22,7 @@ function ImageWithFallback({ urlAvatar, className, defaultUrl = null }) {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setShouldLoad(true)
-            observer.disconnect() // Ngắt theo dõi sau khi load
+            observer.unobserve(entry.target) // an toàn hơn disconnect
           }
         })
       },
@@ -30,11 +36,13 @@ function ImageWithFallback({ urlAvatar, className, defaultUrl = null }) {
   useEffect(() => {
     if (!shouldLoad) return
 
+    let isMounted = true
+
     const testImage = (url, onSuccess, onError) => {
       const img = new Image()
       img.src = url
-      img.onload = onSuccess
-      img.onerror = onError
+      img.onload = () => isMounted && onSuccess()
+      img.onerror = () => isMounted && onError()
     }
 
     // Thử ảnh gốc
@@ -54,6 +62,10 @@ function ImageWithFallback({ urlAvatar, className, defaultUrl = null }) {
         )
       },
     )
+
+    return () => {
+      isMounted = false
+    }
   }, [shouldLoad, urlAvatar, df])
 
   return (
@@ -62,7 +74,7 @@ function ImageWithFallback({ urlAvatar, className, defaultUrl = null }) {
       className={`bg-cover bg-center bg-no-repeat w-full h-full ${className}`}
       style={{
         backgroundImage: `url(${bgUrl})`,
-        transition: 'background-image 0.3s ease-out',
+        // transition background-image không hoạt động → giữ nguyên nếu anh muốn
       }}
     />
   )

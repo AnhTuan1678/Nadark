@@ -103,8 +103,10 @@ const GenresDropdown = ({ onHover = () => {} }) => {
 
   // Chia genre thành 4 cột
   const columns = [[], [], [], []]
+  const perCol = Math.ceil(genres.length / 4)
+
   genres.forEach((genre, index) => {
-    const colIndex = Math.floor(index / 15)
+    const colIndex = Math.floor(index / perCol)
     if (colIndex < 4) columns[colIndex].push(genre)
   })
 

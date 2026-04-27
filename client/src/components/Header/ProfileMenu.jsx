@@ -58,8 +58,8 @@ const ProfileMenu = ({ className }) => {
             isOpen
               ? 'show animate__fadeIn'
               : closing
-              ? 'show animate__fadeOut'
-              : 'd-none'
+                ? 'show animate__fadeOut'
+                : 'd-none'
           }`}
           onClick={onClose}></div>
 
@@ -68,8 +68,8 @@ const ProfileMenu = ({ className }) => {
             isOpen
               ? 'show animate__fadeInDown'
               : closing
-              ? 'animate__fadeOutUp show'
-              : ''
+                ? 'animate__fadeOutUp show'
+                : ''
           } ${styles.dropdownMenu}`}>
           {isLoggedIn ? (
             <>

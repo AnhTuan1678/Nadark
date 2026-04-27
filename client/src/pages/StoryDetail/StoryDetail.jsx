@@ -65,22 +65,32 @@ const StoryDetail = () => {
     fetchReview()
   }, [currentUser.id, id])
 
-  if (!storyDetails || !chapters) return <Loading />
+  if (!storyDetails && !chapters) return <Loading />
 
   return (
     <div className='container mx-auto p-0 p-top-4 p-end-4 flex-grow-1'>
-      <StoryInfoSection
-        storyDetails={storyDetails}
-        genres={genres}
-        progress={progress}
-      />
-      <StoryChaptersSection
-        bookId={id}
-        storyDetails={storyDetails}
-        chapters={chapters}
-        progress={progress}
-      />
-      <StoryReviewsSection bookId={id} reviews={reviews} />
+      {!storyDetails ? (
+        <Loading text='Đang tải thông tin truyện...' />
+      ) : (
+        <StoryInfoSection
+          storyDetails={storyDetails}
+          genres={genres}
+          progress={progress}
+        />
+      )}
+
+      {!chapters ? (
+        <Loading text='Đang tải chương...' />
+      ) : (
+        <StoryChaptersSection
+          bookId={id}
+          storyDetails={storyDetails}
+          chapters={chapters}
+          progress={progress}
+        />
+      )}
+
+      {reviews && <StoryReviewsSection bookId={id} reviews={reviews} />}
     </div>
   )
 }
