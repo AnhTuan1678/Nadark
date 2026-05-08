@@ -149,7 +149,9 @@ exports.createReview = async (req, res) => {
 
 exports.getReviews = async (req, res) => {
   try {
+    console.log('Received request to get reviews for book ID:', req.params.bookId)
     const reviews = await reviewService.getReviews(req.params.bookId)
+    console.log('Reviews fetched:', reviews)
     res.json(reviews)
   } catch (err) {
     res.status(500).json({ message: 'Server error' })

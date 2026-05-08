@@ -25,18 +25,18 @@ const Comment = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
   },
   {
     tableName: 'comments',
-    timestamps: false,
+    timestamps: true,
   },
 )
 

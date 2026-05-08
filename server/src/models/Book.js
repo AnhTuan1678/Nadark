@@ -31,8 +31,8 @@ const Book = sequelize.define(
       onDelete: 'SET NULL',
     },
 
-    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-    updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   },
   { tableName: 'books', timestamps: false },
 )

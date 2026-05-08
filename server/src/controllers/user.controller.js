@@ -53,7 +53,7 @@ exports.uploadAvatar = async (req, res) => {
       username: user.username,
       email: user.email,
       avatarUrl: user.avatar_url,
-      createdDate: user.created_at,
+      createdDate: user.createdAt,
     })
   } catch (err) {
     console.error(err)

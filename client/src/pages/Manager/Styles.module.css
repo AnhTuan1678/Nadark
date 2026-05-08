@@ -1,21 +1,20 @@
-.book:hover {
-    background-color: #303030;
-}
-
 .btn {
     width: 80%;
     margin: 10%;
     opacity: 0.5;
     visibility: hidden;
+    color: white;
+    transition: all 0.2s;
 }
 
 .btn:hover {
     scale: 1.1;
     opacity: 1;
+    color: white;
 }
 
 .active {
-    background: var(--color-bg-hover) !important;
+    background: var(--color-bg-badge-hover) !important;
 }
 
 button.btnDelete {
@@ -25,6 +24,11 @@ button.btnDelete {
 
 button.btnEdit {
     background-color: green !important;
+    color: white;
+}
+
+button.btnAdd {
+    background-color: blue !important;
     color: white;
 }
 

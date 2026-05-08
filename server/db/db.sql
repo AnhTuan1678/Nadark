@@ -20,8 +20,8 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     personal_settings JSONB DEFAULT '{}'::jsonb,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
+    createdAt TIMESTAMP DEFAULT NOW(),
+    updatedAt TIMESTAMP DEFAULT NOW()
 );
 
 -- ============================
@@ -36,8 +36,8 @@ CREATE TABLE books (
     status VARCHAR(50) DEFAULT 'Đang ra', -- Hoàn thành / Tạm ngưng...
     chapter_count INT DEFAULT 0,
     word_count INT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
+    createdAt TIMESTAMP DEFAULT NOW(),
+    updatedAt TIMESTAMP DEFAULT NOW()
 );
 
 -- ============================
@@ -50,8 +50,8 @@ CREATE TABLE chapters (
     author_note TEXT,
     CONTENT TEXT NOT NULL,
     word_count INT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
+    createdAt TIMESTAMP DEFAULT NOW(),
+    updatedAt TIMESTAMP DEFAULT NOW()
 );
 
 -- ============================
@@ -74,7 +74,7 @@ CREATE TABLE user_progress (
     book_id INT REFERENCES books (id) ON DELETE CASCADE,
     last_chapter_index INT REFERENCES chapters (id) ON DELETE SET NULL,
     progress_percent NUMERIC(5, 2) DEFAULT 0,
-    updated_at TIMESTAMP DEFAULT NOW(),
+    updatedAt TIMESTAMP DEFAULT NOW(),
     UNIQUE (user_id, book_id)
 );
 
@@ -108,7 +108,7 @@ BEGIN
         UPDATE books
         SET chapter_count = chapter_count + 1,
             word_count = word_count + NEW.word_count,
-            updated_at = NOW()
+            updatedAt = NOW()
         WHERE id = NEW.book_id;
     END IF;
 
@@ -117,7 +117,7 @@ BEGIN
         UPDATE books
         SET chapter_count = chapter_count - 1,
             word_count = word_count - OLD.word_count,
-            updated_at = NOW()
+            updatedAt = NOW()
         WHERE id = OLD.book_id;
     END IF;
 
@@ -125,7 +125,7 @@ BEGIN
     IF TG_OP = 'UPDATE' THEN
         UPDATE books
         SET word_count = word_count - OLD.word_count + NEW.word_count,
-            updated_at = NOW()
+            updatedAt = NOW()
         WHERE id = NEW.book_id;
     END IF;
 

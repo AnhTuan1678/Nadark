@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faSearch } from '@fortawesome/free-solid-svg-icons'
 import styles from './Styles.module.css'
@@ -7,6 +8,7 @@ import EmptyState from '../../components/EmptyState'
 
 const ChapterTable = ({ chapters = [], onDelete = () => {} }) => {
   const [searchTerm, setSearchTerm] = useState('')
+  const navigate = useNavigate()
 
   // Lọc chương theo tiêu đề hoặc số chương
   const filteredChapters = useMemo(() => {
@@ -64,7 +66,15 @@ const ChapterTable = ({ chapters = [], onDelete = () => {} }) => {
               filteredChapters.map((ch) => (
                 <tr className='bg-transparent' key={ch.chapterId}>
                   <td>{ch.index}</td>
-                  <td>{ch.title}</td>
+                  <td>
+                    <a
+                      onClick={() =>
+                        navigate(`/action/editChapter/${ch.chapterId}`)
+                      }
+                      className='text-decoration-none cursor-pointer'>
+                      {ch.title}
+                    </a>
+                  </td>
                   <td>{timeAgo(ch.releaseDate)}</td>
                   <td>
                     <button

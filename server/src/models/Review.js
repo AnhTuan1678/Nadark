@@ -18,12 +18,12 @@ const Review = sequelize.define(
     },
     content: { type: DataTypes.TEXT, allowNull: false },
     rating: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 5 },
-    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-    updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   },
   {
     tableName: 'reviews',
-    timestamps: false,
+    timestamps: true,
   },
 )
 

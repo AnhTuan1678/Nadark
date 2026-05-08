@@ -90,7 +90,7 @@ const Profile = () => {
             user.id !== profile.id && 'invisible'
           }`}>
           <button
-            className='btn btn-warning text-white'
+            className='btn btn-warning'
             onClick={() =>
               navigate('/auth?action=cp', {
                 state: { from: location.pathname },

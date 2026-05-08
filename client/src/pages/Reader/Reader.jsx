@@ -194,7 +194,7 @@ const Reader = () => {
           Chương {content.index}: {content.title}
         </h5>
         <h6 className={`text-center fw-bold fs-7 mb-4 ${styles.title}`}>
-          Cập nhật: {timeAgo(content.created_at)} - Độ dài: {content.word_count}{' '}
+          Cập nhật: {timeAgo(content.createdAt)} - Độ dài: {content.word_count}{' '}
           từ
         </h6>
 

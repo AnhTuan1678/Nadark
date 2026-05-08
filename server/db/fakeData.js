@@ -18,8 +18,8 @@ async function seedUsers(number = 100) {
         password_hash: passwordHash,
         avatar_url: faker.image.avatarGitHub(), // ✅ thay avatar
         personal_settings: {},
-        created_at: faker.date.past({ years: 2 }),
-        updated_at: new Date(),
+        createdAt: faker.date.past({ years: 2 }),
+        updatedAt: new Date(),
       })
     }
 
@@ -53,8 +53,8 @@ async function seedBooksAndChapters(b_num, c_min_num, c_max_num) {
         url_avatar: faker.image.urlPicsumPhotos({ width: 300, height: 450 }),
         chapter_count: 0,
         word_count: 0,
-        created_at: new Date(),
-        updated_at: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       })
     }
 
@@ -78,8 +78,8 @@ async function seedBooksAndChapters(b_num, c_min_num, c_max_num) {
           content,
           image_url: faker.image.urlPicsumPhotos({ width: 640, height: 360 }),
           word_count: content.trim().split(/\s+/).length,
-          created_at: faker.date.past({ years: 1 }),
-          updated_at: new Date(),
+          createdAt: faker.date.past({ years: 1 }),
+          updatedAt: new Date(),
         })
       }
 
@@ -122,8 +122,8 @@ async function seedReviews(number = 1000) {
         book_id: book.id,
         content: faker.lorem.sentences(faker.number.int({ min: 1, max: 3 })),
         rating: faker.number.int({ min: 1, max: 5 }),
-        created_at: faker.date.past({ years: 2 }),
-        updated_at: new Date(),
+        createdAt: faker.date.past({ years: 2 }),
+        updatedAt: new Date(),
       })
     }
 
@@ -180,8 +180,8 @@ async function seedCommentsTwoStep({
         chapter_id: chapter.id,
         parent_id: null,
         content: faker.lorem.sentences(faker.number.int({ min: 1, max: 3 })),
-        created_at: faker.date.past({ years: 1 }),
-        updated_at: new Date(),
+        createdAt: faker.date.past({ years: 1 }),
+        updatedAt: new Date(),
       })
 
       if (buffer.length >= batchSize || i === total - 1) {
@@ -334,7 +334,7 @@ async function seedUserProgress(min, max) {
           book_id: book.id,
           last_chapter_index: lastIndex,
           progress_percent: progress,
-          updated_at: faker.date.recent({ days: 180 }),
+          updatedAt: faker.date.recent({ days: 180 }),
         })
       })
     }

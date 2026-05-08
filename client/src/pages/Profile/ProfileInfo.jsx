@@ -1,4 +1,9 @@
+import { useLocation, useNavigate } from 'react-router-dom'
+
 const ProfileInfo = ({ profile }) => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
   return (
     <div className='col-md-4 m-0 p-0 pe-0 pe-sm-1 pe-lg-3'>
       <div className='container cus-container shadow flex-grow-1 d-flex flex-column mb-2 p-2'>
@@ -28,6 +33,13 @@ const ProfileInfo = ({ profile }) => {
           </li>
         </ul>
       </div>
+      <button
+        className='btn btn-primary w-100'
+        onClick={() =>
+          navigate('/action/addBook', { state: { from: location.pathname } })
+        }>
+        Đăng truyện
+      </button>
     </div>
   )
 }

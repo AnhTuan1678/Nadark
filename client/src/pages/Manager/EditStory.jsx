@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchGenres } from '../redux/genreSlice'
-import { bookAPI } from '../services/api'
-import { useParams } from 'react-router-dom'
+import { fetchGenres } from '../../redux/genreSlice'
+import { bookAPI } from '../../services/api'
+import { useParams, useNavigate } from 'react-router-dom'
 import './AddStory.css'
-import GenreSelector from '../components/GenreSelector'
-import { clearCacheKey } from '../services/cacheFetch'
-import { API_URL } from '../services/api/config'
+import GenreSelector from '../../components/GenreSelector'
+import { clearCacheKey } from '../../services/cacheFetch'
+import { API_URL } from '../../services/api/config'
 
 const EditStory = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { list: genresData } = useSelector((state) => state.genre)
   const user = useSelector((state) => state.user)
@@ -35,7 +36,6 @@ const EditStory = () => {
     const fetchBook = async () => {
       try {
         setLoading(true)
-        console.log(id)
         const data = await bookAPI.getStoryDetails(id)
         // Chuyển name -> id dựa vào genresData
         const genreIds = data.genres
@@ -46,7 +46,6 @@ const EditStory = () => {
               })
               .filter(Boolean)
           : []
-        console.log(genreIds)
         setFormData({
           title: data.title || '',
           author: data.author || '',
@@ -56,7 +55,7 @@ const EditStory = () => {
         })
       } catch (err) {
         setError('Không tải được thông tin truyện.')
-        console.log(err)
+        console.error(err)
       } finally {
         setLoading(false)
       }
@@ -89,6 +88,9 @@ const EditStory = () => {
       const updatedBook = await bookAPI.updateBook(id, payload, user.token)
       setSuccess(`Đã cập nhật truyện: ${updatedBook.title}`)
       await clearCacheKey(`${API_URL}/api/book/${id}`)
+      setTimeout(() => {
+        navigate(-1)
+      }, 1000)
     } catch (err) {
       setError(err.message || 'Có lỗi khi cập nhật truyện.')
     } finally {
@@ -98,7 +100,9 @@ const EditStory = () => {
 
   return (
     <div className='container border cus-container shadow-sm p-4 flex-grow-1'>
-      <h3 className='mb-4 text-center text-primary'>Chỉnh sửa truyện</h3>
+      <h3 className='mb-4 text-center text-primary'>
+        Chỉnh sửa thông tin truyện
+      </h3>
 
       {success && <div className='alert alert-success'>{success}</div>}
       {error && <div className='alert alert-danger'>{error}</div>}

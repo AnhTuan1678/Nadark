@@ -40,7 +40,7 @@ exports.updateSettings = async (userId, { settings }) => {
 }
 
 exports.updateProfile = async (userId, { username, email, password }) => {
-  const updateData = { updated_at: new Date() }
+  const updateData = { updatedAt: new Date() }
 
   if (username) updateData.username = username
   if (email) updateData.email = email
@@ -59,7 +59,7 @@ exports.changeAvatar = async (userId, imagePath) => {
   const avatarUrl = await uploadToImgBB(resizedPath, process.env.IMGBB_API_KEY)
 
   user.avatar_url = avatarUrl
-  user.updated_at = new Date()
+  user.updatedAt = new Date()
   await user.save()
 
   fs.unlinkSync(resizedPath)
@@ -74,7 +74,7 @@ exports.getCommentsByUser = async (userId) => {
       { model: db.Chapter, attributes: ['id', 'title'] },
       { model: db.User, attributes: ['id', 'username', 'avatar_url'] },
     ],
-    order: [['created_at', 'DESC']],
+    order: [['createdAt', 'DESC']],
   })
 
   return comments

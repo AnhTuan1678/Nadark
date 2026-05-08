@@ -10,17 +10,17 @@ const Chapter = sequelize.define(
       allowNull: false,
       references: { model: 'books', key: 'id' },
     },
-    index: {type:DataTypes.INTEGER},
+    index: { type: DataTypes.INTEGER },
     title: { type: DataTypes.STRING(255), allowNull: false },
     author_note: { type: DataTypes.TEXT },
     content: { type: DataTypes.TEXT, allowNull: false },
     word_count: { type: DataTypes.INTEGER, defaultValue: 0 },
-    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-    updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   },
   {
     tableName: 'chapters',
-    timestamps: false,
+    timestamps: true,
   },
 )
 
@@ -48,6 +48,5 @@ Chapter.beforeCreate(async (chapter, options) => {
     throw error // ngăn Chapter tạo ra nếu có lỗi
   }
 })
-
 
 module.exports = Chapter

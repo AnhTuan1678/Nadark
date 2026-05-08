@@ -75,7 +75,7 @@ export const getChapters = async (storyId) => {
     chapterId: ch.id,
     index: ch.index,
     title: ch.title,
-    releaseDate: ch.created_at,
+    releaseDate: ch.createdAt,
   }))
 }
 

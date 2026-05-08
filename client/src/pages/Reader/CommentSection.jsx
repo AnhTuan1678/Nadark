@@ -57,7 +57,7 @@ const CommentNode = ({
       <CommentItem comment={comment} />
 
       <div className='d-flex flex-row align-items-center ms-5'>
-        <h6 className='me-3 ms-2'>{timeAgo(comment.created_at)}</h6>
+        <h6 className='me-3 ms-2'>{timeAgo(comment.createdAt)}</h6>
         <div
           className='btn opacity-hover-50 m-0 p-0 d-flex flex-row me-3'
           onClick={handleReplyClick}>

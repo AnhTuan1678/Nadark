@@ -14,8 +14,8 @@ export const formatterStoryDetail = (book) => {
     followers: book.followers,
     urlAvatar: book.url_avatar,
     genres: (book.Genres || []).map((g) => g.name),
-    publishedDate: book.created_at,
-    updateAt: book.updated_at,
+    publishedDate: book.createdAt,
+    updateAt: book.updatedAt,
     reviewCount: book.review_count,
     totalRating: book.total_rating,
     chapters: book.Chapters || [],
@@ -34,11 +34,11 @@ export const formatterProfile = (profile) => {
     email: profile.email,
     avatarUrl: profile.avatar_url,
     personalSettings: profile.personal_settings || {},
-    createdDate: profile.created_at
-      ? new Date(profile.created_at).toISOString().split('T')[0]
+    createdDate: profile.createdAt
+      ? new Date(profile.createdAt).toISOString().split('T')[0]
       : null,
-    updatedDate: profile.updated_at
-      ? new Date(profile.updated_at).toISOString().split('T')[0]
+    updatedDate: profile.updatedAt
+      ? new Date(profile.updatedAt).toISOString().split('T')[0]
       : null,
   }
 }

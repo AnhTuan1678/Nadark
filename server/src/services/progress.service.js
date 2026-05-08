@@ -26,7 +26,7 @@ exports.saveProgress = async (
       book_id: bookId,
       last_chapter_index: lastChapterIndex,
       progress_percent: progressPercent,
-      updated_at: new Date(),
+      updatedAt: new Date(),
     },
     { returning: true },
   )
@@ -46,7 +46,7 @@ exports.getAllProgressByUser = async (userId, { limit = 30, offset = 0 }) => {
   // Lấy danh sách tiến trình kèm thông tin Book + Chapter
   const progressList = await db.UserProgress.findAll({
     where: { user_id: userId },
-    order: [['updated_at', 'DESC']],
+    order: [['updatedAt', 'DESC']],
     limit,
     offset,
     include: [

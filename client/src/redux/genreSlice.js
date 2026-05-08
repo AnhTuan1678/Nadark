@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { genreApi } from '../services/api'
+import { genreAPI } from '../services/api'
 
 // Gọi API lấy tất cả thể loại
 export const fetchGenres = createAsyncThunk(
   'genre/fetchAll',
   async (_, { rejectWithValue }) => {
     try {
-      const data = await genreApi.getAll()
+      const data = await genreAPI.getAll()
       return data
     } catch (err) {
       return rejectWithValue(err.message)

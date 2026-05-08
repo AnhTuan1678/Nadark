@@ -4,18 +4,22 @@ const Book = require('../models/Book')
 const { formatBookTraffic } = require('../utils/formatBookTraffic')
 
 exports.increaseBookView = async (bookId) => {
-  const today = new Date().toISOString().slice(0, 10)
+  try {
+    const today = new Date().toISOString().slice(0, 10)
 
-  const [record, created] = await BookTraffic.findOrCreate({
-    where: { book_id: bookId, date: today },
-    defaults: { views: 1 },
-  })
+    const [record, created] = await BookTraffic.findOrCreate({
+      where: { book_id: bookId, date: today },
+      defaults: { views: 1 },
+    })
 
-  if (!created) {
-    await record.increment('views', { by: 1 })
+    if (!created) {
+      await record.increment('views', { by: 1 })
+    }
+
+    await Book.increment('views', { by: 1, where: { id: bookId } })
+  } catch (error) {
+    console.error('Error increasing book view:', error)
   }
-
-  await Book.increment('views', { by: 1, where: { id: bookId } })
 }
 
 exports.getBookTrafficLast30Days = async (bookId) => {

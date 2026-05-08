@@ -5,7 +5,7 @@ exports.getCommentsByChapter = async (chapterId) => {
   return db.Comment.findAll({
     where: { chapter_id: chapterId },
     include: [{ model: db.User, attributes: ['id', 'username', 'avatar_url'] }],
-    order: [['created_at', 'DESC']],
+    order: [['createdAt', 'DESC']],
   })
 }
 

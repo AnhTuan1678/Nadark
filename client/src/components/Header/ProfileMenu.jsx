@@ -13,6 +13,7 @@ import {
   faSignIn,
   faTrash,
   faUserPlus,
+  faBook,
 } from '@fortawesome/free-solid-svg-icons'
 import { clearCache } from '../../services/cacheFetch'
 import nova from '../../assets/image/GuestAvatar.png' // avatar mặc định khi chưa đăng nhập
@@ -85,6 +86,12 @@ const ProfileMenu = ({ className }) => {
                 onClick={() => navigate('/bookshelf')}>
                 <FontAwesomeIcon icon={faBookmark} />
                 Đánh dấu
+              </button>
+              <button
+                className={`dropdown-item slide-in-hover ${styles.dropdownItem}`}
+                onClick={() => navigate('/action')}>
+                <FontAwesomeIcon icon={faBook} />
+                Quản lý
               </button>
               <button
                 className={`dropdown-item slide-in-hover ${styles.dropdownItem}`}

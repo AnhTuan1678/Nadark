@@ -13,12 +13,12 @@ const User = sequelize.define(
       defaultValue: 'https://bit.ly/478koYr',
     },
     personal_settings: { type: DataTypes.JSONB, defaultValue: {} },
-    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-    updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   },
   {
     tableName: 'users',
-    timestamps: false,
+    timestamps: true,
   },
 )
 

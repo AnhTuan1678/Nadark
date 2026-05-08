@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { bookAPI, userAPI } from '../../services/api'
+import { bookAPI, userAPI, chapterAPI } from '../../services/api'
 import { useEffect } from 'react'
 import StoryCard from '../../components/StoryCard'
 import EmptyState from '../../components/EmptyState'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import styles from './Styles.module.css'
 import ChapterTable from './ChapterTable'
 import ChapterForm from './ ChapterForm'
 import { useNavigate } from 'react-router-dom'
+import { clearCacheKey } from '../../services/cacheFetch'
+import { API_URL } from '../../services/api/config'
 
 const Manager = () => {
   const user = useSelector((state) => state.user)
@@ -19,19 +21,17 @@ const Manager = () => {
   const [selectedBook, setSelectedBook] = useState(null)
   const [chapters, setChapters] = useState([])
 
-  useEffect(() => {
-    console.log(booksUploaded)
-  })
-
   const handleDeleteChapter = async (chapterId) => {
-    console.log('Delete chapter:', chapterId)
-    // if (!selectedBook || !chapterId) return
-    // try {
-    //   await bookAPI.deleteChapter(selectedBook, chapterId)
-    //   setChapters((prev) => prev.filter((ch) => ch.chapterId !== chapterId))
-    // } catch (err) {
-    //   console.error('Lỗi xóa chương:', err)
-    // }
+    if (!selectedBook || !chapterId) return
+    try {
+      await chapterAPI.deleteChapter(chapterId, user.token)
+      // Refetch chapters after deletion
+      clearCacheKey(`${API_URL}/api/book/${selectedBook}/chapters`)
+      const data = await bookAPI.getChapters(selectedBook)
+      setChapters(data)
+    } catch (err) {
+      console.error('Lỗi xóa chương:', err)
+    }
   }
 
   useEffect(() => {
@@ -50,6 +50,7 @@ const Manager = () => {
   }, [user.id])
 
   useEffect(() => {
+    if (!selectedBook) return
     const fetchChapters = async () => {
       const data = await bookAPI.getChapters(selectedBook)
       setChapters(data)
@@ -65,11 +66,12 @@ const Manager = () => {
       <div className='row flex-grow-1'>
         <div className='m-0 px-2 row'>
           <div className='p-0 m-0 col col-2'>
-            {booksUploaded.map((book) => (
+            {booksUploaded.map((book, index) => (
               <div
-                className={`position-relative p-2 rounded ${styles.book} ${
+                className={`position-relative p-2 rounded ${
                   book.id === selectedBook && styles.active
-                }`}>
+                }`}
+                key={index}>
                 <StoryCard
                   key={book.id}
                   story={book}
@@ -80,23 +82,31 @@ const Manager = () => {
                   className={`position-absolute top-0 start-0 bottom-0 w-100 h-100 cursor-pointer d-flex flex-column ${styles.overlay}`}
                   style={{ zIndex: 1000 }}
                   onClick={() => {
+                    clearCacheKey(`${API_URL}/api/book/${book.id}/chapters`)
                     setSelectedBook(book.id)
                   }}>
                   <button
                     className={`btn ${styles.btn} ${styles.btnEdit}`}
                     onClick={(e) => {
                       e.stopPropagation()
-                      navigate(`/action/edit/${book.id}`)
+                      navigate(`/action/${book.id}/edit`)
                     }}>
                     <FontAwesomeIcon icon={faEdit} />
                   </button>
                   <button
                     className={`btn ${styles.btn} ${styles.btnDelete}`}
                     onClick={(e) => {
-                      console.log('123')
                       e.stopPropagation()
                     }}>
                     <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                  <button
+                    className={`btn ${styles.btn} ${styles.btnAdd}`}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      navigate(`/action/${book.id}/addChapter`)
+                    }}>
+                    <FontAwesomeIcon icon={faPlus} />
                   </button>
                 </div>
               </div>

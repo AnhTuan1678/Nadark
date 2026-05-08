@@ -17,7 +17,7 @@ exports.getReviews = async (bookId) => {
   return db.Review.findAll({
     where: { book_id: bookId },
     include: [{ model: db.User, attributes: ['id', 'username', 'avatar_url'] }],
-    order: [['created_at', 'DESC']],
+    order: [['createdAt', 'DESC']],
   })
 }
 
@@ -28,7 +28,7 @@ exports.updateReview = async (userId, reviewId, { content, rating }) => {
 
   review.content = content || review.content
   review.rating = rating || review.rating
-  review.updated_at = new Date()
+  review.updatedAt = new Date()
 
   return review.save()
 }

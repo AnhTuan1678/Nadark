@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchGenres } from '../redux/genreSlice'
-import { bookAPI } from '../services/api'
+import { fetchGenres } from '../../redux/genreSlice'
+import { bookAPI } from '../../services/api'
 import './AddStory.css'
-import GenreSelector from '../components/GenreSelector'
+import GenreSelector from '../../components/GenreSelector'
 
 const AddStory = () => {
   const [formData, setFormData] = useState({

@@ -7,7 +7,7 @@ exports.getAllBooks = async ({ limit, offset }) => {
   const rows = await db.Book.findAll({
     limit: limit || 30,
     offset: offset || 0,
-    order: [['updated_at', 'DESC']],
+    order: [['updatedAt', 'DESC']],
     include: [
       {
         model: db.Genre,
@@ -31,10 +31,10 @@ exports.getBooksByCriteria = async (criteria, limit = 12, offset = 0) => {
   let order = []
   switch (criteria) {
     case 'new_update':
-      order = [['updated_at', 'DESC']]
+      order = [['updatedAt', 'DESC']]
       break
     case 'new_create':
-      order = [['created_at', 'DESC']]
+      order = [['createdAt', 'DESC']]
       break
     case 'most_follow':
       order = [['followers', 'DESC']]
@@ -230,8 +230,8 @@ exports.createBook = async (bookData, uploaderId = null) => {
     status: status || 'Đang ra',
     url_avatar: url_avatar || 'https://docln.net/img/nocover.jpg',
     uploader_id: uploaderId, // có thể null
-    created_at: new Date(),
-    updated_at: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   })
 
   // Gắn thể loại (nếu có)
@@ -268,7 +268,7 @@ exports.getBooksByUploader = async (
     where: { uploader_id: uploaderId },
     limit,
     offset,
-    order: [['updated_at', 'DESC']],
+    order: [['updatedAt', 'DESC']],
     include: [
       {
         model: db.Genre,
@@ -304,7 +304,7 @@ exports.updateBook = async (bookId, updateData) => {
     description: description !== undefined ? description : book.description,
     status: status !== undefined ? status : book.status,
     url_avatar: url_avatar !== undefined ? url_avatar : book.url_avatar,
-    updated_at: new Date(),
+    updatedAt: new Date(),
   })
 
   // Cập nhật thể loại (nếu có)
