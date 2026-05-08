@@ -15,7 +15,8 @@ import {
   faUserPlus,
 } from '@fortawesome/free-solid-svg-icons'
 import { clearCache } from '../../services/cacheFetch'
-import nova from '../../assets/image/GuestAvatar.png' // avatar mặc định
+import nova from '../../assets/image/GuestAvatar.png' // avatar mặc định khi chưa đăng nhập
+import defaultAvatar from '../../assets/image/default-avatar.png' // avatar mặc định khi user chưa có avatar
 
 const ProfileMenu = ({ className }) => {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
@@ -50,7 +51,7 @@ const ProfileMenu = ({ className }) => {
       <div className='dropdown' onClick={onOpen}>
         <img
           className={`${styles.avatar} dropdown-toggle`}
-          src={isLoggedIn ? user.avatarUrl : nova}
+          src={isLoggedIn ? user.avatarUrl || defaultAvatar : nova}
           alt={isLoggedIn ? user.username : 'Guest'}
         />
         <div

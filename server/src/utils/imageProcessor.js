@@ -1,7 +1,7 @@
 const sharp = require('sharp')
 const fs = require('fs')
 
-async function resizeImage(filePath, width = 60, height = 60) {
+async function resizeImage(filePath, width = 100, height = 100) {
   const outputPath = filePath.replace(/(\.[\w]+)$/, `_resized$1`)
 
   const buffer = await fs.promises.readFile(filePath)
