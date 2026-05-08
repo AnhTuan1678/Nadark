@@ -81,23 +81,35 @@ exports.searchBooks = async (
     chapter_count: { [Op.between]: [minChapter, maxChapter] },
   }
 
-  // Lấy ID sách phù hợp thể loại (nếu có lọc)
+  // Lấy ID sách phù hợp đầy đủ thể loại
   let bookIds = null
+
   if (genres.length > 0) {
     const booksWithGenre = await db.Book.findAll({
       attributes: ['id'],
       include: [
         {
           model: db.Genre,
-          where: { id: { [Op.in]: genres } },
+          where: {
+            id: {
+              [Op.in]: genres,
+            },
+          },
           attributes: [],
           through: { attributes: [] },
         },
       ],
+      group: ['Book.id'],
+      having: literal(`COUNT(DISTINCT("Genres"."id")) = ${genres.length}`),
     })
+
     bookIds = booksWithGenre.map((b) => b.id)
-    if (!bookIds.length) return [] // không có sách phù hợp
-    whereCondition.id = { [Op.in]: bookIds }
+
+    if (!bookIds.length) return []
+
+    whereCondition.id = {
+      [Op.in]: bookIds,
+    }
   }
 
   // Truy vấn exact match (với include genre đầy đủ)
