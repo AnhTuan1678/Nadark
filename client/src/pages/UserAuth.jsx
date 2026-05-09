@@ -97,8 +97,13 @@ const Login = ({ onSuccess = () => {} }) => {
             value={usernameOrEmail}
             onChange={(e) => setUsernameOrEmail(e.target.value)}
             autoFocus={true}
+            id='username'
+            name='username'
+            autoComplete='username'
           />
-          <label className={styles.label}>Tên tài khoản hoặc email *</label>
+          <label className={styles.label} htmlFor='username'>
+            Tên tài khoản hoặc email *
+          </label>
         </div>
         <div className='floating-label'>
           <input
@@ -106,8 +111,13 @@ const Login = ({ onSuccess = () => {} }) => {
             placeholder=''
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            id='password'
+            name='password'
+            autoComplete='current-password'
           />
-          <label className={styles.label}>Mật khẩu *</label>
+          <label className={styles.label} htmlFor='password'>
+            Mật khẩu *
+          </label>
         </div>
 
         <a href='#' className={`${styles.btn} fw-bold`}>
@@ -190,8 +200,13 @@ const Register = ({ onSwitchTab }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoFocus={true}
+            id='username'
+            name='username'
+            autoComplete='username'
           />
-          <label className={styles.label}>Tên tài khoản *</label>
+          <label className={styles.label} htmlFor='username'>
+            Tên tài khoản *
+          </label>
         </div>
         <div className='floating-label'>
           <input
@@ -199,8 +214,13 @@ const Register = ({ onSwitchTab }) => {
             placeholder=''
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            id='email'
+            name='email'
+            autoComplete='email'
           />
-          <label className={styles.label}>Email *</label>
+          <label className={styles.label} htmlFor='email'>
+            Email *
+          </label>
         </div>
         <div className='floating-label'>
           <input
@@ -208,8 +228,13 @@ const Register = ({ onSwitchTab }) => {
             placeholder=''
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            id='password'
+            name='password'
+            autoComplete='new-password'
           />
-          <label className={styles.label}>Mật khẩu *</label>
+          <label className={styles.label} htmlFor='password'>
+            Mật khẩu *
+          </label>
         </div>
 
         <div
@@ -297,8 +322,13 @@ const ChangePassword = ({ onSuccess = () => {} }) => {
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
             autoFocus={true}
+            name='oldPassword'
+            id='oldPassword'
+            autoComplete='current-password'
           />
-          <label className={styles.label}>Mật khẩu cũ</label>
+          <label className={styles.label} htmlFor='oldPassword'>
+            Mật khẩu cũ
+          </label>
         </div>
 
         <div className='floating-label'>
@@ -307,8 +337,13 @@ const ChangePassword = ({ onSuccess = () => {} }) => {
             placeholder=''
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
+            name='newPassword'
+            id='newPassword'
+            autoComplete='new-password'
           />
-          <label className={styles.label}>Mật khẩu mới</label>
+          <label className={styles.label} htmlFor='newPassword'>
+            Mật khẩu mới
+          </label>
         </div>
 
         <div className='floating-label'>
@@ -317,8 +352,13 @@ const ChangePassword = ({ onSuccess = () => {} }) => {
             placeholder=''
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            name='confirmPassword'
+            id='confirmPassword'
+            autoComplete='new-password'
           />
-          <label className={styles.label}>Xác nhận mật khẩu mới</label>
+          <label className={styles.label} htmlFor='confirmPassword'>
+            Xác nhận mật khẩu mới
+          </label>
         </div>
 
         <div

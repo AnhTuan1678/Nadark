@@ -57,6 +57,9 @@ const Manager = () => {
         const books = await userAPI.getUserBooks(uid)
 
         setBooksUploaded(books.data)
+        if (books.data.length > 0) {
+          setSelectedBook(books.data[0].id)
+        }
       } catch (err) {
         console.error('Lỗi fetch profile/progress:', err)
       }
@@ -73,19 +76,19 @@ const Manager = () => {
     fetchChapters()
   }, [selectedBook])
 
-  if (!booksUploaded?.length) return <EmptyState message='Không có thông tin' />
+  if (!booksUploaded) return <EmptyState message='Không có thông tin' />
 
   return (
     <div className='container cus-container flex-grow-1 p-2'>
-      <h3 className='border-bottom'>Series of @{user.username}</h3>
+      <h3 className='border-bottom'>Truyện @{user.username} đã đăng</h3>
       <div className='row flex-grow-1'>
-        <div className='m-0 px-2 row'>
-          <div className='p-0 m-0 col col-12 col-md-2 d-flex flex-md-column flex-row overflow-auto'>
+        <div className='m-0 p-2 row'>
+          <div className='p-0 m-0 col col-12 col-md-2 d-flex flex-md-column flex-row overflow-auto gap-2'>
             {booksUploaded.map((book, index) => (
               <div
                 className={`position-relative p-0 rounded col-4 col-md-12 ${
                   book.id === selectedBook && styles.active
-                }`}
+                } ${styles.bookCard}`}
                 key={index}>
                 <StoryCard
                   key={book.id}
@@ -128,8 +131,22 @@ const Manager = () => {
                 </div>
               </div>
             ))}
+            <div
+              className={`position-relative p-0 rounded col-4 col-md-12 ${
+                selectedBook === 'new' && styles.active
+              }`}>
+              <div
+                className={`d-flex flex-column p-4 gap-4 border rounded h-100 justify-content-center align-items-center cursor-pointer ${styles.addNew}`}
+                onClick={() => {
+                  setSelectedBook('new')
+                  navigate('/action/addBook')
+                }}>
+                <FontAwesomeIcon icon={faPlus} size='2x' />
+                <span>Thêm mới</span>
+              </div>
+            </div>
           </div>
-          <div className='col col-10' style={{ maxHeight: '80vh' }}>
+          <div className='col col-12 col-md-10' style={{ maxHeight: '100vh' }}>
             <ChapterTable chapters={chapters} onDelete={handleDeleteChapter} />
           </div>
         </div>

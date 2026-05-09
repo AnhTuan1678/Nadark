@@ -45,6 +45,7 @@ const EditStory = () => {
       try {
         setLoading(true)
         const data = await bookAPI.getStoryDetails(id)
+        console.log('Book details:', data)
 
         const genreIds = data.genres
           ? data.genres
@@ -61,10 +62,10 @@ const EditStory = () => {
           genres: genreIds,
           summary: data.description || '',
           status: data.status || 'Đang tiến hành',
-          coverImage: data.coverImage || '',
+          coverImage: data.urlAvatar || '',
         })
 
-        setPreviewImage(data.coverImage || '')
+        setPreviewImage(data.urlAvatar || '')
       } catch (err) {
         setError('Không tải được thông tin truyện.')
         console.error(err)
@@ -123,11 +124,7 @@ const EditStory = () => {
         url_avatar: imageUrl,
       }
 
-      const updatedBook = await bookAPI.updateBook(
-        id,
-        payload,
-        user.token,
-      )
+      const updatedBook = await bookAPI.updateBook(id, payload, user.token)
 
       setSuccess(`Đã cập nhật truyện: ${updatedBook.title}`)
 
@@ -155,7 +152,6 @@ const EditStory = () => {
       ) : (
         <form onSubmit={handleSubmit}>
           <div className='row g-3'>
-
             {/* TITLE */}
             <div className='col-12 col-md-6'>
               <label className='form-label fw-semibold'>Tiêu đề *</label>
@@ -189,8 +185,7 @@ const EditStory = () => {
                 className='form-select'
                 name='status'
                 value={formData.status}
-                onChange={handleChange}
-              >
+                onChange={handleChange}>
                 <option>Đang tiến hành</option>
                 <option>Hoàn thành</option>
                 <option>Tạm ngưng</option>
@@ -307,12 +302,10 @@ const EditStory = () => {
               <button
                 type='submit'
                 className='btn btn-success px-4'
-                disabled={loading}
-              >
+                disabled={loading}>
                 {loading ? 'Đang lưu...' : 'Lưu thay đổi'}
               </button>
             </div>
-
           </div>
         </form>
       )}

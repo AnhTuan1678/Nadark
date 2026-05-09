@@ -66,7 +66,8 @@ function ReaderContent({ content, setting, onEnd }) {
                 ref={(el) => (lineRefs.current[i] = el)}
                 src={imgMatch[1]}
                 alt={`image-${i}`}
-                style={{ width: '100%', margin: '1rem 0' }}
+                className='w-100'
+                // style={{ width: '100%', margin: '1rem 0' }}
               />
             )
           } else {

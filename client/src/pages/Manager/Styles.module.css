@@ -13,9 +13,9 @@
     color: white;
 }
 
-.active {
+/* .active {
     background: var(--color-bg-badge-hover) !important;
-}
+} */
 
 button.btnDelete {
     background-color: red !important;
@@ -61,4 +61,12 @@ button.btnAdd {
 .transparentTable th,
 .transparentTable td {
     background-color: transparent !important;
+}
+
+.addNew:hover,
+.addNew:focus,
+.bookCard:hover,
+.active {
+    background-color: var(--color-bg-badge-hover) !important;
+    color: white;
 }

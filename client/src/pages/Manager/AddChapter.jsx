@@ -1,113 +1,206 @@
 import React, { useState } from 'react'
-import { chapterAPI } from '../../services/api'
+import { chapterAPI, mediaAPI } from '../../services/api'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { clearCacheKey } from '../../services/cacheFetch'
 import { API_URL } from '../../services/api/config'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import './AddChapter.css'
+
+import TextBlock from '../../components/Block/TextBlock'
+import ImageBlock from '../../components/Block/ImageBlock'
 
 const AddChapter = () => {
   const { id: bookId } = useParams()
   const navigate = useNavigate()
   const token = useSelector((state) => state.user.token)
 
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
   const [formData, setFormData] = useState({
     title: '',
     author_note: '',
-    content: '',
-    word_count: 0,
+    blocks: [{ type: 'text', content: '' }],
   })
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-
-    // Nếu là content thì tính số từ
-    if (name === 'content') {
-      const wordCount =
-        value.trim() === '' ? 0 : value.trim().split(/\s+/).length
-      setFormData({ ...formData, content: value, word_count: wordCount })
-    } else {
-      setFormData({ ...formData, [name]: value })
-    }
+  /* ===================== ADD BLOCK ===================== */
+  const addBlock = (type) => {
+    setFormData((prev) => ({
+      ...prev,
+      blocks: [
+        ...prev.blocks,
+        type === 'text'
+          ? { type: 'text', content: '' }
+          : { type: 'image', mode: 'url', url: '', file: null },
+      ],
+    }))
   }
 
+  /* ===================== UPDATE BLOCK ===================== */
+  const updateBlock = (index, value) => {
+    setFormData((prev) => {
+      const newBlocks = [...prev.blocks]
+      newBlocks[index] = { ...newBlocks[index], ...value }
+
+      return {
+        ...prev,
+        blocks: newBlocks,
+      }
+    })
+  }
+
+  /* ===================== DELETE BLOCK ===================== */
+  const deleteBlock = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      blocks: prev.blocks.filter((_, i) => i !== index),
+    }))
+  }
+
+  /* ===================== SUBMIT ===================== */
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(formData)
-    // Gửi dữ liệu lên server tại đây
+
     try {
-      const response = await chapterAPI.createChapter(
+      setLoading(true)
+      setError('')
+
+      let content = ''
+
+      for (const block of formData.blocks) {
+        /* TEXT */
+        if (block.type === 'text') {
+          content += (block.content || '') + '\n'
+        }
+
+        /* IMAGE */
+        if (block.type === 'image') {
+          let url = block.url
+
+          if (block.mode === 'file' && block.file) {
+            const res = await mediaAPI.uploadMedia(token, block.file)
+            url = res.url
+          }
+
+          if (url) {
+            content += `[!img](${url})\n`
+          }
+        }
+      }
+
+      const wordCount = formData.blocks
+        .filter((b) => b.type === 'text')
+        .reduce((a, b) => a + (b.content?.trim().split(/\s+/).length || 0), 0)
+
+      await chapterAPI.createChapter(
         {
-          ...formData,
+          title: formData.title,
+          author_note: formData.author_note,
+          content,
+          word_count: wordCount,
           book_id: bookId,
         },
         token,
       )
-      console.log('Chapter created:', response)
-      // Clear cache for the book
+
       await clearCacheKey(`${API_URL}/api/book/${bookId}/chapters`)
-      setTimeout(() => {
-        navigate(-1)
-      }, 1000)
+
+      navigate(-1)
     } catch (err) {
-      console.error('Error creating chapter:', err)
+      console.error(err)
+      setError(err.message || 'Có lỗi khi tạo chapter')
+    } finally {
+      setLoading(false)
     }
   }
 
+  /* ===================== UI ===================== */
   return (
-    <div className='container cus-container border mt-5'>
-      <h3 className='mb-4 text-center text-primary'>Thêm chương mới</h3>
+    <div className='container border cus-container shadow-sm p-4 flex-grow-1'>
+      <h3 className='mb-4 text-center text-primary'>Thêm chương</h3>
+
+      {error && <div className='alert alert-danger'>{error}</div>}
+
       <form onSubmit={handleSubmit}>
-        <div className='mb-3'>
-          <label className='form-label fw-semibold'>Tiêu đề chương *</label>
-          <input
-            type='text'
-            className='form-control'
-            name='title'
-            value={formData.title}
-            onChange={handleChange}
-            placeholder='Nhập tiêu đề chương'
-            required
-          />
-        </div>
+        <div className='row g-3'>
+          {/* TITLE */}
+          <div className='col-12'>
+            <label className='form-label fw-semibold'>Tiêu đề chương *</label>
+            <input
+              type='text'
+              className='form-control'
+              value={formData.title}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
+              required
+            />
+          </div>
 
-        <div className='mb-3'>
-          <label className='form-label fw-semibold'>Ghi chú tác giả</label>
-          <textarea
-            className='form-control'
-            name='author_note'
-            rows='3'
-            value={formData.author_note}
-            onChange={handleChange}
-            placeholder='Nhập ghi chú tác giả'></textarea>
-        </div>
+          {/* AUTHOR NOTE */}
+          <div className='col-12'>
+            <label className='form-label fw-semibold'>Ghi chú tác giả</label>
+            <textarea
+              className='form-control'
+              rows={5}
+              value={formData.author_note}
+              onChange={(e) =>
+                setFormData({ ...formData, author_note: e.target.value })
+              }
+            />
+          </div>
 
-        <div className='mb-3'>
-          <label className='form-label fw-semibold'>Nội dung chương *</label>
-          <textarea
-            className='form-control'
-            name='content'
-            rows='8'
-            value={formData.content}
-            onChange={handleChange}
-            placeholder='Nhập nội dung chương'
-            required></textarea>
-          <small className='text-muted'>Số từ: {formData.word_count}</small>
-        </div>
+          {/* BLOCK EDITOR */}
+          <div className='col-12'>
+            <label className='form-label fw-semibold'>Nội dung chương</label>
+            {formData.blocks.map((block, index) => (
+              <div key={index}>
+                {block.type === 'text' && (
+                  <TextBlock
+                    block={block}
+                    index={index}
+                    updateBlock={updateBlock}
+                    deleteBlock={deleteBlock}
+                  />
+                )}
 
-        <div className='d-flex justify-content-center mb-4'>
-          <button type='submit' className='btn btn-primary me-3 px-4'>
-            Thêm chương
-          </button>
-          <button
-            type='button'
-            className='btn btn-outline-secondary px-4'
-            onClick={() => {
-              navigate(-1)
-            }}>
-            Quay lại
-          </button>
+                {block.type === 'image' && (
+                  <ImageBlock
+                    block={block}
+                    index={index}
+                    updateBlock={updateBlock}
+                    deleteBlock={deleteBlock}
+                  />
+                )}
+              </div>
+            ))}
+
+            {/* ADD BLOCK */}
+            <div className='d-flex gap-2 my-3'>
+              <button
+                type='button'
+                className='btn btn-outline-primary'
+                onClick={() => addBlock('text')}>
+                + Text
+              </button>
+
+              <button
+                type='button'
+                className='btn btn-outline-success'
+                onClick={() => addBlock('image')}>
+                + Image
+              </button>
+            </div>
+          </div>
+
+          {/* SUBMIT */}
+          <div className='col-12 d-flex justify-content-center mt-3'>
+            <button
+              type='submit'
+              className='btn btn-primary px-4'
+              disabled={loading}>
+              {loading ? 'Đang lưu...' : 'Lưu chương'}
+            </button>
+          </div>
         </div>
       </form>
     </div>

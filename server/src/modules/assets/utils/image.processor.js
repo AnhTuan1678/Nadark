@@ -20,7 +20,7 @@ const path = require('path')
 exports.optimize = async (inputPath, options = {}) => {
   // ===== DEFAULT OPTIONS =====
   const {
-    maxWidth = 1280,
+    maxWidth = 1000,
     quality = 85,
     format = 'auto',
     resizeMode = 'only-large',

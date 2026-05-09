@@ -48,24 +48,24 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--color-bg-badge);
-    border-color: var(--color-bg-badge);
-    color: var(--color-text-light);
+    background-color: var(--color-bg-badge) !important;
+    border-color: var(--color-bg-badge) !important;
+    color: var(--color-text-light) !important;
 }
 
 .btn-primary:hover,
 .btn-primary:active {
-    background-color: var(--color-bg-badge-hover);
-    border-color: var(--color-bg-badge-hover);
-    color: var(--color-bg-content);
+    background-color: var(--color-bg-badge-hover) !important;
+    border-color: var(--color-bg-badge-hover) !important;
+    color: var(--color-bg-content) !important;
     cursor: pointer;
 }
 
 .btn-primary:disabled,
 .btn-primary.disabled {
-    background-color: var(--color-bg-disabled);
-    border-color: var(--color-bg-disabled);
-    color: var(--color-text-disabled);
+    background-color: var(--color-bg-disabled) !important;
+    border-color: var(--color-bg-disabled) !important;
+    color: var(--color-text-disabled) !important;
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
