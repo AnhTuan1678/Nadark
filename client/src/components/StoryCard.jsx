@@ -16,6 +16,7 @@ import { useState } from 'react'
 import { timeAgo } from '../utils/timeAgo'
 import ImageWithFallback from './ImageWithFallback'
 import { followCursor } from 'tippy.js'
+import cover from '../assets/image/cover.jpg'
 
 const StoryCard = ({ story, className = '', clickable = true }) => {
   const [hover, setHover] = useState(false)
@@ -29,6 +30,7 @@ const StoryCard = ({ story, className = '', clickable = true }) => {
         <div className='d-flex justify-content-center align-items-center'></div>
         <ImageWithFallback
           urlAvatar={story.urlAvatar}
+          defaultUrl={cover}
           className={`ratio ratio-2x3 ${styles['card-img']}`}
         />
         <div className='d-flex flex-column p-2 ps-4'>
@@ -94,6 +96,7 @@ const StoryCard = ({ story, className = '', clickable = true }) => {
               <ImageWithFallback
                 urlAvatar={story.urlAvatar}
                 className='ratio ratio-2x3'
+                defaultUrl={cover}
               />
             )}
 

@@ -64,9 +64,11 @@ const Header = () => {
         {isMobile ? (
           <MobileHeader />
         ) : (
-          <div className={`d-flex align-items-center container py-0 px-2 h-100`}>
+          <div
+            className={`d-flex align-items-center container py-0 px-2 h-100`}>
             {/* Logo */}
             <div className='flex-grow-1 d-flex'>
+              <Logo />
               <h1
                 className={`logo fs-4 cursor-pointer d-inline-block p-0 m-0 ${style.logo}`}
                 onClick={() => navigate(`/`)}
@@ -106,6 +108,7 @@ const MobileHeader = () => {
         {/* Logo + Profile */}
         {!showSearch && (
           <div className='d-flex align-items-center p-0 m-0 animate__animated animate__fadeInDown animate__faster'>
+            <Logo />
             <h1
               className={`logo fs-4 m-0 ${style.logo} cursor-pointer flex-grow-1`}
               style={{ fontFamily: 'Ananda' }}
@@ -125,6 +128,17 @@ const MobileHeader = () => {
         )}
       </div>
     </div>
+  )
+}
+
+const Logo = () => {
+  return (
+    <img
+      id='logo1'
+      src='/favicon-32x32.png'
+      alt='Logo'
+      style={{ height: '28px', width: 'auto' }}
+    />
   )
 }
 

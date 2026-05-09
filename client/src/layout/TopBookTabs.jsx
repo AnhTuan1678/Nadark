@@ -6,6 +6,7 @@ import styles from './TopBooksTabs.module.css'
 import { useNavigate } from 'react-router-dom'
 import EmptyState from '../components/EmptyState'
 import ImageWithFallback from '../components/ImageWithFallback'
+import cover from '../assets/image/cover.jpg'
 
 const TopBooksTabs = ({ data }) => {
   const [key, setKey] = useState('month')
@@ -18,7 +19,7 @@ const TopBooksTabs = ({ data }) => {
     return '#aaa'
   }
 
-  const renderList = (books) => {
+  const RenderList = (books) => {
     if (!books) return <EmptyState message='Đang lấy dữ liệu' />
     if (books.length === 0) return <EmptyState message='Không có dữ liệu' />
     return (
@@ -38,6 +39,7 @@ const TopBooksTabs = ({ data }) => {
             {/* Ảnh */}
             <ImageWithFallback
               urlAvatar={book.urlAvatar}
+              defaultUrl={cover}
               className={`${styles.avatar}`}
             />
 
@@ -69,13 +71,13 @@ const TopBooksTabs = ({ data }) => {
         justify
         variant='pills'>
         <Tab eventKey='month' title='Top Tháng' tabClassName={styles.tabButton}>
-          {renderList(data.month)}
+          {RenderList(data.month)}
         </Tab>
         <Tab eventKey='week' title='Top Tuần' tabClassName={styles.tabButton}>
-          {renderList(data.week)}
+          {RenderList(data.week)}
         </Tab>
         <Tab eventKey='today' title='Top Ngày' tabClassName={styles.tabButton}>
-          {renderList(data.today)}
+          {RenderList(data.today)}
         </Tab>
       </Tabs>
     </div>

@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom'
 import styles from './styles.module.css'
 import { useEffect, useState } from 'react'
 import ImageWithFallback from '../../components/ImageWithFallback'
+import cover from '../../assets/image/cover.jpg'
 
 const StoryInfoSection = ({ storyDetails, genres, progress }) => {
   const [details, setDetails] = useState(storyDetails)
@@ -110,6 +111,7 @@ const StoryInfoSection = ({ storyDetails, genres, progress }) => {
           <ImageWithFallback
             className='ratio ratio-2x3 bg-cover bg-center'
             urlAvatar={details.urlAvatar}
+            defaultUrl={cover}
           />
         </div>
       </div>

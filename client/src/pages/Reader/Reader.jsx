@@ -47,6 +47,13 @@ const Reader = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' })
       setContent(data)
       setComments(comments)
+
+      // Lưu vào localStorage
+      const { content: _, ...rest } = data
+      const bookId = data.book_id
+      const book = await bookAPI.getStoryDetails(bookId)
+      const toSave = { ...rest, book, date: Date.now() }
+      localStorage.setItem(`chapter_${data.id}`, JSON.stringify(toSave))
     }
 
     // Lưu tiến trình đọc khi load chương
