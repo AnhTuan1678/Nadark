@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchGenres } from '../../redux/genreSlice'
 import { bookAPI } from '../../services/api'
@@ -18,6 +19,7 @@ const AddStory = () => {
   const [error, setError] = useState('')
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { list: genresData } = useSelector((state) => state.genre)
   const user = useSelector((state) => state.user)
 
@@ -46,14 +48,9 @@ const AddStory = () => {
       }
       const newBook = await bookAPI.createBook(payload, user.token)
       setSuccess(`Tạo truyện thành công: ${newBook.title}`)
-      setFormData({
-        title: '',
-        author: '',
-        genres: [],
-        summary: '',
-        status: 'Đang tiến hành',
-      })
-      console.log(newBook)
+      setTimeout(() => {
+        navigate(-1)
+      }, 1000)
     } catch (err) {
       setError(err.message || 'Có lỗi xảy ra')
     } finally {
@@ -62,7 +59,7 @@ const AddStory = () => {
   }
 
   return (
-    <div className='container border cus-container shadow-sm p-4'>
+    <div className='container border cus-container shadow-sm p-4 flex-grow-1'>
       <h3 className='mb-4 text-center text-primary'>Thêm truyện mới</h3>
 
       {success && <div className='alert alert-success'>{success}</div>}
@@ -135,6 +132,15 @@ const AddStory = () => {
               placeholder='Nhập tóm tắt truyện'
               required
             />
+          </div>
+
+          {/* Notification */}
+          <div className='col-12'>
+            <small className='text-muted'>
+              * Vui lòng điền đầy đủ thông tin trước khi thêm truyện mới. Cover
+              truyện và các chương có thể được thêm sau khi truyện được tạo
+              thành công.
+            </small>
           </div>
 
           {/* Submit */}

@@ -33,13 +33,22 @@ const ProfileInfo = ({ profile }) => {
           </li>
         </ul>
       </div>
-      <button
-        className='btn btn-primary w-100'
-        onClick={() =>
-          navigate('/action/addBook', { state: { from: location.pathname } })
-        }>
-        Đăng truyện
-      </button>
+      <div className='d-flex flex-row gap-1'>
+        <button
+          className='btn btn-primary w-100 p-1 m-0'
+          onClick={() =>
+            navigate('/action/addBook', { state: { from: location.pathname } })
+          }>
+          Đăng truyện
+        </button>
+        <button
+          className='btn btn-primary w-100 p-1 m-0'
+          onClick={() =>
+            navigate('/action', { state: { from: location.pathname } })
+          }>
+          Quản lý
+        </button>
+      </div>
     </div>
   )
 }

@@ -34,6 +34,21 @@ const Manager = () => {
     }
   }
 
+  const handleDeleteBook = async (bookId) => {
+    if (!bookId) return
+    try {
+      await bookAPI.deleteBook(bookId, user.token)
+      // Refetch books after deletion
+      const uid = user.id
+      const books = await userAPI.getUserBooks(uid)
+      setBooksUploaded(books.data)
+      setSelectedBook(null)
+      setChapters([])
+    } catch (err) {
+      console.error('Lỗi xóa sách:', err)
+    }
+  }
+
   useEffect(() => {
     const uid = user.id
     if (!uid) return
@@ -65,24 +80,25 @@ const Manager = () => {
       <h3 className='border-bottom'>Series of @{user.username}</h3>
       <div className='row flex-grow-1'>
         <div className='m-0 px-2 row'>
-          <div className='p-0 m-0 col col-2'>
+          <div className='p-0 m-0 col col-12 col-md-2 d-flex flex-md-column flex-row overflow-auto'>
             {booksUploaded.map((book, index) => (
               <div
-                className={`position-relative p-2 rounded ${
+                className={`position-relative p-0 rounded col-4 col-md-12 ${
                   book.id === selectedBook && styles.active
                 }`}
                 key={index}>
                 <StoryCard
                   key={book.id}
                   story={book}
-                  className=''
+                  className='p-2'
                   clickable={false}
                 />
                 <div
-                  className={`position-absolute top-0 start-0 bottom-0 w-100 h-100 cursor-pointer d-flex flex-column ${styles.overlay}`}
-                  style={{ zIndex: 1000 }}
+                  className={`position-absolute bottom-0 cursor-pointer d-flex w-100 h-100 m-0 p-0 flex-row justify-content-center align-items-center ${styles.overlay}`}
+                  style={{ zIndex: 2000 }}
                   onClick={() => {
                     clearCacheKey(`${API_URL}/api/book/${book.id}/chapters`)
+                    console.log('Selected book ID:', book.id)
                     setSelectedBook(book.id)
                   }}>
                   <button
@@ -97,6 +113,7 @@ const Manager = () => {
                     className={`btn ${styles.btn} ${styles.btnDelete}`}
                     onClick={(e) => {
                       e.stopPropagation()
+                      handleDeleteBook(book.id)
                     }}>
                     <FontAwesomeIcon icon={faTrash} />
                   </button>

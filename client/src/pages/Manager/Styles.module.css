@@ -1,6 +1,6 @@
 .btn {
-    width: 80%;
-    margin: 10%;
+    margin: 4px;
+    padding: 4px;
     opacity: 0.5;
     visibility: hidden;
     color: white;
@@ -45,6 +45,7 @@ button.btnAdd {
 .overlay:hover .btn,
 .active .btn {
     visibility: visible;
+    z-index: 1000;
 }
 
 .table {
