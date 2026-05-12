@@ -1,5 +1,9 @@
 const db = require('../models')
 const { Op, literal } = require('sequelize')
+const path = require('path')
+const fs = require('fs')
+
+const { TEMP_DIR, PUBLIC_DIR, CLIENT_BUILD_DIR } = require('../config/path')
 
 exports.getAllBooks = async ({ limit, offset }) => {
   const count = await db.Book.count()
@@ -340,4 +344,73 @@ exports.deleteBook = async (bookId) => {
   await book.destroy()
 
   return { success: true, message: `Book ${bookId} deleted` }
+}
+
+exports.exportBookToTextFile = async (bookId) => {
+  const book = await db.Book.findByPk(bookId, {
+    include: [
+      {
+        model: db.Genre,
+        through: { attributes: [] },
+        attributes: ['name'],
+      },
+    ],
+  })
+
+  if (!book) {
+    throw new Error('BOOK_NOT_FOUND')
+  }
+
+  const tempDir = path.join(TEMP_DIR, 'txt')
+  if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true })
+  }
+
+  const safeTitle = book.title.replace(/[\\/:*?"<>|]/g, '_')
+  const fileName = `${safeTitle}-${book.id}.txt`
+  const filePath = path.join(tempDir, fileName)
+
+  // NẾU FILE ĐÃ TỒN TẠI RỒI THÌ KHÔNG CẦN TẠO LẠI
+  if (fs.existsSync(filePath)) {
+    return {
+      fileName,
+      filePath,
+      url: `${TEMP_DIR}/txt/${fileName}`,
+    }
+  }
+
+  // LẤY CHƯƠNG
+  const chapters = await db.Chapter.findAll({
+    where: { book_id: bookId },
+    order: [['id', 'ASC']],
+  })
+
+  let content = ''
+
+  // THÔNG TIN TRUYỆN
+  content += `Tên truyện: ${book.title}\n`
+  content += `Tác giả: ${book.author}\n`
+  content += `Trạng thái: ${book.status}\n`
+  content += `Thể loại: ${book.Genres.map((g) => g.name).join(', ')}\n\n`
+  content += `Mô tả:\n${book.description || ''}\n\n`
+  content += '====================\n\n'
+
+  // CHƯƠNG
+  const separator = '\n Cách Chương.\n\n'
+  const chapterContents = chapters.map((chapter, index) => {
+    return [
+      `Chương ${index + 1} - ${chapter.title}\n`,
+      chapter.content || '',
+    ].join('\n')
+  })
+  content += chapterContents.join(separator)
+
+  // GHI FILE
+  fs.writeFileSync(filePath, content, 'utf8')
+
+  return {
+    fileName,
+    filePath,
+    url: `${TEMP_DIR}/txt/${fileName}`,
+  }
 }

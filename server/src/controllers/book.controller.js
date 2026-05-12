@@ -149,9 +149,7 @@ exports.createReview = async (req, res) => {
 
 exports.getReviews = async (req, res) => {
   try {
-    console.log('Received request to get reviews for book ID:', req.params.bookId)
     const reviews = await reviewService.getReviews(req.params.bookId)
-    console.log('Reviews fetched:', reviews)
     res.json(reviews)
   } catch (err) {
     res.status(500).json({ message: 'Server error' })
@@ -328,5 +326,28 @@ exports.deleteBook = async (req, res) => {
       return res.status(404).json({ error: 'Không tìm thấy sách' })
     }
     res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+exports.exportBook = async (req, res) => {
+  try {
+    const { id } = req.params
+    const result = await bookService.exportBookToTextFile(id)
+
+    return res.download(result.filePath, result.fileName, (err) => {
+      if (err) {
+        console.error('Lỗi khi gửi file:', err)
+        return res
+          .status(500)
+          .json({ success: false, message: 'Lỗi khi gửi file' })
+      }
+    })
+  } catch (err) {
+    console.error(err)
+
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    })
   }
 }

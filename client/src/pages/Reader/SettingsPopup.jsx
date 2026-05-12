@@ -16,10 +16,6 @@ const SettingsPopup = ({ defaultSetting, onClose, onSave, onChange }) => {
     onChange && onChange(settings)
   }, [onChange, settings])
 
-    useEffect(() => {
-      console.log(settings)
-    }, [settings])
-
   const handleResetButton = async () => {
     const DEFAULT_SETTINGS = {
       fontSize: '18px',

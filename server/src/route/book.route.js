@@ -20,6 +20,7 @@ router.get('/most-followed', bookController.getMostFollowedBooks)
 router.get('/:id', bookController.getBook)
 router.put('/:id', authenticateToken, bookController.updateBook)
 router.delete('/:id', authenticateToken, bookController.deleteBook)
+router.get('/:id/export', bookController.exportBook)
 
 // Chapters
 router.get('/:id/chapters', bookController.getChapters)

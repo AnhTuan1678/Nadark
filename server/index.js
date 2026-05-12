@@ -1,38 +1,39 @@
 const express = require('express')
 const cors = require('cors')
-const route = require('./src/route/index')
 const path = require('path')
+
+const route = require('./src/route/index')
+const { TEMP_DIR, PUBLIC_DIR, CLIENT_BUILD_DIR } = require('./src/config/path')
+
 require('./src/models/sync')
 
 const app = express()
+
 const PORT = process.env.PORT || 3000
 const HOST = process.env.HOST || 'localhost'
 const ENV = process.env.NODE_ENV || 'development'
 
-app.use(express.json())
+// Middleware
 app.use(cors())
-app.use('/api', route)
+app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-const tempPath = path.join(__dirname, 'src/temp')
-app.use('/temp', express.static(tempPath))
+// Static
+app.use('/temp', express.static(TEMP_DIR))
+app.use('/public', express.static(PUBLIC_DIR))
 
-const publicPath = path.join(__dirname, 'public')
-app.use('/public', express.static(publicPath))
+// API
+app.use('/api', route)
 
-// =====================
-// PHỤC VỤ FRONTEND VITE BUILD
-// =====================
-const clientBuildPath = path.join(__dirname, './dist')
-app.use(express.static(clientBuildPath))
+// Frontend build
+app.use(express.static(CLIENT_BUILD_DIR))
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' })
 })
 
-// Bắt tất cả route còn lại trả về index.html để React Router xử lý
 app.get(/^\/.*$/, (req, res) => {
-  res.sendFile(path.join(clientBuildPath, 'index.html'))
+  res.sendFile(path.join(CLIENT_BUILD_DIR, 'index.html'))
 })
 
 app.listen(PORT, HOST, () => {

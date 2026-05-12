@@ -179,3 +179,29 @@ export const deleteBook = async (bookId, token) => {
   const data = await res.json()
   return data // { message: 'Xóa sách thành công' }
 }
+
+// Tạo file txt và trả về đường dẫn để tải về
+export const exportBookToText = async (bookId) => {
+  const res = await fetch(`${API_URL}/api/book/${bookId}/export`)
+  console.log('Export response status:', res)
+
+  if (!res.ok) {
+    const errorData = await res.json()
+    throw new Error(errorData.message || `HTTP error! status: ${res.status}`)
+  }
+  console.log('Export response data:', await res.json())
+
+  return res.json()
+}
+
+// Tải file txt về máy
+export const downloadBookText = (bookId) => {
+  const a = document.createElement('a')
+
+  a.href = `${API_URL}/api/book/${bookId}/export`
+  a.download = ''
+
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+}

@@ -11,7 +11,7 @@ import {
   faStar,
   faUser,
 } from '@fortawesome/free-solid-svg-icons'
-import { bookshelfAPI } from '../../services/api'
+import { bookshelfAPI, bookAPI } from '../../services/api'
 import { timeAgo } from '../../utils/timeAgo'
 import { StarRating } from './StartRating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -59,6 +59,18 @@ const StoryInfoSection = ({ storyDetails, genres, progress }) => {
         : null,
     )
     showSnackbar(res)
+  }
+
+  const handleDownloadButton = async () => {
+    try {
+      await bookAPI.downloadBookText(details.id)
+    } catch (err) {
+      console.error('Error exporting book:', err)
+      showSnackbar({
+        status: 'error',
+        message: err.message || 'Không thể tải file',
+      })
+    }
   }
 
   const fallbackCopyTextToClipboard = (text) => {
@@ -179,7 +191,9 @@ const StoryInfoSection = ({ storyDetails, genres, progress }) => {
             <div className='btn opacity-hover-50 p-0'>
               <FontAwesomeIcon icon={faList} /> {details.chapterCount}
             </div>
-            <div className='btn opacity-hover-50 p-0'>
+            <div
+              className='btn opacity-hover-50 p-0'
+              onClick={handleDownloadButton}>
               <FontAwesomeIcon icon={faDownload} />
             </div>
             <div
