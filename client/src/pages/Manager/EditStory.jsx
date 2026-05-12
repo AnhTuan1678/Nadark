@@ -45,8 +45,6 @@ const EditStory = () => {
       try {
         setLoading(true)
         const data = await bookAPI.getStoryDetails(id)
-        console.log('Book details:', data)
-
         const genreIds = data.genres
           ? data.genres
               .map((g) => {

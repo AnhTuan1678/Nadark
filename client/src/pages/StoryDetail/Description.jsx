@@ -3,9 +3,7 @@ import { useEffect, useRef, useState } from "react"
 const Description = ({ description }) => {
   const [showAll, setShowAll] = useState(false)
   const [needsClamp, setNeedsClamp] = useState(false)
-
   const textRef = useRef(null)
-
   const maxLines = 6
 
   useEffect(() => {
@@ -45,6 +43,7 @@ const Description = ({ description }) => {
           className='fw-lighter fst-italic mb-1'
           style={{
             display: '-webkit-box',
+            whiteSpace: 'pre-wrap',
             WebkitLineClamp: !showAll && needsClamp ? maxLines : 'unset',
             WebkitBoxOrient: 'vertical',
             overflow: !showAll && needsClamp ? 'hidden' : 'visible',
