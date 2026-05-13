@@ -9,6 +9,7 @@ const Genre = require('./Genre')
 const Review = require('./Review')
 const UserBookshelf = require('./UserBookshelf')
 const UserProgress = require('./UserProgress')
+const Notification = require('../modules/notifications/notification.model')
 
 // --- User ↔ Book ---
 Book.belongsTo(User, { foreignKey: 'uploader_id', as: 'uploader' })
@@ -58,6 +59,20 @@ UserProgress.belongsTo(Book, { foreignKey: 'book_id', onDelete: 'CASCADE' })
 User.hasMany(UserProgress, { foreignKey: 'user_id' })
 Book.hasMany(UserProgress, { foreignKey: 'book_id' })
 
+// --- User ↔ Notification ---
+Notification.belongsTo(User, {
+  foreignKey: 'user_id',
+  as: 'user',
+  onDelete: 'CASCADE',
+})
+User.hasMany(Notification, { foreignKey: 'user_id' })
+Notification.belongsTo(User, {
+  foreignKey: 'actor_id',
+  as: 'actor',
+  onDelete: 'SET NULL',
+})
+User.hasMany(Notification, { foreignKey: 'actor_id', as: 'actions' })
+
 const db = {
   sequelize,
   Sequelize,
@@ -70,6 +85,7 @@ const db = {
   Review,
   UserBookshelf,
   UserProgress,
+  Notification,
 }
 
 module.exports = db

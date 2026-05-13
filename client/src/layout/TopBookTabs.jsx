@@ -45,11 +45,11 @@ const TopBooksTabs = ({ data }) => {
 
             {/* Thông tin */}
             <div className='flex-grow-1 ms-2'>
-              <div className={styles.title}>{book.title}</div>
+              <p className={`fs-8 fw-bold m-0 ${styles.title}`}>{book.title}</p>
               <div className='d-flex'>
-                <div className={`fs-8 flex-grow-1 ${styles.chapter}`}>
-                  Chapter {book.chapterCount}
-                </div>
+                <p className={`fs-8 flex-grow-1 m-0 ${styles.chapter}`}>
+                  {book.chapterCount} chương
+                </p>
                 <div className={styles.views}>
                   <FontAwesomeIcon icon={faEye} />
                   {book[`${key}Views`]}

@@ -15,9 +15,9 @@ const CommentSection = ({
   const [replyTo, setReplyTo] = useState(null)
 
   return (
-    <div className='cus-container d-flex flex-column mb-4 p-4 border rounded'>
-      <div className='mb-4'>
-        <h3>Bình luận</h3>
+    <div className='cus-container d-flex flex-column mb-2 p-1 p-md-2 border rounded'>
+      <div className=''>
+        <h3 className='m-0'>Bình luận</h3>
         <CommentBox
           onSend={(mess) => {
             handleSendComment(mess)

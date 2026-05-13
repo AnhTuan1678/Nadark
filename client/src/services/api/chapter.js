@@ -18,7 +18,6 @@ export const createChapter = async (chapterData, token) => {
   }
 
   const data = await res.json()
-  console.log(data)
   return data
 }
 

@@ -129,7 +129,7 @@ const StoryInfoSection = ({ storyDetails, genres, progress }) => {
       </div>
 
       <div className='m-1 m-md-4 d-flex flex-column col'>
-        <p className='fs-2'>{details.title}</p>
+        <p className={`fs-1 text-center text-md-start m-0 ${styles['story-title']}`}>{details.title}</p>
 
         {/* Genres */}
         <div className='d-flex flex-row mb-2 flex-wrap'>

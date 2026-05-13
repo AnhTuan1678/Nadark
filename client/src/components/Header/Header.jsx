@@ -8,6 +8,8 @@ import ProfileMenu from './ProfileMenu'
 import SearchBar from './SearchBar'
 import NavBar from './NavBar'
 import ThemeToggle from './ThemeToggle'
+import NotificationBell from './NotificationBell'
+import logo from '../../assets/image/logo.png'
 
 const Header = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
@@ -15,8 +17,6 @@ const Header = () => {
   const [lastScrollY, setLastScrollY] = useState(0)
   const [animation, setAnimation] = useState('')
   const [height, setHeight] = useState(0)
-
-  const navigate = useNavigate()
 
   const fixedRef = useRef(null)
 
@@ -67,18 +67,11 @@ const Header = () => {
           <div
             className={`d-flex align-items-center container py-0 px-2 h-100`}>
             {/* Logo */}
-            <div className='flex-grow-1 d-flex'>
-              <Logo />
-              <h1
-                className={`logo fs-4 cursor-pointer d-inline-block p-0 m-0 ${style.logo}`}
-                onClick={() => navigate(`/`)}
-                style={{ fontFamily: 'Ananda' }}>
-                {/* NaDark */}
-                {import.meta.env.VITE_APP_NAME}
-              </h1>
-            </div>
+            <Logo />
+            <div className='flex-grow-1'></div>
             <SearchBar className='flex-grow-1' />
             <ThemeToggle />
+            <NotificationBell />
             <ProfileMenu className='ps-2' />
           </div>
         )}
@@ -90,7 +83,6 @@ const Header = () => {
 }
 
 const MobileHeader = () => {
-  const navigate = useNavigate()
   const [showSearch, setShowSearch] = useState(false)
 
   return (
@@ -109,13 +101,9 @@ const MobileHeader = () => {
         {!showSearch && (
           <div className='d-flex align-items-center p-0 m-0 animate__animated animate__fadeInDown animate__faster'>
             <Logo />
-            <h1
-              className={`logo fs-4 m-0 ${style.logo} cursor-pointer flex-grow-1`}
-              style={{ fontFamily: 'Ananda' }}
-              onClick={() => navigate('/')}>
-              {import.meta.env.VITE_APP_NAME}
-            </h1>
+            <div className='flex-grow-1'></div>
             <ThemeToggle />
+            <NotificationBell />
             <ProfileMenu className='ps-2' />
           </div>
         )}
@@ -132,13 +120,20 @@ const MobileHeader = () => {
 }
 
 const Logo = () => {
+  const navigate = useNavigate()
   return (
-    <img
-      id='logo1'
-      src='/favicon-32x32.png'
-      alt='Logo'
-      style={{ height: '28px', width: 'auto' }}
-    />
+    <div
+      className='cursor-pointer'
+      onClick={() => {
+        navigate('/')
+      }}>
+      <img
+        id='logo'
+        src={logo}
+        alt='Logo'
+        style={{ height: '28px', width: 'auto' }}
+      />
+    </div>
   )
 }
 

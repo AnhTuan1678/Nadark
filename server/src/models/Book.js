@@ -18,7 +18,7 @@ const Book = sequelize.define(
     total_rating: { type: DataTypes.INTEGER, defaultValue: 0 },
     url_avatar: {
       type: DataTypes.STRING,
-      defaultValue: 'https://docln.net/img/nocover.jpg',
+      allowNull: true,
     },
     uploader_id: {
       type: DataTypes.INTEGER,

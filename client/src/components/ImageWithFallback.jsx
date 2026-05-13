@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
+import cover from '../assets/image/cover.jpg'
 
 function ImageWithFallback({ urlAvatar, className, defaultUrl = null }) {
-  const df = defaultUrl || 'https://docln.net/img/nocover.jpg'
+  const df = defaultUrl || cover
   const [bgUrl, setBgUrl] = useState(df)
   const [shouldLoad, setShouldLoad] = useState(false)
   const ref = useRef(null)

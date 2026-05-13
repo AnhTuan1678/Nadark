@@ -232,7 +232,7 @@ exports.createBook = async (bookData, uploaderId = null) => {
     author,
     description,
     status: status || 'Đang ra',
-    url_avatar: url_avatar || 'https://docln.net/img/nocover.jpg',
+    url_avatar: url_avatar,
     uploader_id: uploaderId, // có thể null
     createdAt: new Date(),
     updatedAt: new Date(),

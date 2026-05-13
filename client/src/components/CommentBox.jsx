@@ -19,10 +19,10 @@ export const CommentBox = ({
   }, [focus])
 
   return (
-    <div className='mt-2'>
+    <>
       <textarea
         ref={textareaRef}
-        className='form-control mb-2'
+        className='form-control my-2'
         rows={2}
         value={mess}
         onChange={(e) => setMess(e.target.value)}
@@ -43,6 +43,6 @@ export const CommentBox = ({
           Hủy
         </button>
       )}
-    </div>
+    </>
   )
 }

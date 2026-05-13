@@ -1,5 +1,9 @@
 const db = require('../models')
 const { Op, literal } = require('sequelize')
+const notificationService = require('../modules/notifications/notification.service')
+const NotificationTypes = require('../modules/notifications/notification.types')
+const eventBus = require('../events/eventBus')
+const ChapterEvents = require('../events/chapter.events')
 
 exports.createChapter = async (data) => {
   const { book_id, title, author_note, content } = data
@@ -18,6 +22,9 @@ exports.createChapter = async (data) => {
     index: book.chapter_count + 1,
     word_count: content.trim().split(/\s+/).length,
   })
+
+  // emit event
+  eventBus.emit(ChapterEvents.CHAPTER_CREATED, { chapter, book })
 
   return chapter
 }

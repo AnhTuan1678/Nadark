@@ -13,8 +13,10 @@ const path = require('path')
 
   // ===== MODULE ROUTES =====
   const assetsRoutes = require('../modules/assets/assets.routes')
+  const notificationRoutes = require('../modules/notifications/notification.routes')
   // ===== REGISTER =====
   router.use('/assets', assetsRoutes)
+  router.use('/notifications', notificationRoutes)
 })()
 
 module.exports = router

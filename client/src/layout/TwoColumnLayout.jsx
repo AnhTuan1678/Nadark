@@ -88,12 +88,12 @@ const RecentReadBooks = () => {
 
             {/* Info */}
             <div className='flex-grow-1 ms-2'>
-              <div className={styles.title}>{book.book.title}</div>
+              <p className={`fs-8 fw-bold m-0 ${styles.title}`}>{book.book.title}</p>
 
               <div className='d-flex'>
-                <div className={`fs-8 flex-grow-1 ${styles.chapter}`}>
-                  Chapter {book.index + book.title}
-                </div>
+                <p className={`fs-8 flex-grow-1 m-0 ${styles.chapter}`}>
+                  Chương {book.index + ': ' + book.title}
+                </p>
 
                 <div className={styles.views}>
                   {timeAgo(book.date)}
@@ -107,7 +107,7 @@ const RecentReadBooks = () => {
   }
 
   return (
-    <div className={`${styles.wrapper} p-0 mt-5`}>
+    <div className={`${styles.wrapper} p-0 mt-1`}>
       <Tabs
         activeKey='recent'
         className={styles.tabs}

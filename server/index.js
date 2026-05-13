@@ -6,6 +6,7 @@ const route = require('./src/route/index')
 const { TEMP_DIR, PUBLIC_DIR, CLIENT_BUILD_DIR } = require('./src/config/path')
 
 require('./src/models/sync')
+require('./src/events/listeners/notification.listener')
 
 const app = express()
 

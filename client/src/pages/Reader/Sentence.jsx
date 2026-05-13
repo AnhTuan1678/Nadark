@@ -4,7 +4,7 @@ const Sentence = memo(
   forwardRef(function Sentence({ text, highlightWord, isActive, style }, ref) {
     if (!isActive)
       return (
-        <p ref={ref} style={style}>
+        <p ref={ref} style={style} className='text-break'>
           {text}
         </p>
       )
@@ -19,7 +19,10 @@ const Sentence = memo(
 
     const words = text.split(/\s+/)
     return (
-      <p ref={ref} style={{...style, boxShadow: '0 0 0 1px var(--secondary--color)'}}>
+      <p
+        className='text-break'
+        ref={ref}
+        style={{ ...style, boxShadow: '0 0 0 1px var(--secondary--color)' }}>
         {words.map((w, i) => (
           <span key={i} style={i === highlightWord ? activeStyle : wordStyle}>
             {w + ' '}
