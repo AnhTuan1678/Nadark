@@ -69,10 +69,10 @@ const NotificationBell = ({ className }) => {
           <span
             className='position-absolute rounded-circle'
             style={{
-              width: 4,
-              height: 4,
-              top: 6,
-              right: 6,
+              width: 8,
+              height: 8,
+              top: 0,
+              right: 0,
               backgroundColor: '#dc3545',
             }}
           />

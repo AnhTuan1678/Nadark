@@ -137,6 +137,7 @@ const EditChapter = () => {
       )
 
       await clearCacheKey(`${API_URL}/api/chapter/${chapterId}`)
+      await clearCacheKey(`${API_URL}/api/book/newly-updated?limit=12&offset=0`)
       setSuccess('Cập nhật chapter thành công')
       setTimeout(() => navigate(-1), 800)
     } catch (err) {

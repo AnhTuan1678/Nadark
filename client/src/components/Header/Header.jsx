@@ -62,7 +62,7 @@ const Header = () => {
         className={`${style.header} position-fixed top-0 start-0 end-0 animate__animated ${animation}`}
         ref={fixedRef}>
         {isMobile ? (
-          <MobileHeader />
+          <MobileHeader hiding={!show} />
         ) : (
           <div
             className={`d-flex align-items-center container py-0 px-2 h-100`}>
@@ -82,8 +82,16 @@ const Header = () => {
   )
 }
 
-const MobileHeader = () => {
+const MobileHeader = ({ hiding }) => {
   const [showSearch, setShowSearch] = useState(false)
+
+  useEffect(() => {
+    if (hiding) {
+      setTimeout(() => {
+        setShowSearch(false)
+      }, 500)
+    }
+  }, [hiding])
 
   return (
     <div className='d-flex h-100'>

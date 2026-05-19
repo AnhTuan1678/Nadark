@@ -103,6 +103,7 @@ const AddChapter = () => {
       )
 
       await clearCacheKey(`${API_URL}/api/book/${bookId}/chapters`)
+      await clearCacheKey(`${API_URL}/api/book/newly-updated?limit=12&offset=0`)
 
       navigate(-1)
     } catch (err) {

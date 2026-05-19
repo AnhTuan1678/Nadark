@@ -45,7 +45,7 @@ exports.getBooksByCriteria = async (criteria, limit = 12, offset = 0) => {
       break
   }
 
-  const whereCondition = { chapter_count: { [Op.gt]: 1 } }
+  const whereCondition = { chapter_count: { [Op.gte]: 1 } }
 
   const { count, rows } = await db.Book.findAndCountAll({
     where: whereCondition,
@@ -60,6 +60,13 @@ exports.getBooksByCriteria = async (criteria, limit = 12, offset = 0) => {
       },
     ],
   })
+
+  console.log(
+    `getBooksByCriteria - criteria: ${criteria}, count: ${count}, limit: ${limit}, offset: ${offset}`,
+  )
+  if (criteria === 'new_create') {
+    console.log(rows.map((b) => ({ id: b.id, title: b.title, createdAt: b.createdAt })))
+  }
 
   return {
     total: count,

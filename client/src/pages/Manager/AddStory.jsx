@@ -5,6 +5,8 @@ import { fetchGenres } from '../../redux/genreSlice'
 import { bookAPI } from '../../services/api'
 import './AddStory.css'
 import GenreSelector from '../../components/GenreSelector'
+import { clearCacheKey } from '../../services/cacheFetch'
+import { API_URL } from '../../services/api/config'
 
 const AddStory = () => {
   const [formData, setFormData] = useState({
@@ -48,6 +50,7 @@ const AddStory = () => {
       }
       const newBook = await bookAPI.createBook(payload, user.token)
       setSuccess(`Tạo truyện thành công: ${newBook.title}`)
+      clearCacheKey(`${API_URL}/api/book/newly-created?limit=12&offset=0`)
       setTimeout(() => {
         navigate(-1)
       }, 1000)
