@@ -7,15 +7,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchGenres } from '../../redux/genreSlice'
 
 const NavBar = ({ className = '' }) => {
-  const items = ['Hot', 'Theo dõi', 'Lịch sử', 'Thể loại', 'Tìm truyện']
-  const routes = [
-    '/',
-    '/hot',
-    '/bookshelf',
-    '/recently',
-    '/category',
-    '/search',
-  ]
+  const items = ['Hot', 'Thể loại', 'Tìm truyện', 'Thông tin']
+  const routes = ['/', '/hot', '/category', '/search', '/info']
   const navigate = useNavigate()
   const location = useLocation()
 

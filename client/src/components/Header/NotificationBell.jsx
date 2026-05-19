@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBell } from '@fortawesome/free-solid-svg-icons'
 import NotificationItem from './NotificationItem'
 
-const NotificationBell = () => {
+const NotificationBell = ({ className }) => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
   const notifications = useSelector((state) => state.notifications.items)
@@ -49,34 +49,35 @@ const NotificationBell = () => {
   }
 
   return (
-    <div className='position-relative'>
+    <div className={`position-relative h-75 m-0 ${className}`}>
       {/* BUTTON */}
-      <button
-        className='btn btn-transparent position-relative p-0 m-0'
-        onClick={onToggle}>
+      <div
+        className='p-0 d-flex justify-content-center align-items-center rounded-circle h-100'
+        onClick={onToggle}
+        style={{
+          backgroundColor: 'var(--background-theme-toggle)',
+          border: '1px solid gray',
+          position: 'relative',
+          aspectRatio: '1/1',
+        }}>
         <FontAwesomeIcon
           icon={faBell}
-          size='lg'
-          style={{
-            color: 'white',
-            filter: 'drop-shadow(0 0 1px black) drop-shadow(0 0 1px black)',
-          }}
+          style={{ color: 'var(--color-theme-icon)' }}
         />
 
         {unread > 0 && (
           <span
+            className='position-absolute rounded-circle'
             style={{
-              position: 'absolute',
-              top: 2,
-              right: 2,
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
+              width: 4,
+              height: 4,
+              top: 6,
+              right: 6,
               backgroundColor: '#dc3545',
             }}
           />
         )}
-      </button>
+      </div>
 
       {/* OVERLAY */}
       <div

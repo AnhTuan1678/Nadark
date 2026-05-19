@@ -133,6 +133,14 @@ const App = () => {
                 </DefaultLayout>
               }
             />
+            <Route
+              path='/info'
+              element={
+                <DefaultLayout>
+                  <Pages.Info />
+                </DefaultLayout>
+              }
+            />
             <Route path='/*' element={<Pages.NotFound />} />
           </Routes>
         </Suspense>

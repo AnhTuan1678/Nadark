@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import style from './Header.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faSearch } from '@fortawesome/free-solid-svg-icons'
 import ProfileMenu from './ProfileMenu'
 import SearchBar from './SearchBar'
 import NavBar from './NavBar'
@@ -70,9 +70,9 @@ const Header = () => {
             <Logo />
             <div className='flex-grow-1'></div>
             <SearchBar className='flex-grow-1' />
-            <ThemeToggle />
-            <NotificationBell />
-            <ProfileMenu className='ps-2' />
+            <ThemeToggle className='me-2' />
+            <NotificationBell className='me-2' />
+            <ProfileMenu />
           </div>
         )}
       </div>
@@ -87,30 +87,53 @@ const MobileHeader = () => {
 
   return (
     <div className='d-flex h-100'>
-      {/* Nút toggle */}
-      <button
-        className='btn ps-1 pe-1 m-0 p-0 btn-light rounded-0 shadow bg-transparent border-0 text-light'
-        onClick={() => setShowSearch((prev) => !prev)}>
-        <FontAwesomeIcon
-          icon={faExchangeAlt}
-          style={{ transform: 'rotate(90deg)' }}
-        />
-      </button>
       <div className='d-flex w-100 flex-column p-0 ms-2 me-2 justify-content-center'>
         {/* Logo + Profile */}
         {!showSearch && (
           <div className='d-flex align-items-center p-0 m-0 animate__animated animate__fadeInDown animate__faster'>
             <Logo />
             <div className='flex-grow-1'></div>
-            <ThemeToggle />
-            <NotificationBell />
-            <ProfileMenu className='ps-2' />
+            <ThemeToggle className='me-2' />
+            <div className={'position-relative h-75 m-0'}>
+              <div
+                className='p-0 d-flex justify-content-center align-items-center rounded-circle h-100 me-2'
+                onClick={() => setShowSearch((prev) => !prev)}
+                style={{
+                  backgroundColor: 'var(--background-theme-toggle)',
+                  border: '1px solid gray',
+                  position: 'relative',
+                  aspectRatio: '1/1',
+                }}>
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  style={{ color: 'var(--color-theme-icon)' }}
+                />
+              </div>
+            </div>
+            <NotificationBell className='me-2' />
+            <ProfileMenu />
           </div>
         )}
 
         {/* Search Bar */}
         {showSearch && (
-          <div className='d-flex p-0 animate__animated animate__fadeInDown animate__faster'>
+          <div className='d-flex  align-items-center p-0 animate__animated animate__fadeInDown animate__faster'>
+            <div
+              className='p-0 d-flex justify-content-center align-items-center rounded-circle me-2'
+              onClick={() => setShowSearch((prev) => !prev)}
+              style={{
+                backgroundColor: 'var(--background-theme-toggle)',
+                border: '1px solid gray',
+                position: 'relative',
+                width: 24,
+                height: 24,
+                // aspectRatio: '1/1',
+              }}>
+              <FontAwesomeIcon
+                icon={faArrowLeft}
+                style={{ color: 'var(--color-theme-icon)' }}
+              />
+            </div>
             <SearchBar className='w-100' />
           </div>
         )}

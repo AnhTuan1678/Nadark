@@ -12,6 +12,7 @@ import styles from './SearchBar.module.css'
 import { bookAPI } from '../../services/api'
 import { useNavigate } from 'react-router-dom'
 import { timeAgo } from '../../utils/timeAgo'
+import ImageWithFallback from '../ImageWithFallback'
 
 const SearchBar = ({ className = '' }) => {
   const [query, setQuery] = useState('')
@@ -102,15 +103,12 @@ const SearchBar = ({ className = '' }) => {
 
   return (
     <div
-      className={`${className} align-items-center dropdown ${styles['search-bar']}`}
-      style={
+      className={`${className} align-items-center dropdown ${styles['search-bar']} ${
         showDropdown && results.length > 0
-          ? {
-              borderTopLeftRadius: '12px',
-              borderTopRightRadius: '12px',
-            }
-          : { borderRadius: '12px' }
+          ? 'rounded-top rounded-bottom-0'
+          : 'rounded'
       }
+`}
       ref={wrapperRef}>
       <form
         className='d-flex align-items-center rounded-pill overflow-hidden p-0 shadow m-0'
@@ -131,12 +129,8 @@ const SearchBar = ({ className = '' }) => {
       </form>
 
       <div
-        className='position-absolute start-0 end-0 p-0 m-0 overflow-hidden bg-transparent'
-        style={{
-          backgroundColor: 'inherit',
-          borderBottomLeftRadius: '12px',
-          borderBottomRightRadius: '12px',
-        }}>
+        className='position-absolute start-0 end-0 p-0 m-0 overflow-hidden bg-transparent rounded-bottom'
+        style={{ backgroundColor: 'inherit' }}>
         {
           // (showDropdown || isClosing) &&
           <ul
@@ -151,9 +145,8 @@ const SearchBar = ({ className = '' }) => {
                 } d-flex align-items-center gap-2 p-1 cursor-pointer border-top border-secondary`}
                 onClick={() => handleSelect(book)}
                 onMouseEnter={() => setHighlightedIndex(index)}>
-                <img
-                  src={book.urlAvatar}
-                  alt={book.title}
+                <ImageWithFallback
+                  urlAvatar={book.urlAvatar}
                   className={`${styles['book-cover']} flex-shrink-0 object-fit-cover`}
                 />
                 <div className={`d-flex flex-column overflow-hidden`}>

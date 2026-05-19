@@ -14,6 +14,7 @@ import {
   faTrash,
   faUserPlus,
   faBook,
+  faClockRotateLeft,
 } from '@fortawesome/free-solid-svg-icons'
 import { clearCache } from '../../services/cacheFetch'
 import nova from '../../assets/image/GuestAvatar.png' // avatar mặc định khi chưa đăng nhập
@@ -85,7 +86,13 @@ const ProfileMenu = ({ className }) => {
                 className={`dropdown-item slide-in-hover ${styles.dropdownItem}`}
                 onClick={() => navigate('/bookshelf')}>
                 <FontAwesomeIcon icon={faBookmark} />
-                Đánh dấu
+                Theo dõi
+              </button>
+              <button
+                className={`dropdown-item slide-in-hover ${styles.dropdownItem}`}
+                onClick={() => navigate('/recently')}>
+                <FontAwesomeIcon icon={faClockRotateLeft} />
+                Lịch sử
               </button>
               <button
                 className={`dropdown-item slide-in-hover ${styles.dropdownItem}`}
@@ -109,7 +116,7 @@ const ProfileMenu = ({ className }) => {
                 Xóa cache
               </button>
               <div
-                className={`dropdown-divider ${styles.dropdownDivider}`}></div>
+                className={`dropdown-divider m-0 ${styles.dropdownDivider}`}></div>
               <button
                 className={`dropdown-item slide-in-hover ${styles.dropdownItem}`}
                 onClick={handleLogout}>

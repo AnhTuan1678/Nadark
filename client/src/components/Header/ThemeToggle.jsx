@@ -3,7 +3,7 @@ import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
 import { useTheme } from '../../context/ThemeContext'
 import { useState, useEffect } from 'react'
 
-const ThemeToggle = () => {
+const ThemeToggle = ({className}) => {
   const { theme, toggleTheme } = useTheme()
   const [animate, setAnimate] = useState(false)
 
@@ -20,7 +20,7 @@ const ThemeToggle = () => {
   }, [animate])
 
   return (
-    <div className='form-check form-switch h-75 m-0'>
+    <div className={`form-check form-switch h-75 m-0 ${className}`}>
       <input
         className='form-check-input d-none'
         type='checkbox'

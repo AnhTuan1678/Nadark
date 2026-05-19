@@ -27,10 +27,11 @@
     --color-nav-background: #e4e4e4;
     --color-nav-active: #ffffff;
     --background-nav-dropdown: #ffffff;
-    --color-bg-input: #e0e0e0;
+    /* --color-bg-input: #e0e0e0; */
+    --color-bg-input: var(--background-theme-icon);
     --color-input-icon: #444444;
     --color-search-dropdown-title: var(--secondary--color);
-    --color-theme-icon: var(--secondary--color);
+    --color-theme-icon: var(--primary--color);
     --background-theme-icon: #cccccc;
     --background-theme-toggle: var(--color-comment-background);
     --bg-header: url('../../assets/image/bg-header.jpg');
@@ -77,7 +78,8 @@
     --color-nav-background: #000000;
     --color-nav-active: #333;
     --background-nav-dropdown: #333;
-    --color-bg-input: #2a2a2a;
+    /* --color-bg-input: #2a2a2a; */
+    --color-bg-input: var(--background-NotifyBlock);
     --color-input-icon: #ffffff;
     --color-search-dropdown-title: var(--secondary--color);
     --color-theme-icon: var(--primary--color);
