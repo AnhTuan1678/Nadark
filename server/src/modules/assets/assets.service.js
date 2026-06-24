@@ -1,4 +1,3 @@
-// modules/assets/assets.service.js
 const imageProcessor = require('./utils/image.processor')
 const imgbb = require('./providers/imgbb.provider')
 const fs = require('fs')

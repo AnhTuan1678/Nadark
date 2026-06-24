@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setReaderSpeed, setReaderVoice } from '../redux/settingSlice'
 
@@ -8,7 +8,9 @@ export function useReaderTTS(content, onEnd) {
   const speed = useSelector((state) => state.setting.reader.speed)
   const voiceName = useSelector((state) => state.setting.reader.voiceName)
 
-  const [lines, setLines] = useState(content?.content?.split('\n').filter(Boolean) || [])
+  const [lines, setLines] = useState(
+    content?.content?.split('\n').filter(Boolean) || [],
+  )
   const [reading, setReading] = useState(false)
   const [currentLine, setCurrentLine] = useState(-1)
   const [currentWord, setCurrentWord] = useState(-1)
@@ -18,21 +20,29 @@ export function useReaderTTS(content, onEnd) {
 
   const voice = voices.find((v) => v.name === voiceName) || null
 
-  const queueRef = useRef([])        // Queue các dòng cần đọc
-  const lineIndexRef = useRef(0)     // Dòng hiện tại trong queue
+  const queueRef = useRef([]) // Queue các dòng cần đọc
+  const lineIndexRef = useRef(0) // Dòng hiện tại trong queue
   const readingRef = useRef(reading)
   const currentLineRef = useRef(currentLine)
   const linesRef = useRef(lines)
 
   // Update refs
-  useEffect(() => { readingRef.current = reading }, [reading])
-  useEffect(() => { currentLineRef.current = currentLine }, [currentLine])
-  useEffect(() => { linesRef.current = lines }, [lines])
+  useEffect(() => {
+    readingRef.current = reading
+  }, [reading])
+  useEffect(() => {
+    currentLineRef.current = currentLine
+  }, [currentLine])
+  useEffect(() => {
+    linesRef.current = lines
+  }, [lines])
 
   // Load voices
   useEffect(() => {
     const loadVoices = () => {
-      const available = window.speechSynthesis.getVoices().filter((v) => v.lang.includes('vi'))
+      const available = window.speechSynthesis
+        .getVoices()
+        .filter((v) => v.lang.includes('vi'))
       setVoices(available)
 
       let selectedVoice = available[0]
@@ -54,7 +64,10 @@ export function useReaderTTS(content, onEnd) {
   }, [voiceName, dispatch])
 
   // Check nếu dòng chỉ có ký tự đặc biệt → bỏ qua
-  const isSpecialLine = (line) => !line.trim() || /^[\s=.\-_,!@#$%^&*()]+$/.test(line)
+  const isSpecialLine = useCallback(
+    (line) => !line.trim() || /^[\s=.\-_,!@#$%^&*()]+$/.test(line),
+    [],
+  )
 
   // Reset khi content thay đổi → luôn đọc từ đầu nếu autoSpeed
   useEffect(() => {
@@ -66,7 +79,7 @@ export function useReaderTTS(content, onEnd) {
     if (autoSpeed && newLines.length > 0 && voice && voiceReady && hasStarted) {
       start(newLines, 0)
     }
-  }, [content, voice, voiceReady, hasStarted, autoSpeed])
+  }, [content, voice, voiceReady, hasStarted, autoSpeed, start])
 
   // Khi voice hoặc speed thay đổi → áp dụng ngay cho dòng hiện tại
   useEffect(() => {
@@ -76,20 +89,23 @@ export function useReaderTTS(content, onEnd) {
       lineIndexRef.current = currentLineRef.current
       speakNextLine()
     }
-  }, [voice, speed])
+  }, [voice, speed, speakNextLine])
 
-  const start = (linesArray = lines, fromIndex = 0) => {
-    if (!linesArray || linesArray.length === 0) return
-    if (!Number.isInteger(fromIndex) || fromIndex < 0) fromIndex = 0
+  const start = useCallback(
+    (linesArray = lines, fromIndex = 0) => {
+      if (!linesArray || linesArray.length === 0) return
+      if (!Number.isInteger(fromIndex) || fromIndex < 0) fromIndex = 0
 
-    window.speechSynthesis.cancel()
-    setReading(true)
-    setHasStarted(true)
+      window.speechSynthesis.cancel()
+      setReading(true)
+      setHasStarted(true)
 
-    queueRef.current = linesArray.slice(fromIndex)
-    lineIndexRef.current = fromIndex
-    speakNextLine()
-  }
+      queueRef.current = linesArray.slice(fromIndex)
+      lineIndexRef.current = fromIndex
+      speakNextLine()
+    },
+    [lines, speakNextLine],
+  )
 
   const stop = () => {
     window.speechSynthesis.cancel()
@@ -124,7 +140,7 @@ export function useReaderTTS(content, onEnd) {
     }
   }
 
-  const speakNextLine = () => {
+  const speakNextLine = useCallback(() => {
     if (!queueRef.current || queueRef.current.length === 0) {
       setReading(false)
       setCurrentLine(-1)
@@ -164,7 +180,7 @@ export function useReaderTTS(content, onEnd) {
     }
 
     window.speechSynthesis.speak(utter)
-  }
+  }, [voice, speed, onEnd, isSpecialLine])
 
   return {
     lines,

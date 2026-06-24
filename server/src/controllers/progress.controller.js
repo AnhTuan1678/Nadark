@@ -48,6 +48,9 @@ exports.getAllMyProgress = async (req, res) => {
 exports.getAllProgress = async (req, res) => {
   try {
     const { limit = 30, offset = 0, id } = req.query
+    if (!id) {
+      return res.status(400).json({ error: 'Missing id query parameter' })
+    }
     const result = await progressService.getAllProgressByUser(id, {
       limit: parseInt(limit),
       offset: parseInt(offset),

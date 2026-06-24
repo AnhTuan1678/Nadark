@@ -30,7 +30,7 @@ function ReaderContent({ content, setting, onEnd }) {
       onEnd && onEnd()
       setIsFinished(false)
     }
-  }, [isFinished, onEnd])
+  }, [isFinished, onEnd, content])
 
   // Cuộn đến dòng đang đọc
   useEffect(() => {

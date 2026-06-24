@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize')
 const sequelize = require('../config/database')
-const Book = require('./Book')
 
 const BookTraffic = sequelize.define(
   'BookTraffic',

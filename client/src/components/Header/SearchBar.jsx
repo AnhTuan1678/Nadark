@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faClock,
@@ -51,7 +51,7 @@ const SearchBar = ({ className = '' }) => {
     }
 
     fetchData()
-  }, [debouncedQuery])
+  }, [debouncedQuery, closeDropdown])
 
   // Click ngoài để đóng dropdown
   useEffect(() => {
@@ -62,7 +62,7 @@ const SearchBar = ({ className = '' }) => {
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [closeDropdown])
 
   // Chọn sách
   const handleSelect = (book) => {
@@ -89,7 +89,7 @@ const SearchBar = ({ className = '' }) => {
     }
   }
 
-  const closeDropdown = () => {
+  const closeDropdown = useCallback(() => {
     setIsClosing(true)
     const lastRes = results
     setTimeout(() => {
@@ -99,7 +99,7 @@ const SearchBar = ({ className = '' }) => {
         setIsClosing(false)
       }
     }, 300)
-  }
+  }, [results])
 
   return (
     <div

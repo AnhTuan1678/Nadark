@@ -1,4 +1,3 @@
-// modules/media/providers/imgbb.provider.js
 const fs = require('fs')
 
 exports.upload = async (filePath) => {

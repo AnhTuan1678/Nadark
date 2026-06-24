@@ -1,4 +1,3 @@
-// modules/assets/assets.routes.js
 const router = require('express').Router()
 const upload = require('./middlewares/upload.middleware')
 const assetsController = require('./assets.controller')
