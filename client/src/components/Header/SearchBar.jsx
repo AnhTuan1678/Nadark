@@ -25,6 +25,18 @@ const SearchBar = ({ className = '' }) => {
 
   const navigate = useNavigate()
 
+  const closeDropdown = useCallback(() => {
+    setIsClosing(true)
+    const lastRes = results
+    setTimeout(() => {
+      if (lastRes === results) {
+        setShowDropdown(false)
+        setResults([])
+        setIsClosing(false)
+      }
+    }, 300)
+  }, [results])
+
   // Debounce query
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedQuery(query), 300)
@@ -88,18 +100,6 @@ const SearchBar = ({ className = '' }) => {
       }
     }
   }
-
-  const closeDropdown = useCallback(() => {
-    setIsClosing(true)
-    const lastRes = results
-    setTimeout(() => {
-      if (lastRes === results) {
-        setShowDropdown(false)
-        setResults([])
-        setIsClosing(false)
-      }
-    }, 300)
-  }, [results])
 
   return (
     <div
